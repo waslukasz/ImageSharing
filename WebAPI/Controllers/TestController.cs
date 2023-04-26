@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Exception;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,12 @@ namespace WebAPI.Controllers
         public string AdminRole()
         {
             return "You have Admin privileges!";
+        }
+
+        [HttpGet("exception/test")]
+        public IActionResult CheckExceptionFilter()
+        {
+            throw new ImageNotFoundException();
         }
     }
 }
