@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application_Core.Models
 {
-    public class Reaction:IIdentity<int>
+    public class Reaction : IIdentity<int>
     {
         public int Id { get; set; }
-        public int PostId { get; set; }
-        //Do ustalenia
-        public int UserId { get; set; }
+
+        public Post Post { get; set; }
     }
 }
+

@@ -11,10 +11,11 @@ namespace Application_Core.Models
     public class Album : IIdentity<int>
     {       
         public int Id { get; set; }
-        //Do ustalenia
-        public int UserId { get; set; }
+
         public string Description { get; set; }
+
         public string Title { get; set; }
 
+        public ISet<Image> Images { get; set; }
     }
 }

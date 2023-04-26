@@ -10,10 +10,11 @@ namespace Application_Core.Models
     public class Comment:IIdentity<int>
     {
         public int Id { get; set; }
+
         public Guid Guid { get; set; }
-        //Do ustalenia
-        public int UserId { get; set; }
-        public int PostId { get; set; }
+
+        public Post Post { get; set; }
+
         public string Text { get; set; }    
     }
 }
