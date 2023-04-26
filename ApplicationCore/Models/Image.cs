@@ -11,4 +11,7 @@ public class Image : IIdentity<int>
     public string Slug { get; set; }
     
     public string Title { get; set; }
+
+    public ISet<Album> Albums { get; set; }
+
 }
