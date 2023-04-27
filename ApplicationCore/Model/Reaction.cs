@@ -9,6 +9,7 @@ namespace Application_Core.Model
         public Guid Guid { get; set; }
 
         public Post Post { get; set; }
-    }
+
+	}
 }
 

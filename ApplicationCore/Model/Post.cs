@@ -8,13 +8,19 @@ public class Post : IUidIdentity<int>
 
     public Guid Guid { get; set; }
 
-    public List<string> Tags { get; set; }
+    public string Tags { get; set; }
 
+    public string StatusName { get; set; }
     public Status Status { get; set; }
 
     public string Title { get; set; }
 
-    public ISet<Reaction> Reactions { get; set; }
+    public List<Comment> Comment { get; set; }
 
+    public ISet<Reaction> Reactions { get; set; }
+   
+    public int ImageId { get; set; }
     public Image Image { get; set; }
+
+
 }

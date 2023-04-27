@@ -10,6 +10,7 @@ namespace Application_Core.Model
 
         public Post Post { get; set; }
 
-        public string Text { get; set; }    
-    }
+        public string Text { get; set; }
+
+	}
 }
