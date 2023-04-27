@@ -13,6 +13,7 @@ namespace Application_Core.Model
         public string Title { get; set; }
 
         public ISet<Image> Images { get; set; }
+
         
     }
 }

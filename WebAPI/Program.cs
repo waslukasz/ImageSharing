@@ -1,5 +1,8 @@
 using System.Text;
+using Infrastructure.Database;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -35,6 +38,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = false
     }
 );
+
+builder.Services.AddInfrastructures(builder.Configuration);
 
 var app = builder.Build();
 

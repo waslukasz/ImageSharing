@@ -11,7 +11,10 @@ public class Image : IUidIdentity<int>
     public string Slug { get; set; }
     
     public string Title { get; set; }
+    public Post Post { get; set; }
 
     public ISet<Album> Albums { get; set; }
+
+    public string UserId { get; set; }
 
 }
