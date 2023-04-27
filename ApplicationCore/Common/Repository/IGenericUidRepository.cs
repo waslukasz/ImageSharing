@@ -1,4 +1,4 @@
-﻿namespace Application_Core.Commons.Repository;
+﻿namespace Application_Core.Common.Repository;
 
 public interface IGenericUidRepository<T,K> : IGenericRepository<T,K> where T: IIdentity<K> where K: IComparable<K>
 {

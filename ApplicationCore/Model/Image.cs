@@ -1,6 +1,6 @@
-﻿using Application_Core.Commons.Repository;
+﻿using Application_Core.Common.Repository;
 
-namespace Application_Core.Models;
+namespace Application_Core.Model;
 
 public class Image : IUidIdentity<int>
 {

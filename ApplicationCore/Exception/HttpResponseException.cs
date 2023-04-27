@@ -1,16 +1,14 @@
-﻿namespace Infrastructure.Exception;
+﻿using System.Net;
 
-using System.Net;
-using System;
-
-public class HttpResponseException : Exception
-{
+namespace Application_Core.Exception;
+public class HttpResponseException : System.Exception
+{ 
     private readonly HttpStatusCode _statusCode;
-
-    protected HttpResponseException(HttpStatusCode statusCode, string message): base(message)
-    {
+    protected HttpResponseException(string message, HttpStatusCode statusCode): base(message)
+    { 
         this._statusCode = statusCode;
     }
-
     public HttpStatusCode GetStatusCode() => _statusCode;
 }
+
+

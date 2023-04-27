@@ -1,6 +1,6 @@
-﻿using Application_Core.Commons.Specification;
+﻿using Application_Core.Common.Specification;
 
-namespace Application_Core.Commons.Repository;
+namespace Application_Core.Common.Repository;
 
 public interface IGenericRepository<T,K> where T: IIdentity<K> where K: IComparable<K>
 {

@@ -1,6 +1,7 @@
-﻿namespace WebAPI.ExceptionFilter;
+﻿using Application_Core.Exception;
 
-using Infrastructure.Exception;
+namespace WebAPI.ExceptionFilter;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

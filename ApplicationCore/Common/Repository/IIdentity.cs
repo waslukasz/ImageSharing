@@ -1,4 +1,4 @@
-﻿namespace Application_Core.Commons.Repository;
+﻿namespace Application_Core.Common.Repository;
 
 public interface IIdentity<T> : IComparable<T> where T: IComparable<T>
 {

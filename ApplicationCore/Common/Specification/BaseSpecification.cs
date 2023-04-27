@@ -1,6 +1,6 @@
-﻿namespace Application_Core.Commons.Specification;
+﻿using System.Linq.Expressions;
 
-using System.Linq.Expressions;
+namespace Application_Core.Common.Specification;
 
 public class BaseSpecification<T>: ISpecification<T>
 {

@@ -1,4 +1,4 @@
-﻿namespace Application_Core.Commons.Repository
+﻿namespace Application_Core.Common.Repository
 {
     public interface IUidIdentity<T> : IIdentity<T> where T: IComparable<T>
     {

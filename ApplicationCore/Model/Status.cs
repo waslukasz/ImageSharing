@@ -1,4 +1,4 @@
-﻿namespace Application_Core.Models;
+﻿namespace Application_Core.Model;
 
 public class Status
 {

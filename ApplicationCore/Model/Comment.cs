@@ -1,11 +1,6 @@
-﻿using Application_Core.Commons.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application_Core.Common.Repository;
 
-namespace Application_Core.Models
+namespace Application_Core.Model
 {
     public class Comment : IUidIdentity<int>
     {
