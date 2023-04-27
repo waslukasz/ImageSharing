@@ -2,7 +2,7 @@
 
 namespace Application_Core.Models;
 
-public class Image : IIdentity<int>
+public class Image : IUidIdentity<int>
 {
     public int Id { get; set; }
     

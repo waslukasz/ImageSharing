@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application_Core.Models
 {
-    public class Reaction : IIdentity<int>
+    public class Reaction : IUidIdentity<int>
     {
         public int Id { get; set; }
+        
+        public Guid Guid { get; set; }
 
         public Post Post { get; set; }
     }

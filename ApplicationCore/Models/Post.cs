@@ -2,7 +2,7 @@
 
 namespace Application_Core.Models;
 
-public class Post : IIdentity<int>
+public class Post : IUidIdentity<int>
 {
     public int Id { get; set; }
 

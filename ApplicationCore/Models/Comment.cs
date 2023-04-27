@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application_Core.Models
 {
-    public class Comment:IIdentity<int>
+    public class Comment : IUidIdentity<int>
     {
         public int Id { get; set; }
 
