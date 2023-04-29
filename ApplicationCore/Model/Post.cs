@@ -22,5 +22,5 @@ public class Post : UidIdentity
     
     public Image Image { get; set; }
 
-    public IUser User { get; set; }
+    public IUser<int> User { get; set; }
 }

@@ -1,7 +1,10 @@
-﻿namespace Application_Core.Model.Interface;
+﻿using Application_Core.Common.Repository;
 
-public interface IUser
+namespace Application_Core.Model.Interface;
+
+public interface IUser<TKey> : IUidIdentity<int> where TKey: IEquatable<TKey>
 {
+    new TKey Id { get; set; }
     ISet<Album> Albums { get; set; }
     
     ISet<Comment> Comments { get; set; }

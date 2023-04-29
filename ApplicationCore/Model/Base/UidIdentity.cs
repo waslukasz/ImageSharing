@@ -7,4 +7,9 @@ public abstract class UidIdentity : IUidIdentity<int>
     public int Id { get; set; }
     
     public Guid Guid { get; set; }
+
+    public UidIdentity()
+    {
+        this.Guid = Guid.NewGuid();
+    }
 }

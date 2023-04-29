@@ -1,6 +1,5 @@
-﻿using Application_Core.Common.Repository;
-using Application_Core.Model.Base;
-using Microsoft.AspNet.Identity;
+﻿using Application_Core.Model.Base;
+using Application_Core.Model.Interface;
 
 namespace Application_Core.Model
 {
@@ -8,7 +7,7 @@ namespace Application_Core.Model
     {
         public Post Post { get; set; }
         
-        public IUser User { get; set; }
+        public IUser<int> User { get; set; }
 
     }
 }
