@@ -1,15 +1,15 @@
 ﻿using Application_Core.Common.Repository;
+using Application_Core.Model.Base;
+using Microsoft.AspNet.Identity;
 
 namespace Application_Core.Model
 {
-    public class Reaction : IUidIdentity<int>
+    public class Reaction : UidIdentity
     {
-        public int Id { get; set; }
-        
-        public Guid Guid { get; set; }
-
         public Post Post { get; set; }
+        
+        public IUser User { get; set; }
 
-	}
+    }
 }
 
