@@ -15,6 +15,6 @@ public class ReactionEntityConfiguration : IEntityConfiguration
         builder.Entity<Reaction>()
             .HasOne(r => r.Post)
             .WithMany(p => p.Reactions);
-        builder.Entity<Reaction>().ToTable("Reaction");
+        builder.Entity<Reaction>().ToTable("Reactions");
     }
 }
