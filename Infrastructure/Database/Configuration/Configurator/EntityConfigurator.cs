@@ -2,12 +2,12 @@
 
 namespace Infrastructure.Database.Configuration.Executer;
 
-public class ConfigurationExecuter
+public class EntityConfigurator
 {
     private List<IEntityConfiguration> _configurations;
     private readonly ModelBuilder _builder;
 
-    public ConfigurationExecuter(ModelBuilder builder)
+    public EntityConfigurator(ModelBuilder builder)
     {
         this._builder = builder;
         _configurations = new List<IEntityConfiguration>();
@@ -18,11 +18,12 @@ public class ConfigurationExecuter
         _configurations.Add(configuration);
     }
 
-    public void Execute()
+    public void Configure()
     {
-        _configurations.ForEach(
-            c => c.Configure(this._builder)
-            );
+        foreach (IEntityConfiguration configuration in this._configurations)
+        {
+            configuration.Configure(this._builder);
+        }
     }
     
 }

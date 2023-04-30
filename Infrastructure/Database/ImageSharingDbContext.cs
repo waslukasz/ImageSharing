@@ -26,16 +26,16 @@ namespace Infrastructure.Database
 		{
 			base.OnModelCreating(builder);
 
-			ConfigurationExecuter configurationExecuter = new ConfigurationExecuter(builder);
+			EntityConfigurator entityConfigurator = new EntityConfigurator(builder);
 			
-			configurationExecuter.AddConfiguration(new AlbumEntityConfiguration());
-			configurationExecuter.AddConfiguration(new CommentEntityConfiguration());
-			configurationExecuter.AddConfiguration(new ImageEntityConfiguration());
-			configurationExecuter.AddConfiguration(new PostEntityConfiguration());
-			configurationExecuter.AddConfiguration(new StatusEntityConfiguration());
-			configurationExecuter.AddConfiguration(new ReactionEntityConfiguration());
+			entityConfigurator.AddConfiguration(new AlbumEntityConfiguration());
+			entityConfigurator.AddConfiguration(new CommentEntityConfiguration());
+			entityConfigurator.AddConfiguration(new ImageEntityConfiguration());
+			entityConfigurator.AddConfiguration(new PostEntityConfiguration());
+			entityConfigurator.AddConfiguration(new StatusEntityConfiguration());
+			entityConfigurator.AddConfiguration(new ReactionEntityConfiguration());
 			
-			configurationExecuter.Execute();
+			entityConfigurator.Configure();
 
 		}
 	}
