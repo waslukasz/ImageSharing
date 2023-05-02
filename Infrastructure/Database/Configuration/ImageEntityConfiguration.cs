@@ -15,7 +15,8 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
             .WithMany(u => u.Images);
         builder
             .HasOne(i => i.Post)
-            .WithOne(p => p.Image);
+            .WithOne()
+            .HasForeignKey<Post>(p => p.ImageId);
         builder
             .HasMany(i => i.Albums)
             .WithMany(a => a.Images);

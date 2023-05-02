@@ -11,7 +11,14 @@ public class Image : UidIdentity
     
     public Post Post { get; set; }
 
-    public ISet<Album> Albums { get; set; }
+    public ICollection<Album> Albums { get; set; }
     
     public IUser<int> User { get; set; }
+
+    public int UserId { get; set; }
+
+    public Image() : base()
+    {
+        this.Albums = new List<Album>();
+    }
 }

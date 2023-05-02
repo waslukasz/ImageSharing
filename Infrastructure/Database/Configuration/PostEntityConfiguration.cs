@@ -11,18 +11,16 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
     public void Configure(EntityTypeBuilder<Post> builder)
     {
         builder.HasKey(p => p.Id);
-
         builder
             .HasOne(p => p.Status)
             .WithMany(s => s.Posts);
         builder
             .HasOne(p => p.Image)
-            .WithOne(i => i.Post)
-            .HasForeignKey<Post>(p => p.ImageId)
-            .IsRequired();
+            .WithOne(i => i.Post);
         builder
             .HasMany(p => p.Comments)
-            .WithOne(c => c.Post);
+            .WithOne(c => c.Post)
+            .HasForeignKey(c => c.PostId);
         builder
             .HasMany(p => p.Reactions)
             .WithOne(r => r.Post);
@@ -31,6 +29,5 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .WithMany(u => u.Posts);
         builder.Property(c => c.Tags).HasConversion<TagConverter>();
         builder.ToTable("Posts");
-        
     }
 }

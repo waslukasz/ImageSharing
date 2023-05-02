@@ -4,16 +4,16 @@ namespace Application_Core.Model.Interface;
 
 public interface IUser<TKey> : IUidIdentity<TKey> where TKey: IEquatable<TKey>
 {
-    new TKey Id { get; set; }
-    ISet<Album> Albums { get; set; }
+    TKey Id { get; set; }
+    ICollection<Album> Albums { get; set; }
     
-    ISet<Comment> Comments { get; set; }
+    ICollection<Comment> Comments { get; set; }
     
-    ISet<Post> Posts { get; set; }
+    ICollection<Post> Posts { get; set; }
     
-    ISet<Image> Images { get; set; }
+    ICollection<Image> Images { get; set; }
     
-    ISet<Reaction> Reactions { get; set; }
+    ICollection<Reaction> Reactions { get; set; }
 }
 
 public interface IUser : IUser<int>

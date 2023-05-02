@@ -16,6 +16,8 @@ public class DataGenerator
         _reactionId = 1,
         _commentId = 1;
 
+    public static readonly Faker Faker = new Faker();
+    
     public static Faker<Status> GenerateStatusData()
     {
         return new Faker<Status>()
@@ -31,13 +33,13 @@ public class DataGenerator
             .RuleFor(a => a.Guid, Guid.NewGuid)
             .RuleFor(a => a.Description, f => f.Lorem.Lines(3))
             .RuleFor(a => a.Title, f => string.Join(' ', f.Lorem.Words(4)))
-            .RuleFor(a => a.Images, GenerateRandomImagesForAlbum(images, new Random().Next(1,10)))
-            .RuleFor(a => a.User, user);
+            .RuleFor(a => a.UserId, user.Id);
     }
 
     public static Faker<Post> GeneratePostData(IUser<int> user, ICollection<Status> statusCollection)
     {
         Image image = GenerateImageData(user).Generate();
+        Status status = Faker.PickRandom(statusCollection);
         
         return new Faker<Post>()
             .RuleFor(p => p.Id, f => _postId++)
@@ -45,9 +47,8 @@ public class DataGenerator
             .RuleFor(p => p.Title, f => string.Join(' ', f.Lorem.Words(4)))
             .RuleFor(p => p.Tags, f => f.Random.WordsArray(3))
             .RuleFor(p => p.ImageId, image.Id)
-            .RuleFor(p => p.Image, image)
-            .RuleFor(p => p.Status, f => f.PickRandom(statusCollection))
-            .RuleFor(p => p.User, user);
+            .RuleFor(p => p.StatusId, status.Id)
+            .RuleFor(p => p.UserId, user.Id);
     }
 
     public static Faker<Image> GenerateImageData(IUser<int> user)
@@ -57,25 +58,29 @@ public class DataGenerator
             .RuleFor(i => i.Guid, Guid.NewGuid)
             .RuleFor(i => i.Title, f => string.Join(' ', f.Lorem.Words()))
             .RuleFor(i => i.Slug, string.Empty)
-            .RuleFor(i => i.User, user);
+            .RuleFor(i => i.UserId, user.Id);
     }
 
     public static Faker<Reaction> GenerateReactionData(ICollection<IUser<int>> users , Post post)
     {
+        IUser<int> user = Faker.PickRandom(users);
+
         return new Faker<Reaction>()
             .RuleFor(r => r.Id, f => _reactionId++)
             .RuleFor(r => r.Guid, Guid.NewGuid)
-            .RuleFor(r => r.Post, post)
-            .RuleFor(r => r.User, f => f.PickRandom(users));
+            .RuleFor(r => r.PostId, post.Id)
+            .RuleFor(r => r.UserId, user.Id);
     }
 
     public static Faker<Comment> GenerateCommentData(ICollection<IUser<int>> users, Post post)
     {
+        IUser<int> user = Faker.PickRandom(users);
+        
         return new Faker<Comment>()
             .RuleFor(c => c.Id, f => _commentId++)
             .RuleFor(c => c.Guid, Guid.NewGuid)
-            .RuleFor(c => c.Post, post)
-            .RuleFor(c => c.User, f => f.PickRandom(users))
+            .RuleFor(c => c.PostId, post.Id)
+            .RuleFor(c => c.UserId, user.Id)
             .RuleFor(c => c.Text, f => f.Lorem.Lines(2));
     }
 
@@ -88,13 +93,12 @@ public class DataGenerator
         List<Image> imgs = images.ToList();
         List<Image> outImgs = new List<Image>();
 
-        Enumerable.Range(1, number).Select(i =>
+        for (int i = 0; i < number; i++)
         {
             Image img = faker.PickRandom(imgs);
             imgs.Remove(img);
             outImgs.Add(img);
-            return i;
-        });
+        }
 
         return outImgs;
     }

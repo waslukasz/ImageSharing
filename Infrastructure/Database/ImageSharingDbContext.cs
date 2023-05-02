@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Infrastructure.Database.Seed;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.EF.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Database
 {
 
-	public class ImageSharingDbContext : IdentityDbContext<User>
+	public class ImageSharingDbContext : IdentityDbContext<User,IdentityRole<int>,int>
 	{
 		public DbSet<Album> Albums { get; set; }
 		public DbSet<Comment> Comments { get; set; }
@@ -20,6 +21,7 @@ namespace Infrastructure.Database
 		
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
+			optionsBuilder.EnableSensitiveDataLogging();
 			optionsBuilder.UseSqlite("Data Source=app.db");
 		}
 

@@ -6,6 +6,11 @@ public class Status : Identity
 {
     public string Name { get; set; }
     
-    public ISet<Post> Posts { get; set; }
+    public ICollection<Post> Posts { get; set; }
+
+    public Status()
+    {
+        this.Posts = new List<Post>();
+    }
 
 }
