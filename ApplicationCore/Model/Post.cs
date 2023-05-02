@@ -6,9 +6,7 @@ namespace Application_Core.Model;
 
 public class Post : UidIdentity
 {
-    public string Tags { get; set; }
-
-    public string StatusName { get; set; }
+    public ICollection<string> Tags { get; set; }
     
     public Status Status { get; set; }
 
@@ -23,4 +21,9 @@ public class Post : UidIdentity
     public Image Image { get; set; }
 
     public IUser<int> User { get; set; }
+
+    public Post() : base()
+    {
+        
+    }
 }

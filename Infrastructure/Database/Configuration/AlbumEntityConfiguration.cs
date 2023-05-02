@@ -1,20 +1,21 @@
 ﻿using Application_Core.Model;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class AlbumEntityConfiguration : IEntityConfiguration
+public class AlbumEntityConfiguration : IEntityTypeConfiguration<Album>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Album> builder)
     {
-        builder.Entity<Album>().HasKey(a => a.Id);
-        builder.Entity<Album>()
+        builder.HasKey(a => a.Id);
+        builder
             .HasOne(a => (User)a.User)
             .WithMany(u => u.Albums);
-        builder.Entity<Album>()
+        builder
             .HasMany(a => a.Images)
             .WithMany(i => i.Albums);
-        builder.Entity<Album>().ToTable("Albums");
+        builder.ToTable("Albums");
     }
 }

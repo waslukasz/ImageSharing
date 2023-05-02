@@ -1,20 +1,22 @@
 ﻿using Application_Core.Model;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class ReactionEntityConfiguration : IEntityConfiguration
+public class ReactionEntityConfiguration : IEntityTypeConfiguration<Reaction>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Reaction> builder)
     {
-        builder.Entity<Reaction>().HasKey(r => r.Id);
-        builder.Entity<Reaction>()
+        builder.HasKey(r => r.Id);
+        builder
             .HasOne(r => (User)r.User)
             .WithMany(u => u.Reactions);
-        builder.Entity<Reaction>()
+        builder
             .HasOne(r => r.Post)
             .WithMany(p => p.Reactions);
-        builder.Entity<Reaction>().ToTable("Reactions");
+        builder.ToTable("Reactions");
     }
+    
 }

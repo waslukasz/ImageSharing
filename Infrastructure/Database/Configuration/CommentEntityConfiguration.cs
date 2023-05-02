@@ -1,20 +1,22 @@
 ﻿using Application_Core.Model;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class CommentEntityConfiguration : IEntityConfiguration
+public class CommentEntityConfiguration : IEntityTypeConfiguration<Comment>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Comment> builder)
     {
-        builder.Entity<Comment>().HasKey(c => c.Id);
-        builder.Entity<Comment>()
+        builder.HasKey(c => c.Id);
+        builder
             .HasOne(c => (User)c.User)
             .WithMany(u => u.Comments);
-        builder.Entity<Comment>()
+        builder
             .HasOne(c => c.Post)
             .WithMany(p => p.Comments);
-        builder.Entity<Comment>().ToTable("Comments");
+        builder.ToTable("Comments");
     }
+    
 }

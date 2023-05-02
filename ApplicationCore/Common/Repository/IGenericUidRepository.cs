@@ -1,6 +1,6 @@
 ﻿namespace Application_Core.Common.Repository;
 
-public interface IGenericUidRepository<T,K> : IGenericRepository<T,K> where T: IIdentity<K> where K: IComparable<K>
+public interface IGenericUidRepository<T,K> : IGenericRepository<T,K> where T: IIdentity<K> where K: IEquatable<K>
 {
     Task<K?> FindByGuidAsync(Guid guid);
     

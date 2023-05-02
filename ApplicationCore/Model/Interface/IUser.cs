@@ -2,7 +2,7 @@
 
 namespace Application_Core.Model.Interface;
 
-public interface IUser<TKey> : IUidIdentity<int> where TKey: IEquatable<TKey>
+public interface IUser<TKey> : IUidIdentity<TKey> where TKey: IEquatable<TKey>
 {
     new TKey Id { get; set; }
     ISet<Album> Albums { get; set; }
@@ -14,4 +14,9 @@ public interface IUser<TKey> : IUidIdentity<int> where TKey: IEquatable<TKey>
     ISet<Image> Images { get; set; }
     
     ISet<Reaction> Reactions { get; set; }
+}
+
+public interface IUser : IUser<int>
+{
+    
 }

@@ -1,31 +1,36 @@
 ﻿using Application_Core.Model;
+using Infrastructure.Database.Converter;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class PostEntityConfiguration : IEntityConfiguration
+public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Post> builder)
     {
-        builder.Entity<Post>().HasKey(p => p.Id);
-        builder.Entity<Post>()
+        builder.HasKey(p => p.Id);
+
+        builder
             .HasOne(p => p.Status)
             .WithMany(s => s.Posts);
-        builder.Entity<Post>()
+        builder
             .HasOne(p => p.Image)
             .WithOne(i => i.Post)
             .HasForeignKey<Post>(p => p.ImageId)
             .IsRequired();
-        builder.Entity<Post>()
+        builder
             .HasMany(p => p.Comments)
             .WithOne(c => c.Post);
-        builder.Entity<Post>()
+        builder
             .HasMany(p => p.Reactions)
             .WithOne(r => r.Post);
-        builder.Entity<Post>()
+        builder
             .HasOne(p => (User)p.User)
             .WithMany(u => u.Posts);
-        builder.Entity<Post>().ToTable("Posts");
+        builder.Property(c => c.Tags).HasConversion<TagConverter>();
+        builder.ToTable("Posts");
+        
     }
 }

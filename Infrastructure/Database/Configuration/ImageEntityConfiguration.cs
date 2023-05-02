@@ -1,23 +1,25 @@
 ﻿using Application_Core.Model;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class ImageEntityConfiguration : IEntityConfiguration
+public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Image> builder)
     {
-        builder.Entity<Image>().HasKey(i => i.Id);
-        builder.Entity<Image>()
+        builder.HasKey(i => i.Id);
+        builder
             .HasOne(i => (User)i.User)
             .WithMany(u => u.Images);
-        builder.Entity<Image>()
+        builder
             .HasOne(i => i.Post)
             .WithOne(p => p.Image);
-        builder.Entity<Image>()
+        builder
             .HasMany(i => i.Albums)
             .WithMany(a => a.Images);
-        builder.Entity<Image>().ToTable("Images");
+        builder.ToTable("Images");
     }
 }
+

@@ -1,16 +1,17 @@
 ﻿using Application_Core.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.Configuration;
 
-public class StatusEntityConfiguration : IEntityConfiguration
+public class StatusEntityConfiguration : IEntityTypeConfiguration<Status>
 {
-    public void Configure(ModelBuilder builder)
+    public void Configure(EntityTypeBuilder<Status> builder)
     {
-        builder.Entity<Status>().HasKey(s => s.Name);
-        builder.Entity<Status>()
+        builder.HasKey(s => s.Id);
+        builder
             .HasMany(s => s.Posts)
             .WithOne(p => p.Status);
-        builder.Entity<Status>().ToTable("Status");
+        builder.ToTable("Status");
     }
 }

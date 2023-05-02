@@ -1,11 +1,11 @@
 ﻿namespace Application_Core.Common.Repository;
 
-public interface IIdentity<T> : IComparable<T> where T: IComparable<T>
+public interface IIdentity<T> : IEquatable<T> where T: IEquatable<T>
 {
     public T Id { get; set; }
 
-    int IComparable<T>.CompareTo(T? other)
+    bool IEquatable<T>.Equals(T? other)
     {
-        return this.CompareTo(other);
+        return this.Equals(other);
     }
 }

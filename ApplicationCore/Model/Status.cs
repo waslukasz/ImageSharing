@@ -1,9 +1,11 @@
-﻿namespace Application_Core.Model;
+﻿using Application_Core.Model.Base;
 
-public class Status
+namespace Application_Core.Model;
+
+public class Status : Identity
 {
     public string Name { get; set; }
     
     public ISet<Post> Posts { get; set; }
-    
+
 }

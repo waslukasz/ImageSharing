@@ -2,7 +2,7 @@
 
 namespace Application_Core.Common.Repository;
 
-public interface IGenericRepository<T,K> where T: IIdentity<K> where K: IComparable<K>
+public interface IGenericRepository<T,K> where T: IIdentity<K> where K: IEquatable<K>
 {
     Task<T?> FindByIdAsync(K id);
     
