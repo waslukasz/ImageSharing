@@ -4,5 +4,5 @@ namespace Infrastructure.Database.Seed.Interface;
 
 public interface ISeed
 {
-    void Seed(ModelBuilder builder);
+    void SeedData(ModelBuilder builder);
 }
