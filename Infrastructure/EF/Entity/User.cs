@@ -6,8 +6,6 @@ namespace Infrastructure.EF.Entity;
 
 public class User : IdentityUser<int>, IUser<int>
 {
-    public int Id { get; set; }
-    
     public Guid Guid { get; set; }
     
     public ICollection<Album> Albums { get; set; }
