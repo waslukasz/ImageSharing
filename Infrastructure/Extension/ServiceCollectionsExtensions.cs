@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Extensions
+namespace Infrastructure.Extension
 {
 	public static class ServiceCollectionsExtensions
 	{

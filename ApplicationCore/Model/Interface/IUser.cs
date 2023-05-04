@@ -15,8 +15,3 @@ public interface IUser<TKey> : IUidIdentity<TKey> where TKey: IEquatable<TKey>
     
     ICollection<Reaction> Reactions { get; set; }
 }
-
-public interface IUser : IUser<int>
-{
-    
-}

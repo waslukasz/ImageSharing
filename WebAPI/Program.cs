@@ -1,6 +1,6 @@
 using System.Text;
 using Infrastructure.Database;
-using Infrastructure.Extensions;
+using Infrastructure.Extension;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
