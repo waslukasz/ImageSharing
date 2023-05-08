@@ -13,10 +13,12 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
         builder.HasKey(p => p.Id);
         builder
             .HasOne(p => p.Status)
-            .WithMany(s => s.Posts);
-        builder
-            .HasOne(p => p.Image)
-            .WithOne(i => i.Post);
+            .WithMany(s => s.Posts)
+            .OnDelete(DeleteBehavior.ClientCascade);
+        builder.
+            HasOne(p => p.Image)
+            .WithOne(i => i.Post)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasMany(p => p.Comments)
             .WithOne(c => c.Post)
@@ -26,7 +28,8 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .WithOne(r => r.Post);
         builder
             .HasOne(p => (User)p.User)
-            .WithMany(u => u.Posts);
+            .WithMany(u => u.Posts)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.Property(c => c.Tags).HasConversion<TagConverter>();
         builder.ToTable("Posts");
     }

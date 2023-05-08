@@ -12,14 +12,18 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
         builder.HasKey(i => i.Id);
         builder
             .HasOne(i => (User)i.User)
-            .WithMany(u => u.Images);
+            .WithMany(u => u.Images)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasOne(i => i.Post)
             .WithOne()
+            .OnDelete(DeleteBehavior.ClientCascade)
             .HasForeignKey<Post>(p => p.ImageId);
+
         builder
             .HasMany(i => i.Albums)
             .WithMany(a => a.Images);
+
         builder.ToTable("Images");
     }
 }

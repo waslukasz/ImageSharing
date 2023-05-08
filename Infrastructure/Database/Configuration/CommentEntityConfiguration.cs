@@ -12,11 +12,13 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<Comment>
         builder.HasKey(c => c.Id);
         builder
             .HasOne(c => (User)c.User)
-            .WithMany(u => u.Comments);
+            .WithMany(u => u.Comments)
+          .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasOne(c => c.Post)
-            .WithMany(p => p.Comments);
+            .WithMany(p => p.Comments)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.ToTable("Comments");
     }
-    
+
 }

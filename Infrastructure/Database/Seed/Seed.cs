@@ -26,7 +26,7 @@ public class Seed : ISeed
     public ICollection<AlbumImage> PopulateAlbumImagesJoinTable(ICollection<Album> albums, ICollection<Image> images)
     {
         Random random = new Random();
-        
+
         return albums.SelectMany(a =>
             Enumerable.Range(0, random.Next(0, images.Count - 1))
                 .Select(i => new AlbumImage() { AlbumId = a.Id, ImageId = images.ElementAt(i).Id })).ToList();

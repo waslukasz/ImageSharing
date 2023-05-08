@@ -18,11 +18,15 @@ namespace Infrastructure.Database
 		public DbSet<Post> Posts { get; set; }	
 		public DbSet<Reaction> Reactions { get; set; }
 		public DbSet<Status> Statuses { get; set; }
-		
+		public ImageSharingDbContext(DbContextOptions options) : base(options)
+		{
+
+		}
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
-			optionsBuilder.UseSqlite("Data Source=app.db");
+			//optionsBuilder.UseSqlite("Data Source=app.db");
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
