@@ -1,4 +1,5 @@
 ﻿using Application_Core.Model;
+using Azure;
 using Infrastructure.Database.Entity;
 using Infrastructure.EF.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -15,12 +16,20 @@ public class AlbumEntityConfiguration : IEntityTypeConfiguration<Album>
         builder
             .HasOne(a => (User)a.User)
             .WithMany(u => u.Albums)
+            .OnDelete(DeleteBehavior.ClientCascade )
             .HasForeignKey("UserId")
             .IsRequired();
         builder
             .HasMany(a => a.Images)
             .WithMany(i => i.Albums)
-            .UsingEntity<AlbumImage>().ToTable("AlbumImage");
+            .UsingEntity<AlbumImage>(
+                l => l.HasOne<Image>().WithMany().HasForeignKey(i => i.ImageId),
+                r => r.HasOne<Album>().WithMany().HasForeignKey(i => i.AlbumId),
+                j => j.HasKey(albumImage => new { aid = albumImage.AlbumId, iid = albumImage.ImageId })
+                );
+
+
+
         builder.ToTable("Albums");
     }
 }

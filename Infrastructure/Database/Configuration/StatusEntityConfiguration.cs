@@ -11,7 +11,8 @@ public class StatusEntityConfiguration : IEntityTypeConfiguration<Status>
         builder.HasKey(s => s.Id);
         builder
             .HasMany(s => s.Posts)
-            .WithOne(p => p.Status);
+            .WithOne(p => p.Status)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.ToTable("Status");
     }
 }
