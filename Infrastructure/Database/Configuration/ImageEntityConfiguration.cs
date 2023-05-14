@@ -10,6 +10,7 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
     public void Configure(EntityTypeBuilder<Image> builder)
     {
         builder.HasKey(i => i.Id);
+        builder.Ignore(i => i.Stream);
         builder
             .HasOne(i => (User)i.User)
             .WithMany(u => u.Images)

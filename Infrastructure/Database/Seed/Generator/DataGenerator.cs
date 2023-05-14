@@ -9,10 +9,6 @@ namespace Infrastructure.Database.Seed.Generator;
 
 public class DataGenerator
 {
-    public static int 
-        _reactionId = 1,
-        _commentId = 1;
-
     public static Faker<User> GenerateDummyUserData()
     {
         int id = 1;
@@ -69,6 +65,7 @@ public class DataGenerator
         return new Faker<Image>()
             .RuleFor(i => i.Id, f => (f.IndexFaker)+1)
             .RuleFor(i => i.Guid, Guid.NewGuid)
+            .RuleFor(i => i.Extension, ".jpg")
             .RuleFor(i => i.Title, f => string.Join(' ', f.Lorem.Words()))
             .RuleFor(i => i.Slug, string.Empty)
             .RuleFor(i => i.UserId, user.Id);

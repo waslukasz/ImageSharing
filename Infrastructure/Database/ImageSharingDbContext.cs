@@ -1,10 +1,11 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database.Configuration;
+using Infrastructure.Database.FileManagement;
 using Infrastructure.Database.Seed.Interface;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Infrastructure.Database.Seed;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.EF.Entity;
+using Infrastructure.EventListener;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Database
@@ -18,15 +19,25 @@ namespace Infrastructure.Database
 		public DbSet<Post> Posts { get; set; }	
 		public DbSet<Reaction> Reactions { get; set; }
 		public DbSet<Status> Statuses { get; set; }
-		public ImageSharingDbContext(DbContextOptions options) : base(options)
+		
+		//do not remove - important when manipulating data from infrastructure project !
+		// public ImageSharingDbContext()
+		// {
+		// 	
+		// }
+
+		public ImageSharingDbContext(DbContextOptions options, ImageEntityEventListener listener) : base(options)
 		{
-
+			ChangeTracker.Tracked += listener.OnImageCreate;
+			ChangeTracker.StateChanged += listener.OnImageDelete;
 		}
-
+		
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
-			//optionsBuilder.UseSqlite("Data Source=app.db");
+			optionsBuilder.UseSqlServer(
+				"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)

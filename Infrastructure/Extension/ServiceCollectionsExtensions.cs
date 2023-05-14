@@ -16,10 +16,9 @@ namespace Infrastructure.Extension
 	{
 		public static void AddInfrastructures(this IServiceCollection services, IConfiguration Configuration)
 		{
-
-			services.AddDbContext<ImageSharingDbContext>(options => options.UseSqlServer(
-				   Configuration.GetConnectionString("DefaultConnection")));
-			//TODO Identity
+			services.AddDbContext<ImageSharingDbContext>(options =>
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+			);
 		}
 
 	}

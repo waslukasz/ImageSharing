@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Application_Core.Model;
+﻿using Application_Core.Model;
 using Application_Core.Model.Interface;
 using Bogus;
 using Infrastructure.Database.Entity;
@@ -12,7 +11,7 @@ namespace Infrastructure.Database.Seed;
 
 public class Seed : ISeed
 {
-    public ICollection<Post> AssignImagesToPosts(ICollection<Post> posts, ICollection<Image> images)
+    private ICollection<Post> AssignImagesToPosts(ICollection<Post> posts, ICollection<Image> images)
     {
         if (posts.Count != images.Count)
             throw new ArgumentException();
@@ -23,7 +22,7 @@ public class Seed : ISeed
         }).ToList() ;
     }
 
-    public ICollection<AlbumImage> PopulateAlbumImagesJoinTable(ICollection<Album> albums, ICollection<Image> images)
+    private ICollection<AlbumImage> PopulateAlbumImagesJoinTable(ICollection<Album> albums, ICollection<Image> images)
     {
         Random random = new Random();
 
@@ -61,8 +60,8 @@ public class Seed : ISeed
         Faker.GlobalUniqueIndex = 0; // IMPORTANT !
         ICollection<Comment> comments = posts.SelectMany(p => DataGenerator.GenerateCommentData(iUsers, p).Generate(10)).ToList();
 
-        ICollection<Post> postsWithImages = AssignImagesToPosts(posts, images);
-        ICollection<AlbumImage> albumImagesJoinTable = PopulateAlbumImagesJoinTable(albums, images);
+        ICollection<Post> postsWithImages = this.AssignImagesToPosts(posts, images);
+        ICollection<AlbumImage> albumImagesJoinTable = this.PopulateAlbumImagesJoinTable(albums, images);
 
         builder.Entity<Status>().HasData(status);
         builder.Entity<User>().HasData(users);

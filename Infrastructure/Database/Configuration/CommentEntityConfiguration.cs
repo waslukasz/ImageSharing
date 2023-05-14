@@ -17,7 +17,7 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<Comment>
         builder
             .HasOne(c => c.Post)
             .WithMany(p => p.Comments)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
         builder.ToTable("Comments");
     }
 

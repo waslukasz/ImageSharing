@@ -1,11 +1,15 @@
 using System.Text;
 using Infrastructure.Database;
+using Infrastructure.Database.FileManagement;
+using Infrastructure.EventListener;
 using Infrastructure.Extension;
+using Infrastructure.Service;
+using Infrastructure.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +43,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     }
 );
 
+builder.Services.AddScoped<ImageEntityEventListener>();
+builder.Services.AddScoped<FileManager>();
+builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<UniqueFileNameAssigner>();
+builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);
 
 var app = builder.Build();

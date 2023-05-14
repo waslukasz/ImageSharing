@@ -22,6 +22,7 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
         builder
             .HasMany(p => p.Comments)
             .WithOne(c => c.Post)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasForeignKey(c => c.PostId);
         builder
             .HasMany(p => p.Reactions)
