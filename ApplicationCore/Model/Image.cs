@@ -22,7 +22,7 @@ public class Image : IUidIdentity<int>
 
     public int UserId { get; set; }
     
-    public Stream Stream { get; set; }
+    public Stream? Stream { get; set; }
 
     public Image()
     {

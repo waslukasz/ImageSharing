@@ -13,55 +13,62 @@ public class ImageEntityEventListener
     {
         this._fileManager = fileManager;
     }
-    public void OnImageDelete(object? sender, EntityStateChangedEventArgs entityStateChangedEventArgs)
+    public void OnImageDelete(object? sender, EntityEntryEventArgs args)
     {
-        if(!IsInstanceOfImage(entityStateChangedEventArgs.Entry.Entity))
+        if(args.Entry.Entity is not Image entity)
             return;
 
-        Image entity = (Image)entityStateChangedEventArgs.Entry.Entity;
-            
-        if (entityStateChangedEventArgs.Entry.State == EntityState.Deleted)
-        {
-            bool result = this._fileManager.DeleteFile(entity.GetStoragePath()).Result;
-
-            Console.WriteLine("-------------------------------------------------");
-            if(result == true)
-                Console.WriteLine($"Deleting image - {entity.Title} - {entity.Guid} ");
-            else
-                Console.WriteLine($"An error occured while deleting image {entity.Title}");
-            Console.WriteLine("-------------------------------------------------");
-        }
-    }
-
-    public void OnImageCreate(object? sender, EntityTrackedEventArgs entityTrackedEventArgs)
-    {
-        if(!IsInstanceOfImage(entityTrackedEventArgs.Entry.Entity))
+        if (args.Entry.State != EntityState.Deleted)
             return;
         
-        Image entity = (Image)entityTrackedEventArgs.Entry.Entity;
+        bool result = this._fileManager.DeleteFile(entity.GetStoragePath()).Result;
+
+        Console.WriteLine("-------------------------------------------------");
+        if(result == true)
+            Console.WriteLine($"Deleting image - {entity.Title} - {entity.Guid} ");
+        else
+            Console.WriteLine($"An error occured while deleting image {entity.Title}");
+        Console.WriteLine("-------------------------------------------------");
+    }
+
+    public void OnImageCreate(object? sender, EntityEntryEventArgs args)
+    {
+        if(args.Entry.Entity is not Image entity)
+            return;
+
+        if (args.Entry.State != EntityState.Added)
+            return;
         
-        if (entityTrackedEventArgs.Entry.State == EntityState.Added)
-        {
-            
-            bool result = this._fileManager.UploadFile(entity.GetStoragePath(),entity.Stream).Result;
+        bool result = this._fileManager.UploadFile(entity.GetStoragePath(),entity.Stream).Result;
 
-            Console.WriteLine("-------------------------------------------------");
-            if(result == true)
-                Console.WriteLine($"File with name - {entity.Title} - successfully uploaded !");
-            else
-                Console.WriteLine($"An error occured while uploading image {entity.Title} ");
-            Console.WriteLine("-------------------------------------------------");
-        }
+        Console.WriteLine("-------------------------------------------------");
+        if(result == true)
+            Console.WriteLine($"File with name - {entity.Title} - successfully uploaded !");
+        else
+            Console.WriteLine($"An error occured while uploading image {entity.Title} ");
+        Console.WriteLine("-------------------------------------------------");
+        
     }
 
-    public void OnImageUpdate(object? sender, EntityStateChangedEventArgs entityStateChangedEventArgs)
+    public void OnImageUpdate(object? sender, EntityEntryEventArgs args)
     {
-        throw new NotImplementedException();
-    }
+        if(args.Entry.Entity is not Image entity)
+            return;
 
-    private bool IsInstanceOfImage(object entity)
-    {
-        return entity is Image;
+        if (args.Entry.State != EntityState.Modified)
+            return;
+
+        Image imageBeforeModification = (Image)args.Entry.OriginalValues.ToObject();
+
+        if(entity.Stream is null)
+            return;
+
+        this._fileManager.DeleteFile(imageBeforeModification.GetStoragePath()).Wait();
+        this._fileManager.UploadFile(entity.GetStoragePath(), entity.Stream).Wait();
+        
+        Console.WriteLine("-------------------------------------------------");
+        Console.WriteLine($"File with name - {entity.Title} - successfully updated !");
+        Console.WriteLine("-------------------------------------------------");
     }
     
 }

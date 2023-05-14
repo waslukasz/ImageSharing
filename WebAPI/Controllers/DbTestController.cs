@@ -1,11 +1,8 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database;
 using Infrastructure.Service;
-using LiteX.Storage.Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Mapper;
 using WebAPI.Request;
 
@@ -34,6 +31,25 @@ public class DbTestController : ControllerBase
     public async Task<IActionResult> UploadImage([FromForm] UploadImageRequest request)
     {
         await _imageService.CreateImage(ImageMapper.FromRequestToFileDto(request));
+        return Ok();
+    }
+
+    [HttpPost("images/update")]
+    public async Task<IActionResult> UpdateImage([FromForm] UpdateImageRequest request)
+    {
+        Image? entity = this._context.Images.Where(i => i.Guid == request.Id).Include(i => i.Post).FirstOrDefault();
+        if (entity is null)
+            return NotFound();
+
+        // IMPORTANT !
+        // This line makes sure the entity state always changes to 'MODIFIED',
+        // so event listener can catch this and update file correctly.
+        entity.Guid = Guid.NewGuid();
+        
+        entity.Stream = request.File.OpenReadStream();
+        entity.Title = request.Title;
+
+        await this._context.SaveChangesAsync();
         return Ok();
     }
 

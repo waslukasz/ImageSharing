@@ -30,6 +30,7 @@ namespace Infrastructure.Database
 		{
 			ChangeTracker.Tracked += listener.OnImageCreate;
 			ChangeTracker.StateChanged += listener.OnImageDelete;
+			ChangeTracker.StateChanged += listener.OnImageUpdate;
 		}
 		
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
