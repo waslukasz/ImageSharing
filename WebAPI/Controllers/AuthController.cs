@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Configuration;
-using WebAPI.Dto;
 using WebAPI.Managers;
 using WebAPI.Managers.Interfaces;
+using WebAPI.Request;
 
 namespace WebAPI.Controllers
 {
@@ -30,15 +30,15 @@ namespace WebAPI.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody] LoginUserDto dto)
+        public async Task<IActionResult> Authenticate([FromBody] LoginUserRequest request)
         {
-            return Ok(await _authManager.Authenticate(dto));
+            return Ok(await _authManager.Authenticate(request));
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterUserDto dto)
+        public async Task<IActionResult> Register([FromForm] RegisterUserRequest request)
         {
-            return await _authManager.RegisterUser(dto) ? NoContent() : BadRequest();
+            return await _authManager.RegisterUser(request) ? NoContent() : BadRequest();
         }
     }
 }

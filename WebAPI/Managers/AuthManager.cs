@@ -8,10 +8,9 @@ using Infrastructure.EF.Entity;
 using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using WebAPI.Configuration;
-using WebAPI.Dto;
 using WebAPI.Managers.Interfaces;
+using WebAPI.Request;
 
 namespace WebAPI.Managers;
 
@@ -31,7 +30,7 @@ public class AuthManager : IAuthManager
         _mapper = mapper;
     }
 
-    public async Task<string> Authenticate(LoginUserDto user)
+    public async Task<string> Authenticate(LoginUserRequest user)
     {
         var logged = await _userManager.FindByNameAsync(user.Username);
         if (await _userManager.CheckPasswordAsync(logged, user.Password)) return CreateToken(logged);
@@ -39,16 +38,21 @@ public class AuthManager : IAuthManager
         throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
     }
 
-    public async Task<bool> RegisterUser(RegisterUserDto dto)
+    Task<bool> IAuthManager.RegisterUser(RegisterUserRequest request)
     {
-        var user = _mapper.Map<UserEntity>(dto);
-        if (await _userManager.FindByEmailAsync(dto.Email) is not null)
+        return RegisterUser(request);
+    }
+
+    public async Task<bool> RegisterUser(RegisterUserRequest request)
+    {
+        var user = _mapper.Map<UserEntity>(request);
+        if (await _userManager.FindByEmailAsync(request.Email) is not null)
             throw new BadRequestException("Email already in use.", HttpStatusCode.BadRequest);
         
-        if (await _userManager.FindByNameAsync(dto.UserName) is not null)
+        if (await _userManager.FindByNameAsync(request.UserName) is not null)
             throw new BadRequestException("Username already in use.", HttpStatusCode.BadRequest);
         
-        var result = await _userManager.CreateAsync(user, dto.Password);
+        var result = await _userManager.CreateAsync(user, request.Password);
         await _userManager.AddToRoleAsync(user, "User");
         return result.Succeeded;
     }
@@ -68,4 +72,5 @@ public class AuthManager : IAuthManager
             .Issuer(_jwtSettings.Issuer)
             .Encode();
     }
+    
 }

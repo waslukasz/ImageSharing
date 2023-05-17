@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebAPI.Dto;
+namespace WebAPI.Request;
 
-public class RegisterUserDto
+public class RegisterUserRequest
 {
     [EmailAddress]
     [Required]

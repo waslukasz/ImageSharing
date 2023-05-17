@@ -1,11 +1,11 @@
 ﻿using Infrastructure.EF.Entity;
-using WebAPI.Dto;
+using WebAPI.Request;
 
 namespace WebAPI.Managers.Interfaces;
 
 public interface IAuthManager
 {
     public string CreateToken(UserEntity user);
-    public Task<string> Authenticate(LoginUserDto user);
-    public Task<bool> RegisterUser(RegisterUserDto dto);
+    public Task<string> Authenticate(LoginUserRequest user);
+    public Task<bool> RegisterUser(RegisterUserRequest request);
 }
