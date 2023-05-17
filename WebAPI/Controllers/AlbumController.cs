@@ -22,8 +22,7 @@ public class AlbumController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery(Name = "page")] int page, [FromQuery(Name = "itemNumber")] int itemNumber = 5)
     {
         PaginatorResult<Album> paginator = await _albumManager.GetAllPaginated(itemNumber, page);
-        PaginatorResult<AlbumResponse> response =
-            PaginatorResult<Album>.MapToOtherType(paginator, AlbumMapper.FromAlbumToAlbumResponse);
+        PaginatorResult<AlbumResponse> response = paginator.MapToOtherType(AlbumMapper.FromAlbumToAlbumResponse);
 
         return Ok(response);
     }

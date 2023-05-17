@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.EF.Entity;
 using Infrastructure.EventListener;
-using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Database
 {
 
-	public class ImageSharingDbContext : IdentityDbContext<User,IdentityRole<int>,int>
+	public class ImageSharingDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
 	{
 		public DbSet<Album> Albums { get; set; }
 		public DbSet<Comment> Comments { get; set; }
@@ -21,10 +20,10 @@ namespace Infrastructure.Database
 		public DbSet<Status> Statuses { get; set; }
 		
 		// uncomment when manipulating data from infrastructure project !
-		// public ImageSharingDbContext()
-		// {
-		// 	
-		// }
+		public ImageSharingDbContext()
+		{
+		 	
+		}
 
 		public ImageSharingDbContext(DbContextOptions options, ImageEntityEventListener listener) : base(options)
 		{
@@ -36,9 +35,6 @@ namespace Infrastructure.Database
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
-			//optionsBuilder.UseSqlServer(
-			//	"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
-			//);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)

@@ -9,11 +9,11 @@ namespace Infrastructure.Database.Seed.Generator;
 
 public class DataGenerator
 {
-    public static Faker<User> GenerateDummyUserData()
+    public static Faker<UserEntity> GenerateDummyUserData()
     {
         int id = 1;
         
-        return new Faker<User>()
+        return new Faker<UserEntity>()
             .RuleFor(u => u.Id, f => (f.IndexFaker)+1)
             .RuleFor(u => u.Guid, Guid.NewGuid)
             .RuleFor(u => u.UserName, f => f.Name.FirstName())

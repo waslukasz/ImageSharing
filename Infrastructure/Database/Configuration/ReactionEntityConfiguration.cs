@@ -11,7 +11,7 @@ public class ReactionEntityConfiguration : IEntityTypeConfiguration<Reaction>
     {
         builder.HasKey(r => r.Id);
         builder
-            .HasOne(r => (User)r.User)
+            .HasOne(r => (UserEntity)r.User)
             .WithMany(u => u.Reactions);
         builder
             .HasOne(r => r.Post)
