@@ -122,4 +122,25 @@ public static class Configure
             }
         }
     }
+
+    public static async void AddRoles(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var roleManager = scope.ServiceProvider.GetService<RoleManager<RoleEntity>>();
+            if (roleManager.FindByNameAsync("admin").Result is null)
+            {
+                var role = new RoleEntity();
+                role.Name = "Admin";
+                await roleManager.CreateAsync(role);
+            }
+
+            if (roleManager.FindByNameAsync("user").Result is null)
+            {
+                var role = new RoleEntity();
+                role.Name = "User";
+                await roleManager.CreateAsync(role);
+            }
+        }
+    }
 }

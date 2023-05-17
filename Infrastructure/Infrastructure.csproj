@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="Bogus" Version="34.0.2" />
+      <PackageReference Include="JWT" Version="10.0.2" />
       <PackageReference Include="LiteX.Storage.Local" Version="9.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
@@ -23,6 +24,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Manager\Interface\" />
     </ItemGroup>
 
 </Project>
