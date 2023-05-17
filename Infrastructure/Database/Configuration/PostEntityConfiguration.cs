@@ -28,7 +28,7 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .HasMany(p => p.Reactions)
             .WithOne(r => r.Post);
         builder
-            .HasOne(p => (User)p.User)
+            .HasOne(p => (UserEntity)p.User)
             .WithMany(u => u.Posts)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder.Property(c => c.Tags).HasConversion<TagConverter>();

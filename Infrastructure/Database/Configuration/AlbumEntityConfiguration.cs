@@ -14,7 +14,7 @@ public class AlbumEntityConfiguration : IEntityTypeConfiguration<Album>
         builder.HasKey(a => a.Id);
         builder.Property<int>("UserId");
         builder
-            .HasOne(a => (User)a.User)
+            .HasOne(a => (UserEntity)a.User)
             .WithMany(u => u.Albums)
             .OnDelete(DeleteBehavior.ClientCascade )
             .HasForeignKey("UserId")
