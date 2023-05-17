@@ -20,10 +20,10 @@ namespace Infrastructure.Database
 		public DbSet<Status> Statuses { get; set; }
 		
 		// uncomment when manipulating data from infrastructure project !
-		// public ImageSharingDbContext()
-		// {
-		// 	
-		// }
+		public ImageSharingDbContext()
+		{
+		 	
+		}
 
 		public ImageSharingDbContext(DbContextOptions options, ImageEntityEventListener listener) : base(options)
 		{

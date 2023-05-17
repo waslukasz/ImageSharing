@@ -117,7 +117,7 @@ public static class Configure
             {
                 UserEntity user = new UserEntity() {Email = "admin@wsei.edu.pl", UserName = "admin"};
 
-                var saved = await userManager?.CreateAsync(user, "admin1!");
+                var saved = await userManager?.CreateAsync(user, "Administrator1!");
                 userManager.AddToRoleAsync(user, "USER");
             }
         }
