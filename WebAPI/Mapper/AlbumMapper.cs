@@ -11,7 +11,7 @@ public static class AlbumMapper
         return new AlbumResponse()
         {
             Id = album.Guid,
-            Titile = album.Title,
+            Title = album.Title,
             Description = album.Description
         };
     }

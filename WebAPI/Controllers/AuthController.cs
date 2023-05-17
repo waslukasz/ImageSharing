@@ -8,55 +8,37 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Configuration;
 using WebAPI.Dto;
+using WebAPI.Managers;
+using WebAPI.Managers.Interfaces;
 
 namespace WebAPI.Controllers
 {
     [ApiController, Route("/api/auth")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<UserEntity> _manager;
-        private readonly JwtSettings _jwtSettings;
+        private readonly UserManager<UserEntity> _userManager;
         private readonly ILogger _logger;
+        private readonly IAuthManager _authManager;
 
         public AuthenticationController(UserManager<UserEntity> manager, ILogger<AuthenticationController> logger,
-            IConfiguration configuration, JwtSettings jwtSettings)
+            IConfiguration configuration, IAuthManager authManager)
         {
-            _manager = manager;
+            _userManager = manager;
             _logger = logger;
-            _jwtSettings = jwtSettings;
+            _authManager = authManager;
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody] LoginUserDto user)
+        public async Task<IActionResult> Authenticate([FromBody] LoginUserDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return Unauthorized();
-            }
-
-            var logged = await _manager.FindByNameAsync(user.Username);
-            if (await _manager.CheckPasswordAsync(logged, user.Password))
-            {
-                return Ok(new { Token = CreateToken(logged) });
-            }
-
-            return Unauthorized();
+            return Ok(await _authManager.Authenticate(dto));
         }
 
-        private string CreateToken(UserEntity user)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromForm] RegisterUserDto dto)
         {
-            return new JwtBuilder()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
-                .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
-                .AddClaim(JwtRegisteredClaimNames.Gender, "male")
-                .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
-                .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeSeconds())
-                .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())
-                .Audience(_jwtSettings.Audience)
-                .Issuer(_jwtSettings.Issuer)
-                .Encode();
+            return await _authManager.RegisterUser(dto) ? NoContent() : BadRequest();
         }
     }
 }

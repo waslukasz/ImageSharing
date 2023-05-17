@@ -1,5 +1,7 @@
+using System.Reflection;
 using System.Text;
 using Infrastructure.Database.FileManagement;
+using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EventListener;
@@ -12,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
+using WebAPI.Managers;
+using WebAPI.Managers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,12 +77,14 @@ builder.Services.AddScoped<AlbumManager>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // Services
+builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
 builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
@@ -96,5 +102,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.AddUsers();
-
+app.AddRoles();
 app.Run();
