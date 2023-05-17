@@ -36,9 +36,9 @@ namespace Infrastructure.Database
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
-			optionsBuilder.UseSqlServer(
-				"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
-			);
+			//optionsBuilder.UseSqlServer(
+			//	"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			//);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
