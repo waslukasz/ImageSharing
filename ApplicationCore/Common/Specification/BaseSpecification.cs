@@ -4,30 +4,34 @@ namespace Application_Core.Common.Specification;
 
 public class BaseSpecification<T>: ISpecification<T>
 {
-    public BaseSpecification(Expression<Func<T, bool>> criteria)
-    {
-        Criteria = criteria;
-    }
+    public List<Expression<Func<T, bool>>> Criteria { get; }
+    public List<Expression<Func<T, object>>> Includes { get; }
+    public Expression<Func<T, object>>? OrderBy { get; private set; }
+    public Expression<Func<T, object>>? OrderByDescending { get; private set; }
 
     public BaseSpecification()
     {
-        
+        Criteria = new List<Expression<Func<T, bool>>>();
+        Includes = new List<Expression<Func<T, object>>>();
     }
-    
-    public Expression<Func<T, bool>> Criteria { get; }
-    public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
-    public Expression<Func<T, object>> OrderBy { get; private set; }
-    public Expression<Func<T, object>> OrderByDescending { get; private set; }
 
-    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    public ISpecification<T> AddCriteria(Expression<Func<T, bool>> criteriaExpression)
+    {
+        Criteria.Add(criteriaExpression);
+        return this;
+    }
+
+    public ISpecification<T> AddInclude(Expression<Func<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
+        return this;
     }
-    protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
+    
+    public void SetOrderBy(Expression<Func<T, object>> orderByExpression)
     {
         OrderBy = orderByExpression;
     }
-    protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
+    public void SetOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
     {
         OrderByDescending = orderByDescExpression;
     }

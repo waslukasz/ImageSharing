@@ -7,6 +7,7 @@ public class HttpResponseException : System.Exception
     protected HttpResponseException(string message, HttpStatusCode statusCode): base(message)
     { 
         this._statusCode = statusCode;
+        
     }
     public HttpStatusCode GetStatusCode() => _statusCode;
 }

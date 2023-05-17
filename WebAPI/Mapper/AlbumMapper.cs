@@ -15,15 +15,4 @@ public static class AlbumMapper
             Description = album.Description
         };
     }
-
-    public static PaginatorResult<AlbumResponse> FromPaginatorResultToAlbumResponse(PaginatorResult<Album> paginatorResult)
-    {
-        return new PaginatorResult<AlbumResponse>(
-            paginatorResult.TotalItems,
-            paginatorResult.ItemsOnPage,
-            paginatorResult.Items.Select(c => FromAlbumToAlbumResponse(c)).ToList(),
-            paginatorResult.CurrentPage,
-            paginatorResult.TotalPages
-        );
-    }
 }

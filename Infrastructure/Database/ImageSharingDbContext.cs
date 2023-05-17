@@ -20,10 +20,10 @@ namespace Infrastructure.Database
 		public DbSet<Status> Statuses { get; set; }
 		
 		// uncomment when manipulating data from infrastructure project !
-		public ImageSharingDbContext()
-		{
-		 	
-		}
+		//public ImageSharingDbContext()
+		//{
+		// 	
+		//}
 
 		public ImageSharingDbContext(DbContextOptions options, ImageEntityEventListener listener) : base(options)
 		{
@@ -35,6 +35,14 @@ namespace Infrastructure.Database
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
+			
+			// MOJE BAGNO !!!111 proszę nie ruszać a jak już to odkomentować. Dziękuje ~ Michaś
+			optionsBuilder.UseSqlServer(
+				"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			);
+			// optionsBuilder.UseSqlServer(
+			// 	"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			// );
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
