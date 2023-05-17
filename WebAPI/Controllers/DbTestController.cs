@@ -32,7 +32,7 @@ public class DbTestController : ControllerBase
     [HttpPost("images/upload")]
     public async Task<IActionResult> UploadImage([FromForm] UploadImageRequest request)
     {
-        User user = await GetFirstUser();
+        UserEntity user = await GetFirstUser();
         
         await _imageManager.CreateImage(ImageMapper.FromRequestToFileDto(request), user);
         
@@ -42,7 +42,7 @@ public class DbTestController : ControllerBase
     [HttpPost("images/update")]
     public async Task<IActionResult> UpdateImage([FromForm] UpdateImageRequest request)
     {
-        User user = await GetFirstUser();
+        UserEntity user = await GetFirstUser();
 
         await _imageManager.UpdateImage(ImageMapper.FromRequestToImageDto(request), user);
         
@@ -52,7 +52,7 @@ public class DbTestController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> DeleteImage(UidRequest request)
     {
-        User user = await GetFirstUser();
+        UserEntity user = await GetFirstUser();
 
         await _imageManager.DeleteImage(request.Id, user);
         
@@ -60,7 +60,7 @@ public class DbTestController : ControllerBase
     }
 
     // FOR TEST PURPOSE ONLY !
-    private async Task<User> GetFirstUser()
+    private async Task<UserEntity> GetFirstUser()
     {
         return await _context.Users.FindAsync(1) ?? throw new NotFoundException();
     }

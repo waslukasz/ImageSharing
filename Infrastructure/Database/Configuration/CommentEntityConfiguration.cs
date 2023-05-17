@@ -11,7 +11,7 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<Comment>
     {
         builder.HasKey(c => c.Id);
         builder
-            .HasOne(c => (User)c.User)
+            .HasOne(c => (UserEntity)c.User)
             .WithMany(u => u.Comments)
           .OnDelete(DeleteBehavior.ClientCascade);
         builder

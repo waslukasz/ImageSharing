@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.EF.Entity;
+using Microsoft.AspNet.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Seed.Interface;
 
