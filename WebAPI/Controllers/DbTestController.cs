@@ -1,6 +1,8 @@
-﻿using Application_Core.Model;
+﻿using Application_Core.Exception;
+using Application_Core.Model;
 using Infrastructure.Database;
-using Infrastructure.Service;
+using Infrastructure.EF.Entity;
+using Infrastructure.Manager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Mapper;
@@ -13,12 +15,12 @@ namespace WebAPI.Controllers;
 public class DbTestController : ControllerBase
 {
     private readonly ImageSharingDbContext _context;
-    private readonly ImageService _imageService;
+    private readonly ImageManager _imageManager;
     
-    public DbTestController(ImageSharingDbContext context, ImageService imageService)
+    public DbTestController(ImageSharingDbContext context, ImageManager imageManager)
     {
         _context = context;
-        _imageService = imageService;
+        _imageManager = imageManager;
     }
     
     [HttpGet("images")]
@@ -30,41 +32,36 @@ public class DbTestController : ControllerBase
     [HttpPost("images/upload")]
     public async Task<IActionResult> UploadImage([FromForm] UploadImageRequest request)
     {
-        await _imageService.CreateImage(ImageMapper.FromRequestToFileDto(request));
+        User user = await GetFirstUser();
+        
+        await _imageManager.CreateImage(ImageMapper.FromRequestToFileDto(request), user);
+        
         return Ok();
     }
 
     [HttpPost("images/update")]
     public async Task<IActionResult> UpdateImage([FromForm] UpdateImageRequest request)
     {
-        Image? entity = this._context.Images.Where(i => i.Guid == request.Id).Include(i => i.Post).FirstOrDefault();
-        if (entity is null)
-            return NotFound();
+        User user = await GetFirstUser();
 
-        // IMPORTANT !
-        // This line makes sure the entity state always changes to 'MODIFIED',
-        // so event listener can catch this and update file correctly.
-        entity.Guid = Guid.NewGuid();
+        await _imageManager.UpdateImage(ImageMapper.FromRequestToImageDto(request), user);
         
-        entity.Stream = request.File.OpenReadStream();
-        entity.Title = request.Title;
-
-        await this._context.SaveChangesAsync();
         return Ok();
     }
 
     [HttpPost]
-    public IActionResult DeleteImage(UidRequest request)
+    public async Task<IActionResult> DeleteImage(UidRequest request)
     {
-        Image? entity = this._context.Images.Where(i => i.Guid == request.Id).Include(i => i.Post).FirstOrDefault();
-        if (entity is null)
-            return NotFound();
+        User user = await GetFirstUser();
+
+        await _imageManager.DeleteImage(request.Id, user);
         
-        if(entity.Post is not null)
-            this._context.Posts.Remove(entity.Post);
-        
-        this._context.Images.Remove(entity);
-        this._context.SaveChanges();
         return Ok();
+    }
+
+    // FOR TEST PURPOSE ONLY !
+    private async Task<User> GetFirstUser()
+    {
+        return await _context.Users.FindAsync(1) ?? throw new NotFoundException();
     }
 }

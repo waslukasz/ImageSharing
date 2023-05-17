@@ -3,14 +3,13 @@ using Microsoft.VisualBasic;
 
 namespace Infrastructure.Utility;
 
-public class UniqueFileNameAssigner
+public class UniqueFileNameAssigner : ISlugCreator
 {
     public static char FileNameSeparator = '-';
-    public string RenameFile(FileDto file)
+    public string CreateSlug(params string[] strings)
     {
-        string title = file.Title;
-        string name = file.Name;
-        string mergedFileName = title + FileNameSeparator + name;
+
+        string mergedFileName = String.Join(FileNameSeparator, strings);
 
         mergedFileName = ReplaceSpacesWithSeparator(mergedFileName);
         mergedFileName = ReplaceInvalidChars(mergedFileName);

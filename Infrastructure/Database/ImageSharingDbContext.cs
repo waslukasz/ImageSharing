@@ -20,7 +20,7 @@ namespace Infrastructure.Database
 		public DbSet<Reaction> Reactions { get; set; }
 		public DbSet<Status> Statuses { get; set; }
 		
-		//do not remove - important when manipulating data from infrastructure project !
+		// uncomment when manipulating data from infrastructure project !
 		// public ImageSharingDbContext()
 		// {
 		// 	

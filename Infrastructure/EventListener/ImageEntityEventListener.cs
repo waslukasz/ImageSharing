@@ -1,5 +1,6 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database.FileManagement;
+using Infrastructure.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -8,10 +9,12 @@ namespace Infrastructure.EventListener;
 public class ImageEntityEventListener
 {
     private readonly FileManager _fileManager;
+    private readonly UniqueFileNameAssigner _nameAssigner;
 
-    public ImageEntityEventListener(FileManager fileManager)
+    public ImageEntityEventListener(FileManager fileManager, UniqueFileNameAssigner nameAssigner)
     {
         this._fileManager = fileManager;
+        _nameAssigner = nameAssigner;
     }
     public void OnImageDelete(object? sender, EntityEntryEventArgs args)
     {

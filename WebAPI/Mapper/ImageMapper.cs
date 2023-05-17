@@ -15,4 +15,16 @@ public class ImageMapper
             Stream = request.File.OpenReadStream()
         };
     }
+
+    public static ImageDto FromRequestToImageDto(UpdateImageRequest request)
+    {
+        return new ImageDto()
+        {
+            Guid = request.Id,
+            Title = request.Title,
+            Name = request.File.FileName,
+            Stream = request.File.OpenReadStream(),
+            Length = request.File.Length
+        };
+    }
 }

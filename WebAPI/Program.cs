@@ -1,9 +1,10 @@
 using System.Text;
 using Infrastructure.Database;
 using Infrastructure.Database.FileManagement;
+using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EventListener;
 using Infrastructure.Extension;
-using Infrastructure.Service;
+using Infrastructure.Manager;
 using Infrastructure.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -43,9 +44,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     }
 );
 
+//Album section
+builder.Services.AddScoped<AlbumManager>();
+builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
+
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
-builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);
