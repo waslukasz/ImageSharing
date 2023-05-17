@@ -1,5 +1,4 @@
 using System.Text;
-using Infrastructure.Database;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EventListener;
@@ -23,31 +22,56 @@ builder.Services.AddControllers(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-    options.TokenValidationParameters = new TokenValidationParameters
+// Authentication and authorization
+builder.Services.AddSingleton<JwtSettings>();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(new JwtSettings(builder.Configuration));
+builder.Services.ConfigureCors();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    }
-);
+        Description = @"JWT Authorization header using the Bearer scheme.
+              Enter 'Bearer' and then your token in the text input below.
+              Example: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+
+            },
+            new List<string>()
+        }
+    });
+
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ImageSharing",
+    });
+});
 
 //Album section
 builder.Services.AddScoped<AlbumManager>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
+// Services
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
 builder.Services.AddScoped<ImageManager>();
@@ -70,5 +94,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.AddUsers();
 
 app.Run();

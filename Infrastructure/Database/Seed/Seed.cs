@@ -1,10 +1,10 @@
 ﻿using Application_Core.Model;
-using Application_Core.Model.Interface;
 using Bogus;
 using Infrastructure.Database.Entity;
 using Infrastructure.Database.Seed.Generator;
 using Infrastructure.Database.Seed.Interface;
 using Infrastructure.EF.Entity;
+using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Seed;
@@ -33,11 +33,11 @@ public class Seed : ISeed
 
     public void SeedData(ModelBuilder builder)
     {
-        IUser<int> user = new User()
+        Application_Core.Model.Interface.IUser<int> user = new UserEntity()
         {
             Id = 1,
             Guid = Guid.NewGuid(),
-            UserName = "TEST",
+            UserName = "admin@wsei.edu.pl",
             AccessFailedCount = 0,
             LockoutEnabled = false,
             EmailConfirmed = true,
@@ -47,8 +47,8 @@ public class Seed : ISeed
 
         int postsCount = 20;
 
-        ICollection<User> users = DataGenerator.GenerateDummyUserData().Generate(5);
-        ICollection<IUser<int>> iUsers = users.Cast<IUser<int>>().ToList();
+        ICollection<UserEntity> users = DataGenerator.GenerateDummyUserData().Generate(5);
+        ICollection<Application_Core.Model.Interface.IUser<int>> iUsers = users.Cast<Application_Core.Model.Interface.IUser<int>>().ToList();
         ICollection<Status> status = DataGenerator.GenerateStatusData().Generate(3);
         ICollection<Post> posts = DataGenerator.GeneratePostData(users.First(), status).Generate(postsCount);
         ICollection<Image> images = DataGenerator.GenerateImageData(users.First()).Generate(postsCount);
@@ -64,7 +64,7 @@ public class Seed : ISeed
         ICollection<AlbumImage> albumImagesJoinTable = this.PopulateAlbumImagesJoinTable(albums, images);
 
         builder.Entity<Status>().HasData(status);
-        builder.Entity<User>().HasData(users);
+        builder.Entity<UserEntity>().HasData(users);
         builder.Entity<Image>().HasData(images);
         builder.Entity<Post>().HasData(postsWithImages);
         builder.Entity<Album>().HasData(albums);

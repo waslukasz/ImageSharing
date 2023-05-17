@@ -24,7 +24,7 @@ public class ImageManager
         _NameAssigner = nameAssigner;
     }
 
-    public async Task CreateImage(FileDto imageDto, User user)
+    public async Task CreateImage(FileDto imageDto, UserEntity user)
     {
         Image image = imageDto.ToImage(_NameAssigner);
         image.User = user;
@@ -33,7 +33,7 @@ public class ImageManager
         _Context.SaveChanges();
     }
 
-    public async Task UpdateImage(ImageDto imageDto, User user)
+    public async Task UpdateImage(ImageDto imageDto, UserEntity user)
     {
         Image? entity = await _Context.Images.FindAsync(imageDto.Guid,user);
         if (entity is null)
@@ -50,7 +50,7 @@ public class ImageManager
 
     }
 
-    public async Task DeleteImage(Guid id, User user)
+    public async Task DeleteImage(Guid id, UserEntity user)
     {
         Image? entity = await _Context.Images.Where(i => i.User == user && i.Guid == id).FirstOrDefaultAsync();
         if (entity is null)

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.EF.Entity;
 
-public class User : IdentityUser<int>, IUser<int>
+public class UserEntity : IdentityUser<int>, IUser<int>
 {
     public Guid Guid { get; set; }
     
@@ -18,7 +18,7 @@ public class User : IdentityUser<int>, IUser<int>
     
     public ICollection<Reaction> Reactions { get; set; }
 
-    public User() : base()
+    public UserEntity() : base()
     {
         this.Albums = new List<Album>();
         this.Comments = new List<Comment>();
@@ -27,4 +27,5 @@ public class User : IdentityUser<int>, IUser<int>
         this.Reactions = new List<Reaction>();
         this.Guid = Guid.NewGuid();
     }
+
 }
