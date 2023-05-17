@@ -1,6 +1,7 @@
 using System.Text;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
+using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EventListener;
 using Infrastructure.Extension;
 using Infrastructure.Manager;

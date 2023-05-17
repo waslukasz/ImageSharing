@@ -35,9 +35,6 @@ namespace Infrastructure.Database
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.EnableSensitiveDataLogging();
-			optionsBuilder.UseSqlServer(
-				"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
-			);
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
