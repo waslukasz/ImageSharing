@@ -12,7 +12,7 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
         builder.HasKey(i => i.Id);
         builder.Ignore(i => i.Stream);
         builder
-            .HasOne(i => (User)i.User)
+            .HasOne(i => (UserEntity)i.User)
             .WithMany(u => u.Images)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
