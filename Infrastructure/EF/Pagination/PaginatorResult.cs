@@ -17,14 +17,14 @@ public record PaginatorResult<T> where T: class
         TotalPages = totalPages;
     }
     
-    public static PaginatorResult<F> MapToOtherType<F>(PaginatorResult<T> paginatorResult, Func<T,F> mapper) where F: class
+    public PaginatorResult<F> MapToOtherType<F>(Func<T,F> mapper) where F: class
     {
         return new PaginatorResult<F>(
-            paginatorResult.TotalItems,
-            paginatorResult.ItemsOnPage,
-            paginatorResult.Items.Select(c => mapper(c)).ToList(),
-            paginatorResult.CurrentPage,
-            paginatorResult.TotalPages
+            TotalItems,
+            ItemsOnPage,
+            Items.Select(c => mapper(c)).ToList(),
+            CurrentPage,
+            TotalPages
         );
     }
 
