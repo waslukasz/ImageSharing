@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Mapper;
 using WebAPI.Request;
+using WebAPI.Services;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers;
 
@@ -15,12 +17,12 @@ namespace WebAPI.Controllers;
 public class DbTestController : ControllerBase
 {
     private readonly ImageSharingDbContext _context;
-    private readonly ImageManager _imageManager;
-    
-    public DbTestController(ImageSharingDbContext context, ImageManager imageManager)
+    private readonly IImageService _imageService;
+
+    public DbTestController(ImageSharingDbContext context, IImageService imageService)
     {
         _context = context;
-        _imageManager = imageManager;
+        _imageService = imageService;
     }
     
     [HttpGet("images")]
@@ -34,7 +36,7 @@ public class DbTestController : ControllerBase
     {
         UserEntity user = await GetFirstUser();
         
-        await _imageManager.CreateImage(ImageMapper.FromRequestToFileDto(request), user);
+        await _imageService.CreateImage(ImageMapper.FromRequestToFileDto(request), user);
         
         return Ok();
     }
@@ -44,7 +46,7 @@ public class DbTestController : ControllerBase
     {
         UserEntity user = await GetFirstUser();
 
-        await _imageManager.UpdateImage(ImageMapper.FromRequestToImageDto(request), user);
+        await _imageService.UpdateImage(ImageMapper.FromRequestToImageDto(request), user);
         
         return Ok();
     }
@@ -54,7 +56,7 @@ public class DbTestController : ControllerBase
     {
         UserEntity user = await GetFirstUser();
 
-        await _imageManager.DeleteImage(request.Id, user);
+        await _imageService.DeleteImage(request.Id, user);
         
         return Ok();
     }

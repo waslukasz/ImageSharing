@@ -1,8 +1,8 @@
 ﻿using WebAPI.Request;
 
-namespace WebAPI.Managers.Interfaces;
+namespace WebAPI.Services.Interfaces;
 
-public interface IAccountManager
+public interface IAccountService
 {
     Task<bool> Register(RegisterAccountRequest request);
     Task<bool> Delete(DeleteAccountRequest request);

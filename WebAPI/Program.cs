@@ -8,8 +8,8 @@ using Infrastructure.Utility;
 using Microsoft.OpenApi.Models;
 using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
-using WebAPI.Managers;
-using WebAPI.Managers.Interfaces;
+using WebAPI.Services;
+using WebAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,15 +67,15 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 //Album section
-builder.Services.AddScoped<AlbumManager>();
+builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // Services
-builder.Services.AddScoped<IAccountManager, AccountManager>();
-builder.Services.AddScoped<IAuthManager, AuthManager>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
-builder.Services.AddScoped<ImageManager>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);
