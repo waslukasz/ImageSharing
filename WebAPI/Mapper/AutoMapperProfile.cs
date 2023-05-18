@@ -15,5 +15,8 @@ public class AutoMapperProfile : Profile
             .ReverseMap();
         CreateMap<RegisterAccountRequest, UserEntity>()
             .ForMember(r => r.UserName, e => e.MapFrom(r => r.Username));
+
+        CreateMap<AddReactionRequest, Reaction>()
+            .ForMember(r=>r.PostId, e=>e.Ignore());
     }
 }
