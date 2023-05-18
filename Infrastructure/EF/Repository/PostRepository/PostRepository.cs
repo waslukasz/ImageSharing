@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application_Core.Common.Specification;
+using Infrastructure.EF.Evaluator;
 
 namespace Infrastructure.EF.Repository.PostRepository
 {
@@ -30,14 +32,25 @@ namespace Infrastructure.EF.Repository.PostRepository
             await _context.SaveChangesAsync();
         }
 
-        public IQueryable<Post> GetAllAsync()
-        => _context.Posts.Include(x=>x.Status);
-
         public async Task<Post?> GetByGuidAsync(Guid id)
-        =>await _context.Posts.Where(p=>p.Guid==id).FirstOrDefaultAsync();
+        {
+            return await _context.Posts.Where(p=>p.Guid==id).FirstOrDefaultAsync();
+        }
+        
+        public IQueryable<Post> GetByCriteriaQuery(ISpecification<Post> criteria)
+        {
+            return SpecificationToQueryEvaluator<Post>.ApplySpecification(_context.Posts,criteria);
+        }
 
-        public IQueryable<Post> GetByUserIdAsync(int id)
-        => _context.Posts.Where(x=>x.UserId==id).Include(x=>x.Status);
+        public async Task<IEnumerable<Post>> GetByCriteriaAsync(ISpecification<Post> criteria)
+        {
+            return await GetByCriteriaQuery(criteria).ToListAsync();
+        }
+
+        public IQueryable<Post> GetAllQuery()
+        {
+            return _context.Posts;
+        }
 
         public async Task UpdateAsync(Post post)
         {

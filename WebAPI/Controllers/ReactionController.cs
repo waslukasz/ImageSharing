@@ -1,16 +1,15 @@
 ﻿using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
 using Infrastructure.Manager;
-using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNet.Identity;
+using WebAPI.Managers;
+
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ReactionController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
@@ -21,16 +20,17 @@ namespace WebAPI.Controllers
             _userManager = userManager;
             _reactionManager = reactionManager;
         }
-        //TODO: michał zrób plox xoxo
-      /*  [HttpPost]
+        
+        [HttpPost("add")]
         public async Task<IActionResult> AddReaction([FromBody] AddReactionRequest request)
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
-            
-            if(user is null) return Unauthorized();
+             
+            if(user is null) 
+                return Unauthorized();
 
             await _reactionManager.AddReaction(request, user);
             return Ok();
-        }*/
+        }
     }
 }

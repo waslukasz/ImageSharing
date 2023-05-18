@@ -1,14 +1,13 @@
 ﻿using Application_Core.Common.Specification;
 using Application_Core.Exception;
 using Application_Core.Model;
-using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.Manager.Param;
 using Infrastructure.Utility.Pagination;
 
-namespace Infrastructure.Manager;
+namespace WebAPI.Managers;
 
-public class AlbumManager
+public class AlbumManager : IAlbumManager
 {
     private readonly IAlbumRepository _albumRepository;
 
@@ -22,9 +21,15 @@ public class AlbumManager
 
     public async Task<PaginatorResult<Album>> GetAllPaginated(int maxItems, int page)
     {
+        BaseSpecification<Album> specification = new BaseSpecification<Album>();
+
+        specification.AddInclude(a => a.Images);
+        
         PaginatorResult<Album> result = await _paginator
             .SetItemNumberPerPage(maxItems)
-            .Paginate(_albumRepository.GetAllQuery(), page);
+            .Paginate(_albumRepository.GetAlbumsByCriteriaQuery(
+                specification
+            ), page);
 
         if (result.Items.Count() == 0)
             throw new AlbumNotFoundException();
@@ -36,6 +41,8 @@ public class AlbumManager
     {
         BaseSpecification<Album> specification = new BaseSpecification<Album>();
 
+        specification.AddInclude(a => a.Images);
+        
         if (!string.IsNullOrWhiteSpace(criteria.AlbumTitle))
             specification.AddCriteria(c => c.Title.Contains(criteria.AlbumTitle));
 

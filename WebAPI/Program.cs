@@ -3,8 +3,8 @@ using Application_Core.Model;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EF.Repository.ReactionCommentRepository;
+using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.EventListener;
-using Infrastructure.Extension;
 using Infrastructure.Manager;
 using Infrastructure.Utility;
 using Microsoft.OpenApi.Models;
@@ -68,20 +68,25 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-//Album section
+// User section
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Album section
 builder.Services.AddScoped<AlbumManager>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
-//Reaction section
+// Reaction section
 builder.Services.AddScoped<ReactionManager>();
 builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+
+// Image section
+builder.Services.AddScoped<ImageManager>();
 
 // Services
 builder.Services.AddScoped<IAccountManager, AccountManager>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
-builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);

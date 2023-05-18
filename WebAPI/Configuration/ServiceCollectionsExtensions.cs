@@ -1,11 +1,9 @@
 ﻿using Infrastructure.Database;
 using Infrastructure.EF.Repository.PostRepository;
-using Infrastructure.Manager;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using WebAPI.Managers;
 
-namespace Infrastructure.Extension
+namespace WebAPI.Configuration
 {
 	public static class ServiceCollectionsExtensions
 	{

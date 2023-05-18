@@ -1,19 +1,15 @@
-﻿using Application_Core.Exception;
+﻿using Application_Core.Common.Specification;
+using Application_Core.Exception;
 using Application_Core.Model;
 using AutoMapper;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.ReactionCommentRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WebAPI.Request;
 
-namespace Infrastructure.Manager
+namespace WebAPI.Managers
 {
-    public class ReactionManager
+    public class ReactionManager : IReactionManager
     {
         private readonly IReactionRepository _reactionRepository;
         private readonly IPostRepository _postRepository;
@@ -28,19 +24,29 @@ namespace Infrastructure.Manager
 
         public async Task AddReaction(AddReactionRequest request, UserEntity user)
         {
-            Post? post = await _postRepository.GetByGuidAsync(request.PostId);
+            Post post = await _postRepository.GetByGuidAsync(request.Id) ?? throw new PostNotFoundException();
 
-            if (post is null) throw new PostNotFoundException();
+            BaseSpecification<Reaction> criteria = new BaseSpecification<Reaction>();
+            
+            criteria.AddCriteria(r => r.Post == post);
+            criteria.AddCriteria(r => r.User == user);
 
-            Guid postGuid= request.PostId;
+            Reaction? reaction = await _reactionRepository.FindByCriteria(criteria);
 
-            Reaction reaction = _mapper.Map<Reaction>(request);
-            reaction.PostId = _postRepository.GetByGuidAsync(postGuid).Id;
-
-            reaction.User = user;
-            //reaction.Post = await _postRepository.GetByGuidAsync(postGuid);
-
-            await _reactionRepository.AddReactionAsync(reaction);
+            if (reaction is null)
+            {
+                await _reactionRepository.AddReactionAsync(
+                    new Reaction() 
+                    {
+                        Post = post,
+                        User = user 
+                    }
+                );
+            }
+            else
+            {
+                await _reactionRepository.DeleteAsync(reaction);
+            }
         }
     }
 }

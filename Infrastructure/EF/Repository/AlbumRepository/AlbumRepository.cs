@@ -20,12 +20,9 @@ public class AlbumRepository : IAlbumRepository
         return await _context.Albums.FindAsync(id);
     }
 
-    public async Task<List<Album>> GetAlbumsByCriteria(ISpecification<Album> criteria)
+    public async Task<IEnumerable<Album>> GetAlbumsByCriteria(ISpecification<Album> criteria)
     {
-        return await SpecificationToQueryEvaluator<Album>.ApplySpecification(
-            _context.Albums,
-            criteria
-        ).ToListAsync();
+        return await GetAlbumsByCriteriaQuery(criteria).ToListAsync();
     }
 
     public IQueryable<Album> GetAlbumsByCriteriaQuery(ISpecification<Album> criteria)

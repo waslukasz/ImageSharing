@@ -5,6 +5,6 @@ namespace WebAPI.Request
     public class AddReactionRequest
     {
         [Required]
-        public Guid PostId { get; set; }
+        public Guid Id { get; set; }
     }
 }

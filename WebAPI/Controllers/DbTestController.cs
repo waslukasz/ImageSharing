@@ -5,13 +5,15 @@ using Infrastructure.EF.Entity;
 using Infrastructure.Manager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Managers;
 using WebAPI.Mapper;
 using WebAPI.Request;
 
 namespace WebAPI.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
+
 public class DbTestController : ControllerBase
 {
     private readonly ImageSharingDbContext _context;

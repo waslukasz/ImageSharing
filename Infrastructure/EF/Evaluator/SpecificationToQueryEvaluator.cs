@@ -1,6 +1,5 @@
-﻿using System.Data.Entity;
-using System.Linq.Expressions;
-using Application_Core.Common.Specification;
+﻿using Application_Core.Common.Specification;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.EF.Evaluator;
 
@@ -10,10 +9,7 @@ public class SpecificationToQueryEvaluator<TEntity> where TEntity: class
     {
         var query = inputQuery;
 
-        foreach (Expression<Func<TEntity, bool>> filter in spec.Criteria) 
-        {
-            query = query.Where(filter);
-        }
+        query = spec.Criteria.Aggregate(query, (current, criteria) => current.Where(criteria));
         
         if (spec.OrderBy is not null)
         {
@@ -25,7 +21,7 @@ public class SpecificationToQueryEvaluator<TEntity> where TEntity: class
             query = query.OrderByDescending(spec.OrderByDescending);
         }
         
-        query = spec.Includes.Aggregate(query, (current, include) => current);
+        query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
         return query;
     }
 }
