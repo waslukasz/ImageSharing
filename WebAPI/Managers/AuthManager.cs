@@ -37,6 +37,7 @@ public class AuthManager : IAuthManager
             .WithAlgorithm(new HMACSHA256Algorithm())
             .WithSecret(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
             .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
+            .AddClaim(ClaimTypes.NameIdentifier, user.Id)
             .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
             .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds())
             .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())

@@ -34,7 +34,7 @@ namespace Infrastructure.EF.Repository.PostRepository
         => _context.Posts.Include(x=>x.Status);
 
         public async Task<Post?> GetByGuidAsync(Guid id)
-        =>await _context.Posts.FindAsync(id);
+        =>await _context.Posts.Where(p=>p.Guid==id).FirstOrDefaultAsync();
 
         public IQueryable<Post> GetByUserIdAsync(int id)
         => _context.Posts.Where(x=>x.UserId==id).Include(x=>x.Status);

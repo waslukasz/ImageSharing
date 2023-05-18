@@ -1,6 +1,8 @@
 using System.Reflection;
+using Application_Core.Model;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
+using Infrastructure.EF.Repository.ReactionCommentRepository;
 using Infrastructure.EventListener;
 using Infrastructure.Extension;
 using Infrastructure.Manager;
@@ -69,6 +71,10 @@ builder.Services.AddSwaggerGen(options =>
 //Album section
 builder.Services.AddScoped<AlbumManager>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
+
+//Reaction section
+builder.Services.AddScoped<ReactionManager>();
+builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
 
 // Services
 builder.Services.AddScoped<IAccountManager, AccountManager>();
