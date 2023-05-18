@@ -2,6 +2,7 @@
 using Infrastructure.Manager;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
@@ -9,17 +10,19 @@ namespace WebAPI.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly PostManager _postManager;
-        public PostController(PostManager postManager)
+        private readonly IPostService _postService;
+
+        public PostController(IPostService postService)
         {
-            _postManager = postManager;
+            _postService = postService;
         }
+        
         [HttpGet]
         [Route("/AllPosts")]
         public async Task<IActionResult> GetAll([FromQuery] int maxItem, [FromQuery] int page)
         {
 
-            var data = await _postManager.GetAll(maxItem, page);
+            var data = await _postService.GetAll(maxItem, page);
             return Ok(data);
         }
         [HttpGet]
@@ -27,7 +30,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetAllUserPost([FromQuery] int userId
             ,[FromQuery] int maxItems, [FromQuery] int page)
         {
-            var data = await _postManager.GetUserPosts(maxItems,page,userId);
+            var data = await _postService.GetUserPosts(maxItems,page,userId);
             return Ok(data);
         }
         [HttpPost]

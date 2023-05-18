@@ -14,7 +14,6 @@ namespace Infrastructure.Extension
 			services.AddDbContext<ImageSharingDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
 			);
-            services.AddScoped<PostManager>();
             services.AddScoped<IPostRepository, PostRepository>();
 		}
 	}
