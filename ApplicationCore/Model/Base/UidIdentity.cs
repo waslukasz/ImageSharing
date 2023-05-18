@@ -1,4 +1,5 @@
-﻿using Application_Core.Common.Repository;
+﻿using Application_Core.Common.Identity;
+using Application_Core.Common.Repository;
 
 namespace Application_Core.Model.Base;
 

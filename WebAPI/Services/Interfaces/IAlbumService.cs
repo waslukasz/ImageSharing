@@ -1,6 +1,6 @@
 ﻿using Application_Core.Model;
-using Infrastructure.Manager.Param;
-using Infrastructure.Utility.Pagination;
+using Infrastructure.Dto;
+using Infrastructure.EF.Pagination;
 
 namespace WebAPI.Services.Interfaces;
 

@@ -4,18 +4,18 @@ using AutoMapper;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.CommentRepository;
 using Infrastructure.EF.Repository.PostRepository;
-using Infrastructure.EF.Repository.ReactionCommentRepository;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers
+namespace WebAPI.Services
 {
-    public class CommentManager
+    public class CommentService : ICommentManager
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IPostRepository _postRepository;
         private readonly IMapper _mapper;
 
-        public CommentManager(ICommentRepository commentRepository, IMapper mapper, IPostRepository postRepository)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper, IPostRepository postRepository)
         {
             _commentRepository = commentRepository;
             _postRepository = postRepository;

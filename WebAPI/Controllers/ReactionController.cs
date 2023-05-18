@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
-using Infrastructure.Manager;
-using WebAPI.Managers;
+using WebAPI.Services.Interfaces;
 
 
 namespace WebAPI.Controllers
@@ -13,9 +12,9 @@ namespace WebAPI.Controllers
     public class ReactionController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly ReactionService _reactionService;
+        private readonly IReactionService _reactionService;
 
-        public ReactionController(UserManager<UserEntity> userManager, ReactionService reactionService)
+        public ReactionController(UserManager<UserEntity> userManager, IReactionService reactionService)
         {
             _userManager = userManager;
             _reactionService = reactionService;

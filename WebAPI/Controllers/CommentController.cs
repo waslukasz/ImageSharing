@@ -1,10 +1,8 @@
 ﻿using Infrastructure.EF.Entity;
-using Infrastructure.Manager;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Managers;
 using WebAPI.Request;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
@@ -13,12 +11,12 @@ namespace WebAPI.Controllers
     public class CommentController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly CommentManager _commentManager;
+        private readonly CommentService _commentService;
 
-        public CommentController(UserManager<UserEntity> userManager, CommentManager commentManager)
+        public CommentController(UserManager<UserEntity> userManager, CommentService commentService)
         {
             _userManager = userManager;
-            _commentManager = commentManager;
+            _commentService = commentService;
         }
 
         [HttpPost]
@@ -28,7 +26,7 @@ namespace WebAPI.Controllers
 
             if(user is null) return Unauthorized();
 
-            Guid newCommentGuId = await _commentManager.AddComment(request, user);
+            Guid newCommentGuId = await _commentService.AddComment(request, user);
             return Ok($"Comment GuId: {newCommentGuId}");
 
         }
@@ -47,7 +45,7 @@ namespace WebAPI.Controllers
         [HttpGet("{PostGuId}")]
         public async Task<IActionResult> GetAllComments([FromRoute] Guid PostGuId)
         {
-            return Ok(_commentManager.GetAll(PostGuId));
+            return Ok(_commentService.GetAll(PostGuId));
         }
 
 /*        [HttpGet("{CommentId}")]

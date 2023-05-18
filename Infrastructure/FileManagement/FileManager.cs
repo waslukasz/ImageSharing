@@ -1,6 +1,6 @@
 ﻿using LiteX.Storage.Core;
 
-namespace Infrastructure.Database.FileManagement;
+namespace Infrastructure.FileManagement;
 
 public class FileManager
 {

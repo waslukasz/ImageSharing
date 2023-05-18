@@ -1,11 +1,9 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Dto;
-using Infrastructure.Manager;
-using Infrastructure.Utility.Pagination;
-using Microsoft.AspNetCore.Http;
+using Infrastructure.EF.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Managers;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
 {
@@ -13,8 +11,8 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class PostController : ControllerBase
     {
-        private readonly PostManager _postManager;
-        public PostController(PostManager postManager)
+        private readonly IPostService _postManager;
+        public PostController(IPostService postManager)
         {
             _postManager = postManager;
         }

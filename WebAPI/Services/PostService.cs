@@ -4,9 +4,10 @@ using Application_Core.Model;
 using AutoMapper;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
+using Infrastructure.EF.Pagination;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.UserRepository;
-using Infrastructure.Utility.Pagination;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services;
 
@@ -15,9 +16,9 @@ public class PostService : IPostService
     private readonly IPostRepository _postRepository;
     private readonly Paginator<Post> _paginator;
     private readonly IMapper _mapper;
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public PostService(IPostRepository postRepository, IMapper mapper, UserRepository userRepository)
+    public PostService(IPostRepository postRepository, IMapper mapper, IUserRepository userRepository)
     {
         _postRepository = postRepository;
         _paginator = new();
@@ -34,6 +35,7 @@ public class PostService : IPostService
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
         
         criteria
+            .AddInclude(p => p.Status)
             .AddInclude(p => p.Image)
             .AddInclude(p => p.User);
         
@@ -57,6 +59,7 @@ public class PostService : IPostService
 
         criteria.AddCriteria(p => p.User == user);
         criteria
+            .AddInclude(p => p.Status)
             .AddInclude(p => p.Image)
             .AddInclude(p => p.User);
 

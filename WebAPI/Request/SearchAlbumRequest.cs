@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application_Core.Common.Specification;
-using Infrastructure.Manager.Param;
+using Infrastructure.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Request;

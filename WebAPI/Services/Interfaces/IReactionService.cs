@@ -1,7 +1,7 @@
 ﻿using Infrastructure.EF.Entity;
 using WebAPI.Request;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Services.Interfaces;
 
 public interface IReactionService
 {

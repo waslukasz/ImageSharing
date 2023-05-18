@@ -1,12 +1,12 @@
 ﻿using Application_Core.Model;
-using Infrastructure.Manager;
-using Infrastructure.Manager.Param;
-using Infrastructure.Utility.Pagination;
+using Infrastructure.Dto;
+using Infrastructure.EF.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Managers;
 using WebAPI.Mapper;
 using WebAPI.Request;
 using WebAPI.Response;
+using WebAPI.Services;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers;
 
@@ -14,9 +14,9 @@ namespace WebAPI.Controllers;
 [Route("api/[controller]")]
 public class AlbumController : ControllerBase
 {
-    private readonly AlbumSerivce _albumSerivce;
+    private readonly IAlbumService _albumSerivce;
 
-    public AlbumController(AlbumSerivce albumSerivce)
+    public AlbumController(IAlbumService albumSerivce)
     {
         _albumSerivce = albumSerivce;
     }

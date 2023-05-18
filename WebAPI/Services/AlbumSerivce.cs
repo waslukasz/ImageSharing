@@ -1,13 +1,14 @@
 ﻿using Application_Core.Common.Specification;
 using Application_Core.Exception;
 using Application_Core.Model;
+using Infrastructure.Dto;
+using Infrastructure.EF.Pagination;
 using Infrastructure.EF.Repository.AlbumRepository;
-using Infrastructure.Manager.Param;
-using Infrastructure.Utility.Pagination;
+using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Services;
 
-public class AlbumSerivce : IAlbumSerivce
+public class AlbumSerivce :  IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
 

@@ -2,13 +2,9 @@
 using Application_Core.Model;
 using Infrastructure.Database;
 using Infrastructure.EF.Entity;
-using Infrastructure.Manager;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebAPI.Managers;
 using WebAPI.Mapper;
 using WebAPI.Request;
-using WebAPI.Services;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers;

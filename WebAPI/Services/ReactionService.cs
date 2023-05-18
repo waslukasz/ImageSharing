@@ -4,10 +4,11 @@ using Application_Core.Model;
 using AutoMapper;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.PostRepository;
-using Infrastructure.EF.Repository.ReactionCommentRepository;
+using Infrastructure.EF.Repository.ReactionRepository;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers
+namespace WebAPI.Services
 {
     public class ReactionService : IReactionService
     {

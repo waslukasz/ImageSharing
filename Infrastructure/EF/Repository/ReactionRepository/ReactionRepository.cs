@@ -1,16 +1,9 @@
-﻿using Application_Core.Model;
+﻿using Application_Core.Common.Specification;
+using Application_Core.Model;
 using Infrastructure.Database;
-using Infrastructure.EF.Entity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application_Core.Common.Specification;
 using Infrastructure.EF.Evaluator;
 
-namespace Infrastructure.EF.Repository.ReactionCommentRepository
+namespace Infrastructure.EF.Repository.ReactionRepository
 {
     public class ReactionRepository : IReactionRepository
     {

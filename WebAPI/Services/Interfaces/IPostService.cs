@@ -1,8 +1,8 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Dto;
-using Infrastructure.Utility.Pagination;
+using Infrastructure.EF.Pagination;
 
-namespace WebAPI.Services;
+namespace WebAPI.Services.Interfaces;
 
 public interface IPostService
 {

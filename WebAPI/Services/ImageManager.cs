@@ -8,7 +8,7 @@ using LiteX.Storage.Core;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Services;
 
 public class ImageManager : IImageService
 {

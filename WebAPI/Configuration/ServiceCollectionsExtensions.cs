@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Database;
 using Infrastructure.EF.Repository.PostRepository;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Managers;
 
 namespace WebAPI.Configuration
 {
@@ -12,7 +11,6 @@ namespace WebAPI.Configuration
 			services.AddDbContext<ImageSharingDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
 			);
-            services.AddScoped<IPostRepository, PostRepository>();
 		}
 	}
 }
