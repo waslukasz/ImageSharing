@@ -3,6 +3,7 @@ using Infrastructure.Manager;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Managers;
 using WebAPI.Request;
 
 namespace WebAPI.Controllers
@@ -12,10 +13,12 @@ namespace WebAPI.Controllers
     public class CommentController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
+        private readonly CommentManager _commentManager;
 
-        public CommentController(UserManager<UserEntity> userManager)
+        public CommentController(UserManager<UserEntity> userManager, CommentManager commentManager)
         {
             _userManager = userManager;
+            _commentManager = commentManager;
         }
 
         [HttpPost]
@@ -23,11 +26,10 @@ namespace WebAPI.Controllers
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
 
-            //TODO NIE ZNAJDUJE USERA
-            //if(user is null) return Unauthorized();
+            if(user is null) return Unauthorized();
 
-            //await _reactionManager.AddReaction(request, user);
-            return Ok();
+            Guid newCommentGuId = await _commentManager.AddComment(request, user);
+            return Ok($"Comment GuId: {newCommentGuId}");
 
         }
         [HttpDelete]
@@ -42,16 +44,16 @@ namespace WebAPI.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllComments()
+        [HttpGet("{PostGuId}")]
+        public async Task<IActionResult> GetAllComments([FromRoute] Guid PostGuId)
         {
-            throw new NotImplementedException();
+            return Ok(_commentManager.GetAll(PostGuId));
         }
 
-        [HttpGet("{CommentId}")]
+/*        [HttpGet("{CommentId}")]
         public async Task<IActionResult> GetCommentById()
         {
             throw new NotImplementedException();
-        }
+        }*/
     }
 }
