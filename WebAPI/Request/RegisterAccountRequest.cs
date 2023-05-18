@@ -10,8 +10,7 @@ public class RegisterAccountRequest
     public string Email { get; set; }
     [Required]
     [MinLength(3)]
-    [Display(Name = "Username")]
-    public string UserName { get; set; }
+    public string Username { get; set; }
     [Required]
     [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Password has to meet specified criteria: min. 8 characters, 1 lower case, 1 uppercase, 1 number, 1 special character.")]
     [DataType(DataType.Password)]
