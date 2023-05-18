@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TestController : ControllerBase
     {
         private readonly Microsoft.AspNetCore.Identity.UserManager<UserEntity> _userManager;

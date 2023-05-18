@@ -8,5 +8,5 @@ public interface IPostService
 {
     Task CreateAsync(Post post);
     Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page);
-    Task<PaginatorResult<PostDto>> GetUserPosts(int maxItems, int page, int id);
+    Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page);
 }

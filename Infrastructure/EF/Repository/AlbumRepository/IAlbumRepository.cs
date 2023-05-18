@@ -8,7 +8,7 @@ public interface IAlbumRepository
 {
     public Task<Album?> GetAlbumByGuid(Guid id);
 
-    public Task<List<Album>> GetAlbumsByCriteria(ISpecification<Album> criteria);
+    public Task<IEnumerable<Album>> GetAlbumsByCriteria(ISpecification<Album> criteria);
     
     public IQueryable<Album> GetAlbumsByCriteriaQuery(ISpecification<Album> criteria);
 

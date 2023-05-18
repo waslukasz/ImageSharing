@@ -1,14 +1,14 @@
 using System.Reflection;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
+using Infrastructure.EF.Repository.ReactionCommentRepository;
+using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.EventListener;
-using Infrastructure.Extension;
-using Infrastructure.Manager;
 using Infrastructure.Utility;
 using Microsoft.OpenApi.Models;
 using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
-using WebAPI.Services;
+using WebAPI.Managers;
 using WebAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,16 +66,25 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-//Album section
-builder.Services.AddScoped<IAlbumService, AlbumService>();
+// User section
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Album section
+builder.Services.AddScoped<AlbumSerivce>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
+// Reaction section
+builder.Services.AddScoped<ReactionService>();
+builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+
+// Image section
+builder.Services.AddScoped<ImageManager>();
+
 // Services
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAccountService, IAccountService>();
+builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
-builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);

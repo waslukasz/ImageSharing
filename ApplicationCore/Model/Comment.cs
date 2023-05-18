@@ -15,6 +15,5 @@ namespace Application_Core.Model
         public IUser<int> User { get; set; }
         
         public int UserId { get; set; }
-
 	}
 }

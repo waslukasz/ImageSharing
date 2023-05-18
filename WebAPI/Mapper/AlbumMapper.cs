@@ -12,7 +12,8 @@ public static class AlbumMapper
         {
             Id = album.Guid,
             Title = album.Title,
-            Description = album.Description
+            Description = album.Description,
+            ImageCount = album.Images.Count()
         };
     }
 }

@@ -11,15 +11,15 @@ using WebAPI.Configuration;
 using WebAPI.Request;
 using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Services;
+namespace WebAPI.Managers;
 
-public class AuthService : IAuthService
+public class AuthManager : IAuthService
 {
     private readonly UserManager<UserEntity> _userManager;
 
     private readonly JwtSettings _jwtSettings;
 
-    public AuthService(UserManager<UserEntity> userManager, JwtSettings jwtSettings)
+    public AuthManager(UserManager<UserEntity> userManager, JwtSettings jwtSettings)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;
@@ -36,14 +36,15 @@ public class AuthService : IAuthService
         return new JwtBuilder()
             .WithAlgorithm(new HMACSHA256Algorithm())
             .WithSecret(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
-            .AddClaim(ClaimTypes.Name, user.UserName)
+            .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
             .AddClaim(ClaimTypes.NameIdentifier, user.Id)
-            .AddClaim(ClaimTypes.Email, user.Email)
-            .AddClaim(ClaimTypes.Expiration, DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds())
+            .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
+            .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(365).ToUnixTimeSeconds())
             .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())
-            .AddClaim( ClaimTypes.Role, _userManager.GetRolesAsync(user).Result)
+            .AddClaim(ClaimTypes.Role, _userManager.GetRolesAsync(user).Result)
             .Audience(_jwtSettings.Audience)
             .Issuer(_jwtSettings.Issuer)
             .Encode();
     }
+    
 }

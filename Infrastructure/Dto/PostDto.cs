@@ -8,10 +8,10 @@ namespace Infrastructure.Dto
 {
     public class PostDto
     {
-        public Guid Guid { get; set; }
+        public Guid Id { get; set; }
         public string StatusName { get; set; } = default!;
-        public int ImageId{ get; set; }
-        public int UserId { get; set; }
+        public Guid ImageId { get; set; }
+        public Guid UserId { get; set; }
         public List<string> Tags { get; set; } = new();
         public string Title { get; set; }=default!;
         //public Guid UserGuid { get; set; }
