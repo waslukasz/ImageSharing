@@ -30,42 +30,20 @@ public class AuthManager : IAuthManager
         _mapper = mapper;
     }
 
-    public async Task<string> Authenticate(LoginUserRequest user)
+    public async Task<string> Login(LoginUserRequest request)
     {
-        var logged = await _userManager.FindByNameAsync(user.Username);
-        if (await _userManager.CheckPasswordAsync(logged, user.Password)) return CreateToken(logged);
-        
-        throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+        var user = await _userManager.FindByNameAsync(request.Username);
+        return await _userManager.CheckPasswordAsync(user, request.Password) ? CreateToken(user) : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
     }
 
-    Task<bool> IAuthManager.RegisterUser(RegisterUserRequest request)
-    {
-        return RegisterUser(request);
-    }
-
-    public async Task<bool> RegisterUser(RegisterUserRequest request)
-    {
-        var user = _mapper.Map<UserEntity>(request);
-        if (await _userManager.FindByEmailAsync(request.Email) is not null)
-            throw new BadRequestException("Email already in use.", HttpStatusCode.BadRequest);
-        
-        if (await _userManager.FindByNameAsync(request.UserName) is not null)
-            throw new BadRequestException("Username already in use.", HttpStatusCode.BadRequest);
-        
-        var result = await _userManager.CreateAsync(user, request.Password);
-        await _userManager.AddToRoleAsync(user, "User");
-        return result.Succeeded;
-    }
-    
     public string CreateToken(UserEntity user)
     {
         return new JwtBuilder()
             .WithAlgorithm(new HMACSHA256Algorithm())
             .WithSecret(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
             .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
-            .AddClaim(JwtRegisteredClaimNames.Gender, "male")
             .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
-            .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeSeconds())
+            .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds())
             .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())
             .AddClaim(ClaimTypes.Role, _userManager.GetRolesAsync(user).Result)
             .Audience(_jwtSettings.Audience)

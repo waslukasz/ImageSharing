@@ -1,6 +1,5 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database.Configuration;
-using Infrastructure.Database.FileManagement;
 using Infrastructure.Database.Seed.Interface;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +19,10 @@ namespace Infrastructure.Database
 		public DbSet<Status> Statuses { get; set; }
 		
 		// uncomment when manipulating data from infrastructure project !
-		//public ImageSharingDbContext()
-		//{
-		// 	
-		//}
+		public ImageSharingDbContext()
+		{
+			
+		}
 
 		public ImageSharingDbContext(DbContextOptions options, ImageEntityEventListener listener) : base(options)
 		{
@@ -37,12 +36,12 @@ namespace Infrastructure.Database
 			optionsBuilder.EnableSensitiveDataLogging();
 			
 			// MOJE BAGNO !!!111 proszę nie ruszać a jak już to odkomentować. Dziękuje ~ Michaś
-			optionsBuilder.UseSqlServer(
+			/*optionsBuilder.UseSqlServer(
 				"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			);*/
+			optionsBuilder.UseSqlServer(
+				"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
 			);
-			// optionsBuilder.UseSqlServer(
-			// 	"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
-			// );
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)
