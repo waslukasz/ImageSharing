@@ -2,6 +2,7 @@ using System.Reflection;
 using Application_Core.Model;
 using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
+using Infrastructure.EF.Repository.CommentRepository;
 using Infrastructure.EF.Repository.ReactionCommentRepository;
 using Infrastructure.EventListener;
 using Infrastructure.Extension;
@@ -75,6 +76,10 @@ builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 //Reaction section
 builder.Services.AddScoped<ReactionManager>();
 builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
+
+//Comment section
+builder.Services.AddScoped<CommentManager>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 // Services
 builder.Services.AddScoped<IAccountManager, AccountManager>();

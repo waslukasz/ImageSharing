@@ -39,7 +39,7 @@ public class AuthManager : IAuthManager
             .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
             .AddClaim(ClaimTypes.NameIdentifier, user.Id)
             .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
-            .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds())
+            .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(365).ToUnixTimeSeconds())
             .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())
             .AddClaim(ClaimTypes.Role, _userManager.GetRolesAsync(user).Result)
             .Audience(_jwtSettings.Audience)

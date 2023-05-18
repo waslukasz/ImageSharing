@@ -21,7 +21,6 @@ namespace Infrastructure.EF.Repository.ReactionCommentRepository
 
         public async Task AddReactionAsync(Reaction reaction)
         {
-            
             if(_context.Reactions.Contains(reaction))
             {
                 await DeleteAsync(reaction);

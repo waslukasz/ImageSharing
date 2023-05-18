@@ -6,9 +6,8 @@ namespace WebAPI.Request
     public class AddCommentRequest
     {
         [Required]
-        public int PostId { get; set; }
+        public Guid PostId { get; set; }
         [Required]
         public string Text { get; set; }
-
     }
 }
