@@ -32,13 +32,7 @@ namespace WebAPI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] LoginUserRequest request)
         {
-            return Ok(await _authManager.Authenticate(request));
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromForm] RegisterUserRequest request)
-        {
-            return await _authManager.RegisterUser(request) ? NoContent() : BadRequest();
+            return Ok(await _authManager.Login(request));
         }
     }
 }

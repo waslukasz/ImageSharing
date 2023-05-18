@@ -77,6 +77,7 @@ builder.Services.AddScoped<AlbumManager>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // Services
+builder.Services.AddScoped<IAccountManager, AccountManager>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();

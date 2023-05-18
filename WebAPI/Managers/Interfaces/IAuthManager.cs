@@ -6,6 +6,5 @@ namespace WebAPI.Managers.Interfaces;
 public interface IAuthManager
 {
     public string CreateToken(UserEntity user);
-    public Task<string> Authenticate(LoginUserRequest user);
-    public Task<bool> RegisterUser(RegisterUserRequest request);
+    public Task<string> Login(LoginUserRequest request);
 }
