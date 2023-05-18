@@ -5,13 +5,6 @@ using Azure;
 using Infrastructure.Dto;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.Utility.Pagination;
-using Microsoft.AspNet.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Manager
 {

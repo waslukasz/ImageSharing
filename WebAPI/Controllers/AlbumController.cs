@@ -6,17 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using WebAPI.Mapper;
 using WebAPI.Request;
 using WebAPI.Response;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers;
 
 [Route("api/[controller]")]
 public class AlbumController : ControllerBase
 {
-    private readonly AlbumManager _albumManager;
+    private readonly IAlbumService _albumService;
 
-    public AlbumController(AlbumManager albumManager)
+    public AlbumController(IAlbumService albumService)
     {
-        _albumManager = albumManager;
+        _albumService = albumService;
     }
 
     [HttpGet]
@@ -26,7 +27,7 @@ public class AlbumController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest();
             
-        PaginatorResult<Album> paginator = await _albumManager.GetAllPaginated(paginationRequest.itemNumber, paginationRequest.page);
+        PaginatorResult<Album> paginator = await _albumService.GetAllPaginated(paginationRequest.itemNumber, paginationRequest.page);
         PaginatorResult<AlbumResponse> response = paginator.MapToOtherType(AlbumMapper.FromAlbumToAlbumResponse);
 
         return Ok(response);
@@ -41,7 +42,7 @@ public class AlbumController : ControllerBase
         
         AlbumSearchDto param = request.ToParam();
         
-        PaginatorResult<Album> paginator = await _albumManager.Search(param,paginationRequest.page,paginationRequest.itemNumber);
+        PaginatorResult<Album> paginator = await _albumService.Search(param,paginationRequest.page,paginationRequest.itemNumber);
         PaginatorResult<AlbumResponse> response = paginator.MapToOtherType(AlbumMapper.FromAlbumToAlbumResponse);
 
         return Ok(response);

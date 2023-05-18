@@ -1,20 +1,20 @@
 ﻿using Application_Core.Common.Specification;
 using Application_Core.Exception;
 using Application_Core.Model;
-using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.Manager.Param;
 using Infrastructure.Utility.Pagination;
+using WebAPI.Services.Interfaces;
 
-namespace Infrastructure.Manager;
+namespace WebAPI.Services;
 
-public class AlbumManager
+public class AlbumService : IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
 
     private readonly Paginator<Album> _paginator;
 
-    public AlbumManager(IAlbumRepository albumRepository)
+    public AlbumService(IAlbumRepository albumRepository)
     {
         _paginator = new Paginator<Album>();
         _albumRepository = albumRepository;
