@@ -3,7 +3,6 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using Application_Core.Exception;
-using AutoMapper;
 using Infrastructure.EF.Entity;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -17,17 +16,13 @@ namespace WebAPI.Managers;
 public class AuthManager : IAuthManager
 {
     private readonly UserManager<UserEntity> _userManager;
-    private readonly RoleManager<RoleEntity> _roleManager;
 
     private readonly JwtSettings _jwtSettings;
-    private readonly IMapper _mapper;
 
-    public AuthManager(UserManager<UserEntity> userManager, RoleManager<RoleEntity> roleManager, JwtSettings jwtSettings, IMapper mapper)
+    public AuthManager(UserManager<UserEntity> userManager, JwtSettings jwtSettings)
     {
         _userManager = userManager;
-        _roleManager = roleManager;
         _jwtSettings = jwtSettings;
-        _mapper = mapper;
     }
 
     public async Task<string> Login(LoginUserRequest request)

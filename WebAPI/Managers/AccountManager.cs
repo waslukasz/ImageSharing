@@ -3,6 +3,7 @@ using Application_Core.Exception;
 using AutoMapper;
 using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Identity;
+using WebAPI.Managers.Interfaces;
 using WebAPI.Request;
 
 namespace WebAPI.Managers;
@@ -20,18 +21,12 @@ public class AccountManager : IAccountManager
     
     public async Task<bool> Register(RegisterAccountRequest request)
     {
-        // TODO: Ustawic automapper.
-        //var user = _mapper.Map<UserEntity>(request);
-        var user = new UserEntity()
-        {
-            Email = request.Email,
-            UserName = request.UserName
-        };
-        
+        var user = _mapper.Map<UserEntity>(request);
+
         if (await _userManager.FindByEmailAsync(request.Email) is not null)
             throw new BadRequestException("Email already in use.", HttpStatusCode.BadRequest);
         
-        if (await _userManager.FindByNameAsync(request.UserName) is not null)
+        if (await _userManager.FindByNameAsync(request.Username) is not null)
             throw new BadRequestException("Username already in use.", HttpStatusCode.BadRequest);
         
         var result = await _userManager.CreateAsync(user, request.Password);

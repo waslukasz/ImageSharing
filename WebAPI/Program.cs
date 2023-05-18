@@ -1,17 +1,11 @@
 using System.Reflection;
-using System.Text;
 using Infrastructure.Database.FileManagement;
-using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.AlbumRepository;
-using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EventListener;
 using Infrastructure.Extension;
 using Infrastructure.Manager;
 using Infrastructure.Utility;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
 using WebAPI.Managers;
@@ -85,6 +79,7 @@ builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

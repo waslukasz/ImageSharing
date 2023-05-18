@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application_Core.Exception;
-using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -15,13 +8,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly UserManager<UserEntity> _userManager;
-
-        public TestController(UserManager<UserEntity> userManager)
-        {
-            _userManager = userManager;
-        }
-        
         [HttpGet("auth/anonymous")]
         public string Anonymous()
         {

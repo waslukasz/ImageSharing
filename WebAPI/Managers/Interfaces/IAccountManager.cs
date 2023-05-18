@@ -1,6 +1,6 @@
 ﻿using WebAPI.Request;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Managers.Interfaces;
 
 public interface IAccountManager
 {
