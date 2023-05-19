@@ -10,7 +10,7 @@ using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services;
 
-public class ImageManager : IImageService
+public class ImageService : IImageService
 {
     private readonly ILiteXBlobService _BlobService;
 
@@ -18,7 +18,7 @@ public class ImageManager : IImageService
 
     private readonly UniqueFileNameAssigner _NameAssigner;
 
-    public ImageManager(ILiteXBlobService blobService, ImageSharingDbContext context, UniqueFileNameAssigner nameAssigner)
+    public ImageService(ILiteXBlobService blobService, ImageSharingDbContext context, UniqueFileNameAssigner nameAssigner)
     {
         _BlobService = blobService;
         _Context = context;

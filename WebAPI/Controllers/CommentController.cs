@@ -14,9 +14,9 @@ namespace WebAPI.Controllers
     public class CommentController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly ICommentManager _commentService;
+        private readonly ICommentService _commentService;
 
-        public CommentController(UserManager<UserEntity> userManager, ICommentManager commentService)
+        public CommentController(UserManager<UserEntity> userManager, ICommentService commentService)
         {
             _userManager = userManager;
             _commentService = commentService;

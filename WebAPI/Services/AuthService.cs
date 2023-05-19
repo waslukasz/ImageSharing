@@ -39,6 +39,7 @@ public class AuthService : IAuthService
             .AddClaim(JwtRegisteredClaimNames.Name, user.UserName)
             .AddClaim(ClaimTypes.NameIdentifier, user.Id)
             .AddClaim(JwtRegisteredClaimNames.Email, user.Email)
+            // TODO: Ustawić czas na 15 minut przed oddaniem projektu.
             .AddClaim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddDays(365).ToUnixTimeSeconds())
             .AddClaim(JwtRegisteredClaimNames.Jti, Guid.NewGuid())
             .AddClaim(ClaimTypes.Role, _userManager.GetRolesAsync(user).Result)

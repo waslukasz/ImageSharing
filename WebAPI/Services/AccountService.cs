@@ -25,7 +25,6 @@ public class AccountService : IAccountService
 
         if (await _userManager.FindByEmailAsync(request.Email) is not null)
             throw new BadRequestException("Email already in use.", HttpStatusCode.BadRequest);
-        
         if (await _userManager.FindByNameAsync(request.Username) is not null)
             throw new BadRequestException("Username already in use.", HttpStatusCode.BadRequest);
         
@@ -37,7 +36,10 @@ public class AccountService : IAccountService
     public async Task<bool> Delete(DeleteAccountRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.UserName);
-        if (!await _userManager.CheckPasswordAsync(user, request.Password)) return false;
+        
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
+            return false;
+        
         await _userManager.DeleteAsync(user);
         return true;
     }
@@ -45,15 +47,24 @@ public class AccountService : IAccountService
     public async Task<bool> ChangeUsername(ChangeUsernameAccountRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
-        if (!await _userManager.CheckPasswordAsync(user, request.Password)) return false;
-        await _userManager.SetUserNameAsync(user, request.NewUsername);
+        
+        if (!await _userManager.CheckPasswordAsync(user, request.Password)) 
+            return false;
+        if (!(await _userManager.SetUserNameAsync(user, request.NewUsername)).Succeeded) 
+            throw new BadRequestException("Username already taken.", HttpStatusCode.BadRequest);
+        
         return true;
     }
     
     public async Task<bool> ChangeEmail(ChangeEmailAccountRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
-        if (!await _userManager.CheckPasswordAsync(user, request.Password)) return false;
+        
+        if (!await _userManager.CheckPasswordAsync(user, request.Password)) 
+            return false;
+        if (await _userManager.FindByEmailAsync(request.NewEmail) is not null)
+             throw new BadRequestException("Email already taken.", HttpStatusCode.BadRequest);
+        
         await _userManager.SetEmailAsync(user, request.NewEmail);
         return true;
     }
@@ -61,6 +72,7 @@ public class AccountService : IAccountService
     public async Task<bool> ChangePassword(ChangePasswordAccountRequest request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
+        
         if (!await _userManager.CheckPasswordAsync(user, request.Password))
             return false;
         

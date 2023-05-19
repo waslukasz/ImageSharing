@@ -68,11 +68,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// User section
+// Auth section
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Album section
-builder.Services.AddScoped<IAlbumService, AlbumSerivce>();
+builder.Services.AddScoped<IAlbumService, AlbumService>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
 // Reaction section
@@ -84,15 +86,13 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 // Image section
-builder.Services.AddScoped<ImageManager>();
+builder.Services.AddScoped<ImageService>();
 
 // Comment section
-builder.Services.AddScoped<ICommentManager, CommentService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 // Services
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();

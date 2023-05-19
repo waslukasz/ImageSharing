@@ -10,51 +10,41 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountService _accountManager;
+        private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountManager)
+        public AccountController(IAccountService accountService)
         {
-            _accountManager = accountManager;
+            _accountService = accountService;
         }
         
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register([FromForm] RegisterAccountRequest request)
         {
-            return await _accountManager.Register(request) ? 
-                NoContent() : 
-                BadRequest();
+            return await _accountService.Register(request) ? NoContent() : BadRequest();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> Delete([FromForm] DeleteAccountRequest request)
         {
-            return await _accountManager.Delete(request) ? 
-                NoContent() : 
-                throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            return await _accountService.Delete(request) ? NoContent() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("changeUsername")]
+        [HttpPut("ChangeUsername")]
         public async Task<IActionResult> ChangeUsername([FromForm] ChangeUsernameAccountRequest request)
         {
-            return await _accountManager.ChangeUsername(request) ? 
-                Ok() : 
-                throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            return await _accountService.ChangeUsername(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("changeEmail")]
+        [HttpPut("ChangeEmail")]
         public async Task<IActionResult> ChangeEmail([FromForm] ChangeEmailAccountRequest request)
         {
-            return await _accountManager.ChangeEmail(request) ? 
-                Ok() :
-                throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            return await _accountService.ChangeEmail(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("changePassword")]
+        [HttpPut("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordAccountRequest request)
         {
-            return await _accountManager.ChangePassword(request) ? 
-                Ok() : 
-                throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            return await _accountService.ChangePassword(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
     }
 }

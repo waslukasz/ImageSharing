@@ -8,13 +8,13 @@ using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services;
 
-public class AlbumSerivce :  IAlbumService
+public class AlbumService :  IAlbumService
 {
     private readonly IAlbumRepository _albumRepository;
 
     private readonly Paginator<Album> _paginator;
 
-    public AlbumSerivce(IAlbumRepository albumRepository)
+    public AlbumService(IAlbumRepository albumRepository)
     {
         _paginator = new Paginator<Album>();
         _albumRepository = albumRepository;

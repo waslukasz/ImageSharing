@@ -12,7 +12,7 @@ using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services
 {
-    public class CommentService : ICommentManager
+    public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IPostRepository _postRepository;

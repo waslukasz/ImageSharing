@@ -12,8 +12,4 @@ public class ChangeUsernameAccountRequest
     [MinLength(3)]
     [Display(Name = "Username")]
     public string NewUsername { get; set; }
-    [Required]
-    [Compare("NewUsername", ErrorMessage = "New username and Confirm new username did not match.")]
-    [Display(Name = "Confirm username")]
-    public string ConfirmNewUsername { get; set; }
 }

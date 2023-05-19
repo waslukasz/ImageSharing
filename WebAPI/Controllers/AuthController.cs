@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] LoginUserRequest request)
         {

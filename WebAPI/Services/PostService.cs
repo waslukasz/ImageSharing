@@ -28,8 +28,8 @@ public class PostService : IPostService
     public async Task CreateAsync(Post post)
     {
         await _postRepository.CreateAsync(post);
-
     }
+    
     public async Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page)
     {
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
@@ -51,6 +51,7 @@ public class PostService : IPostService
 
         return resultDto;
     }
+    
     public async Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page)
     {
         UserEntity user = await _userRepository.GetUserByGuidAsync(id) ?? throw new UserNotFoundException();

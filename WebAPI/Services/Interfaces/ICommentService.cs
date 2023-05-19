@@ -5,7 +5,7 @@ using WebAPI.Request;
 
 namespace WebAPI.Services.Interfaces;
 
-public interface ICommentManager
+public interface ICommentService
 {
     Task<Guid> AddComment(AddCommentRequest request, UserEntity user);
     Task<List<CommentDto>> GetAll(Guid postGuId);
