@@ -1,18 +1,17 @@
 using System.Reflection;
-using Application_Core.Model;
-using Infrastructure.Database.FileManagement;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EF.Repository.CommentRepository;
-using Infrastructure.EF.Repository.ReactionCommentRepository;
+using Infrastructure.EF.Repository.PostRepository;
+using Infrastructure.EF.Repository.ReactionRepository;
+using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.EventListener;
-using Infrastructure.Extension;
-using Infrastructure.Manager;
+using Infrastructure.FileManagement;
 using Infrastructure.Utility;
 using Microsoft.OpenApi.Models;
 using WebAPI.Configuration;
 using WebAPI.ExceptionFilter;
-using WebAPI.Managers;
-using WebAPI.Managers.Interfaces;
+using WebAPI.Services;
+using WebAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,24 +68,33 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-//Album section
-builder.Services.AddScoped<AlbumManager>();
+// User section
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Album section
+builder.Services.AddScoped<IAlbumService, AlbumSerivce>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
 
-//Reaction section
-builder.Services.AddScoped<ReactionManager>();
+// Reaction section
+builder.Services.AddScoped<IReactionService, ReactionService>();
 builder.Services.AddScoped<IReactionRepository, ReactionRepository>();
 
-//Comment section
-builder.Services.AddScoped<CommentManager>();
+// Post section
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+
+// Image section
+builder.Services.AddScoped<ImageManager>();
+
+// Comment section
+builder.Services.AddScoped<ICommentManager, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 // Services
-builder.Services.AddScoped<IAccountManager, AccountManager>();
-builder.Services.AddScoped<IAuthManager, AuthManager>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ImageEntityEventListener>();
 builder.Services.AddScoped<FileManager>();
-builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<UniqueFileNameAssigner>();
 builder.Services.ConfigureLiteX();
 builder.Services.AddInfrastructures(builder.Configuration);

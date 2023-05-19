@@ -1,35 +1,44 @@
 ﻿using Application_Core.Model;
-using Infrastructure.Manager;
-using Microsoft.AspNetCore.Http;
+using Infrastructure.Dto;
+using Infrastructure.EF.Pagination;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PostController : ControllerBase
     {
-        private readonly PostManager _postManager;
-        public PostController(PostManager postManager)
+        private readonly IPostService _postManager;
+        public PostController(IPostService postManager)
         {
             _postManager = postManager;
         }
+        
         [HttpGet]
-        [Route("/AllPosts")]
-        public async Task<IActionResult> GetAll([FromQuery] int maxItem, [FromQuery] int page)
+        [Route("all")]
+        public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request)
         {
-
-            var data = await _postManager.GetAll(maxItem, page);
+            if (!ModelState.IsValid)
+                return BadRequest();
+            
+            PaginatorResult<PostDto> data = await _postManager.GetAll(request.ItemNumber, request.Page);
             return Ok(data);
         }
-        [HttpGet]
-        [Route("/GetAllUserPost")]
-        public async Task<IActionResult> GetAllUserPost([FromQuery] int userId
-            ,[FromQuery] int maxItems, [FromQuery] int page)
+        
+        [HttpGet("getByUser")]
+        public async Task<IActionResult> GetAllUserPost([FromQuery] GetUserPostRequest request)
         {
-            var data = await _postManager.GetUserPosts(maxItems,page,userId);
+            if (!ModelState.IsValid)
+                return BadRequest();
+            
+            PaginatorResult<PostDto> data = await _postManager.GetUserPosts(request.Id,request.ItemNumber,request.Page);
             return Ok(data);
         }
+        
+        //TODO: dokończyć metodę
         [HttpPost]
         [Route("/")]
         public async Task<IActionResult> Create([FromForm] Post post)

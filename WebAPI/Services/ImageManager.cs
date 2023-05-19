@@ -6,16 +6,17 @@ using Infrastructure.EF.Entity;
 using Infrastructure.Utility;
 using LiteX.Storage.Core;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Services.Interfaces;
 
-namespace Infrastructure.Manager;
+namespace WebAPI.Services;
 
-public class ImageManager
+public class ImageManager : IImageService
 {
-    public readonly ILiteXBlobService _BlobService;
+    private readonly ILiteXBlobService _BlobService;
 
-    public readonly ImageSharingDbContext _Context;
+    private readonly ImageSharingDbContext _Context;
 
-    public readonly UniqueFileNameAssigner _NameAssigner;
+    private readonly UniqueFileNameAssigner _NameAssigner;
 
     public ImageManager(ILiteXBlobService blobService, ImageSharingDbContext context, UniqueFileNameAssigner nameAssigner)
     {

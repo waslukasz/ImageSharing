@@ -1,14 +1,9 @@
-﻿using Application_Core.Model;
+﻿using Application_Core.Common.Specification;
+using Application_Core.Model;
 using Infrastructure.Database;
-using Infrastructure.EF.Entity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Infrastructure.EF.Evaluator;
 
-namespace Infrastructure.EF.Repository.ReactionCommentRepository
+namespace Infrastructure.EF.Repository.ReactionRepository
 {
     public class ReactionRepository : IReactionRepository
     {
@@ -21,15 +16,18 @@ namespace Infrastructure.EF.Repository.ReactionCommentRepository
 
         public async Task AddReactionAsync(Reaction reaction)
         {
-            if(_context.Reactions.Contains(reaction))
-            {
-                await DeleteAsync(reaction);
-            }
-            else
-            {
-                _context.Reactions.Add(reaction);
-                await _context.SaveChangesAsync();
-            }
+            _context.Reactions.Add(reaction);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Reaction?> FindByCriteria(ISpecification<Reaction> criteria)
+        {
+            return await Task.FromResult(
+                SpecificationToQueryEvaluator<Reaction>.ApplySpecification(
+                    _context.Reactions, 
+                    criteria
+                    ).FirstOrDefault()
+                );
         }
 
         public async Task DeleteAsync(Reaction reaction)

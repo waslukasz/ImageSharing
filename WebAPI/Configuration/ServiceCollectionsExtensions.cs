@@ -1,11 +1,8 @@
 ﻿using Infrastructure.Database;
 using Infrastructure.EF.Repository.PostRepository;
-using Infrastructure.Manager;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Extension
+namespace WebAPI.Configuration
 {
 	public static class ServiceCollectionsExtensions
 	{
@@ -14,8 +11,6 @@ namespace Infrastructure.Extension
 			services.AddDbContext<ImageSharingDbContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
 			);
-            services.AddScoped<PostManager>();
-            services.AddScoped<IPostRepository, PostRepository>();
 		}
 	}
 }

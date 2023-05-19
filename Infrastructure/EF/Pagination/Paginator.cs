@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Utility.Pagination;
+namespace Infrastructure.EF.Pagination;
 
 public class Paginator<TEntity> : IPaginator<TEntity> where TEntity: class
 {

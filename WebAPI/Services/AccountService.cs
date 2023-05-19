@@ -3,17 +3,17 @@ using Application_Core.Exception;
 using AutoMapper;
 using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Identity;
-using WebAPI.Managers.Interfaces;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Services;
 
-public class AccountManager : IAccountManager
+public class AccountService : IAccountService
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserEntity> _userManager;
 
-    public AccountManager(IMapper mapper, UserManager<UserEntity> userManager)
+    public AccountService(IMapper mapper, UserManager<UserEntity> userManager)
     {
         _mapper = mapper;
         _userManager = userManager;

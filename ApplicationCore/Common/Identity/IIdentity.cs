@@ -1,4 +1,4 @@
-﻿namespace Application_Core.Common.Repository;
+﻿namespace Application_Core.Common.Identity;
 
 public interface IIdentity<T> : IEquatable<T> where T: IEquatable<T>
 {

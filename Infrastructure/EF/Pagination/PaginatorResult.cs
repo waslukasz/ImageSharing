@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Utility.Pagination;
+﻿namespace Infrastructure.EF.Pagination;
 
 public record PaginatorResult<T> where T: class
 {

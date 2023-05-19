@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Managers.Interfaces;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
 {
     [ApiController, Route("/api/auth")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthManager _authManager;
+        private readonly IAuthService _authService;
 
-        public AuthenticationController(IConfiguration configuration, IAuthManager authManager)
+        public AuthenticationController(IConfiguration configuration, IAuthService authService)
         {
-            _authManager = authManager;
+            _authService = authService;
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] LoginUserRequest request)
         {
-            return Ok(await _authManager.Login(request));
+            return Ok(await _authService.Login(request));
         }
     }
 }

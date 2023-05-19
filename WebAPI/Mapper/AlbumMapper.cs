@@ -1,5 +1,4 @@
 ﻿using Application_Core.Model;
-using Infrastructure.Utility.Pagination;
 using WebAPI.Response;
 
 namespace WebAPI.Mapper;
@@ -12,7 +11,8 @@ public static class AlbumMapper
         {
             Id = album.Guid,
             Title = album.Title,
-            Description = album.Description
+            Description = album.Description,
+            ImageCount = album.Images.Count()
         };
     }
 }

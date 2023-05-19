@@ -39,9 +39,10 @@ namespace Infrastructure.Database
 			/*optionsBuilder.UseSqlServer(
 				"Server=DESKTOP-7J9U791;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
 			);*/
-			optionsBuilder.UseSqlServer(
-				"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
-			);
+
+			 optionsBuilder.UseSqlServer(
+			 	"Server=(localdb)\\MSSQLLocalDB;Database=ImageSharing;TrustServerCertificate=true;Integrated Security=true"
+			 );
 		}
 
 		protected override void OnModelCreating(ModelBuilder builder)

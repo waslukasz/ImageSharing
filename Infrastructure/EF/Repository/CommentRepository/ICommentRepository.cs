@@ -13,5 +13,6 @@ namespace Infrastructure.EF.Repository.CommentRepository
         Task DeleteAsync(Comment comment);
         Task EditCommentAsync(Comment comment);
         Task<List<Comment>> GetAllCommentsAsync(int postId);
+        Task<Comment> GetCommentByGuIdAsync(Guid guId);
     }
 }
