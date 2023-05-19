@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Application_Core.Common.Specification;
+﻿using Application_Core.Common.Specification;
 
-namespace Infrastructure.Manager.Param;
+namespace Infrastructure.Dto;
 
 public class AlbumSearchDto
 {

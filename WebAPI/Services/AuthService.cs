@@ -8,18 +8,18 @@ using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.AspNetCore.Identity;
 using WebAPI.Configuration;
-using WebAPI.Managers.Interfaces;
 using WebAPI.Request;
+using WebAPI.Services.Interfaces;
 
-namespace WebAPI.Managers;
+namespace WebAPI.Services;
 
-public class AuthManager : IAuthManager
+public class AuthService : IAuthService
 {
     private readonly UserManager<UserEntity> _userManager;
 
     private readonly JwtSettings _jwtSettings;
 
-    public AuthManager(UserManager<UserEntity> userManager, JwtSettings jwtSettings)
+    public AuthService(UserManager<UserEntity> userManager, JwtSettings jwtSettings)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings;

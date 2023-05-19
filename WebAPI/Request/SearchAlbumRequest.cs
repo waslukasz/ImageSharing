@@ -1,22 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application_Core.Common.Specification;
-using Infrastructure.Manager.Param;
+using Infrastructure.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Request;
 
-public class SearchAlbumRequest : IValidatableObject
+public class SearchAlbumRequest : PaginationRequest, IValidatableObject
 {
-    [FromQuery(Name = "title")]
     public string? AlbumTitle { get; set; }
-
-    [FromQuery(Name = "maxImages")]
+    
     public int? MaxImages { get; set; }
     
-    [FromQuery(Name = "minImages")]
     public int? MinImages { get; set; }
-
-    [FromQuery(Name = "orderBy")]
+    
     public OrderBy OrderBy { get; set; } = OrderBy.Desc;
 
     public AlbumSearchDto ToParam()

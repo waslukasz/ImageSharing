@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Utility.Pagination;
+﻿namespace Infrastructure.EF.Pagination;
 
 public interface IPaginator<TEntity> where TEntity: class
 {
