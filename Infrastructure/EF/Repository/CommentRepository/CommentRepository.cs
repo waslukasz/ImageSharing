@@ -1,5 +1,6 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,20 @@ namespace Infrastructure.EF.Repository.CommentRepository
 
         public async Task<List<Comment>> GetAllCommentsAsync(int postId)
         {
-            return _context.Comments.Where(i=>i.PostId==postId).ToList();
+            return _context.Comments
+                .Where(i=>i.PostId==postId)
+                .Include(p=>p.Post)
+                .Include(u=>u.User)
+                .ToList();
+        }
+
+        public async Task<Comment> GetCommentByGuIdAsync(Guid guId)
+        {
+            return await _context.Comments
+                .Where(i=>i.Guid==guId)
+                .Include(p=>p.Post)
+                .Include(u=>u.User)
+                .FirstOrDefaultAsync();
         }
     }
 }

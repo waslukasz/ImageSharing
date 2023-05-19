@@ -1,8 +1,11 @@
-﻿using Infrastructure.EF.Entity;
+﻿using Application_Core.Model;
+using Infrastructure.Dto;
+using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
 using WebAPI.Services;
+using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
 {
@@ -11,47 +14,53 @@ namespace WebAPI.Controllers
     public class CommentController : ControllerBase
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly CommentService _commentService;
+        private readonly ICommentManager _commentService;
 
-        public CommentController(UserManager<UserEntity> userManager, CommentService commentService)
+        public CommentController(UserManager<UserEntity> userManager, ICommentManager commentService)
         {
             _userManager = userManager;
             _commentService = commentService;
         }
-
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddComment([FromBody] AddCommentRequest request)
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if(user is null) return Unauthorized();
+            if (user is null) return Unauthorized();
 
             Guid newCommentGuId = await _commentService.AddComment(request, user);
             return Ok($"Comment GuId: {newCommentGuId}");
 
         }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteComment()
-        {
-            throw new NotImplementedException();
-        }
 
-        [HttpPatch]
-        public async Task<IActionResult> EditComment()
+        //TODO: admin i własciciel moze usuwac
+        [HttpDelete("Delete/{CommentGuId}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] Guid CommentGuId)
         {
-            throw new NotImplementedException();
+            await _commentService.Delete(CommentGuId);
+            return NoContent();
         }
+        //TODO: własciciel moze edytowac 
 
-        [HttpGet("{PostGuId}")]
+        [HttpPatch("Edit")]
+        public async Task<IActionResult> EditComment([FromBody] EditCommentRequest request)
+        {
+            CommentDto commentDto = await _commentService.Edit(request);
+            return Ok(commentDto);
+        }
+  
+        //TODO: paginacja
+        [HttpGet("GetAll/{PostGuId}")]
         public async Task<IActionResult> GetAllComments([FromRoute] Guid PostGuId)
         {
-            return Ok(_commentService.GetAll(PostGuId));
+            return Ok(await _commentService.GetAll(PostGuId));
         }
 
-/*        [HttpGet("{CommentId}")]
-        public async Task<IActionResult> GetCommentById()
+        [HttpGet("GetById/{CommentGuId}")]
+        public async Task<IActionResult> GetCommentById([FromRoute] Guid CommentGuId)
         {
-            throw new NotImplementedException();
-        }*/
+            CommentDto comment = await _commentService.FindByGuId(CommentGuId);
+            return Ok(comment);
+        }
     }
 }

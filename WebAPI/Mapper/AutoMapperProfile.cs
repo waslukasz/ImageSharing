@@ -21,5 +21,9 @@ public class AutoMapperProfile : Profile
 
         CreateMap<AddReactionRequest, Reaction>()
             .ForMember(r=>r.PostId, e=>e.Ignore());
+
+        CreateMap<Comment, CommentDto>()
+            .ForMember(x => x.PostGuId, opt => opt.MapFrom(src => src.Post.Guid))
+            .ForMember(x => x.UserGuId, opt => opt.MapFrom(src => src.User.Guid));
     }
 }
