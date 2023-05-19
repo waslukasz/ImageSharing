@@ -25,13 +25,14 @@ public class ImageService : IImageService
         _NameAssigner = nameAssigner;
     }
 
-    public async Task CreateImage(FileDto imageDto, UserEntity user)
+    public async Task<int> CreateImage(FileDto imageDto, UserEntity user)
     {
         Image image = imageDto.ToImage(_NameAssigner);
         image.User = user;
-
+        
         _Context.Add(image);
         _Context.SaveChanges();
+        return image.Id;
     }
 
     public async Task UpdateImage(ImageDto imageDto, UserEntity user)
@@ -61,6 +62,8 @@ public class ImageService : IImageService
         await _Context.SaveChangesAsync();
     }
 
+    public async Task<Image?> ImageFindByGuid(Guid id)
+        => await _Context.Images.Where(x => x.Guid == id).FirstOrDefaultAsync();
     public async Task<IEnumerable<Image>> GetAll()
     {
         return await _Context.Images.ToListAsync();
