@@ -18,13 +18,14 @@ public class ImageEntityConfiguration : IEntityTypeConfiguration<Image>
         builder
             .HasOne(i => i.Post)
             .WithOne()
-            .OnDelete(DeleteBehavior.ClientCascade)
-            .HasForeignKey<Post>(p => p.ImageId);
-
+            .OnDelete(DeleteBehavior.ClientCascade);
+        builder.
+            HasOne(p => p.Thumbnail)
+            .WithOne(i => i.Image)
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasMany(i => i.Albums)
             .WithMany(a => a.Images);
-
         builder.ToTable("Images");
     }
 }
