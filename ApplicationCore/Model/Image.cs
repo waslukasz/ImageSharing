@@ -25,6 +25,8 @@ public class Image : IUidIdentity<int>
     
     public Stream? Stream { get; set; }
 
+    public Thumbnail Thumbnail { get; set; }
+    public int ThumbnailId { get; set; }
     public Image()
     {
         Guid = Guid.NewGuid();

@@ -55,6 +55,7 @@ namespace Infrastructure.Database
 			builder.ApplyConfiguration(new PostEntityConfiguration());
 			builder.ApplyConfiguration(new ReactionEntityConfiguration());
 			builder.ApplyConfiguration(new StatusEntityConfiguration());
+			builder.ApplyConfiguration(new ThumbnailEntityConfiguration());
 
 			ISeed seed = new Seed.Seed();
 			seed.SeedData(builder);

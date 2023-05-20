@@ -70,6 +70,16 @@ public class DataGenerator
             .RuleFor(i => i.Slug, string.Empty)
             .RuleFor(i => i.UserId, user.Id);
     }
+    
+    public static Faker<Thumbnail> GenerateThumbnailData()
+    {
+        int id = 1;
+
+        return new Faker<Thumbnail>()
+            .RuleFor(i => i.Id, f => (f.IndexFaker) + 1)
+            .RuleFor(i => i.Guid, Guid.NewGuid)
+            .RuleFor(i => i.Name, f => string.Join(' ', f.Lorem.Words()));
+    }
 
     public static Faker<Reaction> GenerateReactionData(ICollection<IUser<int>> users , Post post)
     {

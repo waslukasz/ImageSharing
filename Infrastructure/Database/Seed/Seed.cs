@@ -21,6 +21,17 @@ public class Seed : ISeed
             return p;
         }).ToList() ;
     }
+    
+    private ICollection<Image> AssignThumbnailsToImages(ICollection<Image> images, ICollection<Thumbnail> thumbnails)
+    {
+        if (images.Count != thumbnails.Count)
+            throw new ArgumentException();
+        
+        return images.Select((p, current) => {
+            p.ThumbnailId = thumbnails.ElementAt(current).Id;
+            return p;
+        }).ToList() ;
+    }
 
     private ICollection<AlbumImage> PopulateAlbumImagesJoinTable(ICollection<Album> albums, ICollection<Image> images)
     {
@@ -52,6 +63,7 @@ public class Seed : ISeed
         ICollection<Status> status = new List<Status>(){ new Status(){ Id = 1, Name = "Visible"}, new Status(){ Id = 2, Name = "Hidden"} };
         ICollection<Post> posts = DataGenerator.GeneratePostData(users.First(), status).Generate(postsCount);
         ICollection<Image> images = DataGenerator.GenerateImageData(users.First()).Generate(postsCount);
+        ICollection<Thumbnail> thumbnails = DataGenerator.GenerateThumbnailData().Generate(postsCount);
         ICollection<Album> albums = DataGenerator.GenerateAlbumData(users.First()).Generate(5);
         
         Faker.GlobalUniqueIndex = 0; // IMPORTANT !
@@ -61,11 +73,13 @@ public class Seed : ISeed
         ICollection<Comment> comments = posts.SelectMany(p => DataGenerator.GenerateCommentData(iUsers, p).Generate(10)).ToList();
 
         ICollection<Post> postsWithImages = this.AssignImagesToPosts(posts, images);
+        ICollection<Image> imagesWithThumbnails = AssignThumbnailsToImages(images, thumbnails);
         ICollection<AlbumImage> albumImagesJoinTable = this.PopulateAlbumImagesJoinTable(albums, images);
 
         builder.Entity<Status>().HasData(status);
         builder.Entity<UserEntity>().HasData(users);
-        builder.Entity<Image>().HasData(images);
+        builder.Entity<Thumbnail>().HasData(thumbnails);
+        builder.Entity<Image>().HasData(imagesWithThumbnails);
         builder.Entity<Post>().HasData(postsWithImages);
         builder.Entity<Album>().HasData(albums);
         builder.Entity<AlbumImage>().HasData(albumImagesJoinTable);
