@@ -16,6 +16,18 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.ImageId, opt => opt.MapFrom(src => src.Image.Guid))
             .ForMember(x=>x.StatusName,opt=>opt.MapFrom(src=>src.Status.Name));
 
+        CreateMap<CreatePostRequest, FileDto>()
+            .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Image.FileName))
+            .ForMember(x => x.Length, opt => opt.MapFrom(src => src.Image.Length))
+            .ForMember(x => x.Stream, opt => opt.MapFrom(src => src.Image.OpenReadStream()));
+        CreateMap<CreatePostRequest, Post>()
+            .ForMember(x => x.Image, opt => opt.Ignore())
+            .ForMember(x=>x.UserId,opt=>opt.Ignore())
+            //TODO status w bazie z id 1 i 2 !!
+            .ForMember(x=>x.StatusId,opt=>opt.MapFrom(src=>src.isHidden?1:3))
+            ;
+        
+        
         CreateMap<RegisterAccountRequest, UserEntity>()
             .ForMember(r => r.UserName, e => e.MapFrom(r => r.Username));
 
