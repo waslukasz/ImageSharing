@@ -5,8 +5,10 @@ using AutoMapper;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
+using Infrastructure.EF.Repository.ImageRepository;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.UserRepository;
+using Infrastructure.Utility;
 using WebAPI.Request;
 using WebAPI.Services.Interfaces;
 
@@ -18,20 +20,19 @@ public class PostService : IPostService
     private readonly Paginator<Post> _paginator;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
-    private readonly ImageService _imageService;
+    private readonly UniqueFileNameAssigner _nameAssigner;
 
 
     public PostService(IPostRepository postRepository
         , IMapper mapper
         , IUserRepository userRepository
-        , ImageService imageService
-    )
+        , IImageRepository imageRepository, UniqueFileNameAssigner nameAssigner)
     {
         _postRepository = postRepository;
         _paginator = new();
         _mapper = mapper;
         _userRepository = userRepository;
-        _imageService = imageService;
+        _nameAssigner = nameAssigner;
     }
 
     public async Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page)
@@ -83,10 +84,13 @@ public class PostService : IPostService
 
     public async Task CreateAsync(CreatePostRequest postRequest, UserEntity user)
     {
-        var image = _mapper.Map<FileDto>(postRequest);
-        var post = _mapper.Map<Post>(postRequest);
+        FileDto image = _mapper.Map<FileDto>(postRequest);
+        Post post = _mapper.Map<Post>(postRequest);
+        
         post.User = user;
-        post.Image = await _imageService.CreateImage(image, user);
+        post.Image = image.ToImage(_nameAssigner);
+        post.Image.User = user;
+        
         await _postRepository.CreateAsync(post);
     }
 
@@ -95,18 +99,14 @@ public class PostService : IPostService
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
 
         criteria.AddCriteria(p => p.Guid == postRequest.PostGuid);
-        criteria
-            .AddInclude(p => p.Image);
+        criteria.AddCriteria(p => p.User == user);
 
         var posts = await _postRepository.GetByCriteriaAsync(criteria);
         var post = posts.FirstOrDefault();
+        
         if (post == null)
             throw new PostNotFoundException();
-        var image = await _imageService.ImageFindByGuid(post.Image.Guid);
-        if (image == null)
-        {
-            throw new ImageNotFoundException();
-        }
-        await _imageService.DeleteImage(post.Image.Guid, user);
+
+        await _postRepository.DeleteAsync(post);
     }
 }

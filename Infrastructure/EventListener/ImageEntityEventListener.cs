@@ -24,14 +24,9 @@ public class ImageEntityEventListener
         if (args.Entry.State != EntityState.Deleted)
             return;
         
-        bool result = this._fileManager.DeleteFile(entity.GetStoragePath()).Result;
+        _fileManager.DeleteFile(entity.GetStoragePath()).Wait();
+        _fileManager.DeleteFile(FileManager.GetThumbnailName(entity.GetStoragePath())).Wait();
 
-        Console.WriteLine("-------------------------------------------------");
-        if(result == true)
-            Console.WriteLine($"Deleting image - {entity.Title} - {entity.Guid} ");
-        else
-            Console.WriteLine($"An error occured while deleting image {entity.Title}");
-        Console.WriteLine("-------------------------------------------------");
     }
 
     public void OnImageCreate(object? sender, EntityEntryEventArgs args)
@@ -42,15 +37,35 @@ public class ImageEntityEventListener
         if (args.Entry.State != EntityState.Added)
             return;
         
-        bool result = this._fileManager.UploadFile(entity.GetStoragePath(),entity.Stream).Result;
+        if(entity.Stream is null)
+            return;
 
-        Console.WriteLine("-------------------------------------------------");
-        if(result == true)
-            Console.WriteLine($"File with name - {entity.Title} - successfully uploaded !");
-        else
-            Console.WriteLine($"An error occured while uploading image {entity.Title} ");
-        Console.WriteLine("-------------------------------------------------");
+        string thumbnailName = FileManager.GetThumbnailName(entity.GetStoragePath());
         
+        _fileManager.UploadImage(
+            entity.GetStoragePath(),
+            
+#pragma warning disable CA1416
+            System.Drawing.Image.FromStream(entity.Stream)
+#pragma warning restore CA1416
+            
+        ).Wait();
+
+        _fileManager.CreateThumbnail(
+            thumbnailName,
+            
+#pragma warning disable CA1416
+            System.Drawing.Image.FromStream(entity.Stream), 
+#pragma warning restore CA1416
+            
+            new ThumbnailSettings()
+            ).Wait();
+
+        entity.Thumbnail = new Thumbnail()
+        {
+            Name = thumbnailName
+        };
+
     }
 
     public void OnImageUpdate(object? sender, EntityEntryEventArgs args)
@@ -65,13 +80,29 @@ public class ImageEntityEventListener
 
         if(entity.Stream is null)
             return;
-
-        this._fileManager.DeleteFile(imageBeforeModification.GetStoragePath()).Wait();
-        this._fileManager.UploadFile(entity.GetStoragePath(), entity.Stream).Wait();
         
-        Console.WriteLine("-------------------------------------------------");
-        Console.WriteLine($"File with name - {entity.Title} - successfully updated !");
-        Console.WriteLine("-------------------------------------------------");
+        string oldThumbnailName = FileManager.GetThumbnailName(imageBeforeModification.GetStoragePath());
+        this._fileManager.DeleteFile(imageBeforeModification.GetStoragePath()).Wait();
+        this._fileManager.DeleteFile(oldThumbnailName).Wait();
+        
+        string thumbnailName = FileManager.GetThumbnailName(imageBeforeModification.GetStoragePath());
+        this._fileManager.UploadImage(
+            entity.GetStoragePath(),
+            
+#pragma warning disable CA1416
+            System.Drawing.Image.FromStream(entity.Stream)
+#pragma warning restore CA1416
+            
+        ).Wait();
+        this._fileManager.CreateThumbnail(
+            thumbnailName,
+            
+#pragma warning disable CA1416
+            System.Drawing.Image.FromStream(entity.Stream),
+#pragma warning restore CA1416
+            
+            new ThumbnailSettings()
+            ).Wait();
     }
-    
+
 }

@@ -13,7 +13,5 @@ public class ThumbnailEntityConfiguration : IEntityTypeConfiguration<Thumbnail>
             .HasOne(i => i.Image)
             .WithOne(i => i.Thumbnail)
             .OnDelete(DeleteBehavior.ClientCascade);
-        builder
-            .Ignore(i => i.Stream);
     }
 }

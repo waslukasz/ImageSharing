@@ -1,6 +1,7 @@
 using System.Reflection;
 using Infrastructure.EF.Repository.AlbumRepository;
 using Infrastructure.EF.Repository.CommentRepository;
+using Infrastructure.EF.Repository.ImageRepository;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.ReactionRepository;
 using Infrastructure.EF.Repository.UserRepository;
@@ -86,7 +87,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 // Image section
-builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IImageService,ImageService>();
 
 // Comment section
 builder.Services.AddScoped<ICommentService, CommentService>();

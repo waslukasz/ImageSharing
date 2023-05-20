@@ -8,5 +8,9 @@ public class Thumbnail : IUidIdentity<int>
     public Guid Guid { get; set; }
     public string Name { get; set; }
     public Image Image { get; set; }
-    public Stream? Stream { get; set; }
+
+    public Thumbnail()
+    {
+        Guid = Guid.NewGuid();
+    }
 }

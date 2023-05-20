@@ -15,8 +15,8 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .HasOne(p => p.Status)
             .WithMany(s => s.Posts)
             .OnDelete(DeleteBehavior.ClientCascade);
-        builder.
-            HasOne(p => p.Image)
+        builder
+            .HasOne(p => p.Image)
             .WithOne(i => i.Post)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder

@@ -9,6 +9,7 @@ public interface IImageService
     Task<Image> CreateImage(FileDto imageDto, UserEntity user);
     Task UpdateImage(ImageDto imageDto, UserEntity user);
     Task DeleteImage(Guid id, UserEntity user);
-    Task<IEnumerable<Image>> GetAll();
-    Task<Image?> ImageFindByGuid(Guid id);
+    Task<Image> GetImageWithStream(Guid id);
+    Task<Image> GetImageThumbnailWithStream(Guid id);
+
 }

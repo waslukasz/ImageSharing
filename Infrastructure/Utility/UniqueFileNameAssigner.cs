@@ -5,7 +5,7 @@ namespace Infrastructure.Utility;
 
 public class UniqueFileNameAssigner : ISlugCreator
 {
-    public static char FileNameSeparator = '-';
+    public const char FileNameSeparator = '-';
     public string CreateSlug(params string[] strings)
     {
 
