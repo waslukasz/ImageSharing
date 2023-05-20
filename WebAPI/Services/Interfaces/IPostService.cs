@@ -1,12 +1,15 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Dto;
+using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
+using WebAPI.Request;
 
 namespace WebAPI.Services.Interfaces;
 
 public interface IPostService
 {
-    Task CreateAsync(Post post);
+    Task CreateAsync(CreatePostRequest postRequest,UserEntity user);
     Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page);
     Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page);
+    Task DeleteAsync(DeletePostRequest postRequest,UserEntity user);
 }
