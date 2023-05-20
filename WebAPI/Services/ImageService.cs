@@ -25,14 +25,14 @@ public class ImageService : IImageService
         _NameAssigner = nameAssigner;
     }
 
-    public async Task<int> CreateImage(FileDto imageDto, UserEntity user)
+    public async Task<Image> CreateImage(FileDto imageDto, UserEntity user)
     {
         Image image = imageDto.ToImage(_NameAssigner);
         image.User = user;
         
-        _Context.Add(image);
+        var result = _Context.Add(image);
         _Context.SaveChanges();
-        return image.Id;
+        return result.Entity;
     }
 
     public async Task UpdateImage(ImageDto imageDto, UserEntity user)

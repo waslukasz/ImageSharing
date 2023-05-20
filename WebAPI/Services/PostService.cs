@@ -85,9 +85,8 @@ public class PostService : IPostService
     {
         var image = _mapper.Map<FileDto>(postRequest);
         var post = _mapper.Map<Post>(postRequest);
-        post.UserId = user.Id;
-        var imageId = await _imageService.CreateImage(image, user);
-        post.ImageId = imageId;
+        post.User = user;
+        post.Image = await _imageService.CreateImage(image, user);
         await _postRepository.CreateAsync(post);
     }
 

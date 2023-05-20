@@ -3,6 +3,5 @@
 public enum StatusEnum
 {
     Visible,
-    Hidden,
-    Blocked
+    Hidden
 }

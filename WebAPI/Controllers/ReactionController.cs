@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
             _reactionService = reactionService;
         }
         
-        [HttpPost("add")]
+        [HttpPost("Toggle")]
         public async Task<IActionResult> AddReaction([FromBody] AddReactionRequest request)
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
             if(user is null) 
                 return Unauthorized();
 
-            await _reactionService.AddReaction(request, user);
+            await _reactionService.ToggleReaction(request, user);
             return Ok();
         }
     }

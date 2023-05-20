@@ -5,5 +5,5 @@ namespace WebAPI.Services.Interfaces;
 
 public interface IReactionService
 {
-    Task AddReaction(AddReactionRequest request, UserEntity user);
+    Task ToggleReaction(AddReactionRequest request, UserEntity user);
 }

@@ -6,7 +6,7 @@ namespace WebAPI.Services.Interfaces;
 
 public interface IImageService
 {
-    Task<int> CreateImage(FileDto imageDto, UserEntity user);
+    Task<Image> CreateImage(FileDto imageDto, UserEntity user);
     Task UpdateImage(ImageDto imageDto, UserEntity user);
     Task DeleteImage(Guid id, UserEntity user);
     Task<IEnumerable<Image>> GetAll();

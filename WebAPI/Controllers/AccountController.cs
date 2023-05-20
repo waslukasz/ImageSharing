@@ -29,19 +29,19 @@ namespace WebAPI.Controllers
             return await _accountService.Delete(request) ? NoContent() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("ChangeUsername")]
+        [HttpPatch("ChangeUsername")]
         public async Task<IActionResult> ChangeUsername([FromForm] ChangeUsernameAccountRequest request)
         {
             return await _accountService.ChangeUsername(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("ChangeEmail")]
+        [HttpPatch("ChangeEmail")]
         public async Task<IActionResult> ChangeEmail([FromForm] ChangeEmailAccountRequest request)
         {
             return await _accountService.ChangeEmail(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
         }
         
-        [HttpPut("ChangePassword")]
+        [HttpPatch("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordAccountRequest request)
         {
             return await _accountService.ChangePassword(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);

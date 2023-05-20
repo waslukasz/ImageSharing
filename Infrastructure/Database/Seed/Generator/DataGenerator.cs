@@ -24,14 +24,14 @@ public class DataGenerator
             .RuleFor(u => u.TwoFactorEnabled, false);
     }
     
-    public static Faker<Status> GenerateStatusData()
+    /*public static Faker<Status> GenerateStatusData()
     {
         int id = 1;
         
         return new Faker<Status>()
             .RuleFor(s => s.Id, f => (f.IndexFaker)+1)
             .RuleFor(s => s.Name, f => f.PickRandom<StatusEnum>().ToString());
-    }
+    }*/
 
     public static Faker<Album> GenerateAlbumData(IUser<int> user)
     {

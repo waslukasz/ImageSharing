@@ -49,7 +49,7 @@ public class Seed : ISeed
 
         ICollection<UserEntity> users = DataGenerator.GenerateDummyUserData().Generate(5);
         ICollection<Application_Core.Model.Interface.IUser<int>> iUsers = users.Cast<Application_Core.Model.Interface.IUser<int>>().ToList();
-        ICollection<Status> status = DataGenerator.GenerateStatusData().Generate(3);
+        ICollection<Status> status = new List<Status>(){ new Status(){ Id = 1, Name = "Visible"}, new Status(){ Id = 2, Name = "Hidden"} };
         ICollection<Post> posts = DataGenerator.GeneratePostData(users.First(), status).Generate(postsCount);
         ICollection<Image> images = DataGenerator.GenerateImageData(users.First()).Generate(postsCount);
         ICollection<Album> albums = DataGenerator.GenerateAlbumData(users.First()).Generate(5);
