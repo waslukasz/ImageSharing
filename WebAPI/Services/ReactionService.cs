@@ -23,7 +23,7 @@ namespace WebAPI.Services
             _mapper = mapper;
         }
 
-        public async Task AddReaction(AddReactionRequest request, UserEntity user)
+        public async Task ToggleReaction(AddReactionRequest request, UserEntity user)
         {
             Post post = await _postRepository.GetByGuidAsync(request.Id) ?? throw new PostNotFoundException();
 
