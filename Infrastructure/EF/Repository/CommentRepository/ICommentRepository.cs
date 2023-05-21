@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.EF.Repository.CommentRepository
 {
-    public interface ICommentRepository
+    public interface ICommentRepository : IRepositoryBase<Comment>
     {
-        Task<Guid> AddCommentAsync(Comment comment);
-        Task DeleteAsync(Comment comment);
         Task EditCommentAsync(Comment comment);
         Task<List<Comment>> GetAllCommentsAsync(int postId);
-        Task<Comment> GetCommentByGuIdAsync(Guid guId);
+        Task<Comment?> GetCommentByGuIdAsync(Guid guId);
     }
 }
