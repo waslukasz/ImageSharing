@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using ImageProcessor;
-using ImageProcessor.Imaging.Formats;
+using ImageProcessor.Imaging;
+using Infrastructure.FileManagement.FileSettings;
 using LiteX.Storage.Core;
 
 namespace Infrastructure.FileManagement;
@@ -16,52 +17,34 @@ public class FileManager
         _blobService = blobService;
     }
 
+    public async Task<bool> UploadImage(string blobName, Image image, BaseFileSettings settings)
+    {
+        using (MemoryStream stream = new MemoryStream())
+        {
+            using (MemoryStream outstream = new MemoryStream())
+            {
+                using (ImageFactory factory = new ImageFactory())
+                {
+                    factory
+                        .Load(image)
+                        .Format(settings.GetFormat())
+                        .Resize(new ResizeLayer(settings.GetSize(),ResizeMode.Max))
+                        .Save(outstream);
+                }
+
+                return await _blobService.UploadBlobAsync(blobName,outstream);
+            }
+        }
+    }
+    
     public async Task<bool> DeleteFile(string blobName)
     {
         return await _blobService.DeleteBlobAsync(blobName);
     }
-
-    public async Task<bool> UploadImage(string blobName, Image image)
-    {
-        using (MemoryStream stream = new MemoryStream())
-        {
-            using (MemoryStream outstream = new MemoryStream())
-            {
-                using (ImageFactory factory = new ImageFactory())
-                {
-                    factory
-                        .Load(image)
-                        .Format(new JpegFormat() { Quality = 100 })
-                        .Save(outstream);
-                }
-
-                return await _blobService.UploadBlobAsync(blobName,outstream);
-            }
-        }
-    }
+    
     public async Task<Stream> GetFileStream(string blobName)
     {
         return await _blobService.GetBlobAsync(blobName);
-    }
-
-    public async Task<bool> CreateThumbnail(string blobName, Image image, ThumbnailSettings settings)
-    {
-        using (MemoryStream stream = new MemoryStream())
-        {
-            using (MemoryStream outstream = new MemoryStream())
-            {
-                using (ImageFactory factory = new ImageFactory())
-                {
-                    factory
-                        .Load(image)
-                        .Resize(settings.GetSize())
-                        .Format(settings.GetFormat())
-                        .Save(outstream);
-                }
-
-                return await _blobService.UploadBlobAsync(blobName,outstream);
-            }
-        }
     }
     
     public static string GetThumbnailName(string filename)

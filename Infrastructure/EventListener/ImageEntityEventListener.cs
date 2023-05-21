@@ -1,8 +1,11 @@
-﻿using Application_Core.Model;
+﻿using System.Drawing;
+using Application_Core.Model;
 using Infrastructure.FileManagement;
+using Infrastructure.FileManagement.FileSettings;
 using Infrastructure.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Image = Application_Core.Model.Image;
 
 namespace Infrastructure.EventListener;
 
@@ -29,6 +32,7 @@ public class ImageEntityEventListener
 
     }
 
+#pragma warning disable CA1416
     public void OnImageCreate(object? sender, EntityEntryEventArgs args)
     {
         if(args.Entry.Entity is not Image entity)
@@ -41,25 +45,22 @@ public class ImageEntityEventListener
             return;
 
         string thumbnailName = FileManager.GetThumbnailName(entity.GetStoragePath());
-        
+
+        System.Drawing.Image image = System.Drawing.Image.FromStream(entity.Stream);
+        System.Drawing.Image thumbnail = System.Drawing.Image.FromStream(entity.Stream);
+  
         _fileManager.UploadImage(
             entity.GetStoragePath(),
-            
-#pragma warning disable CA1416
-            System.Drawing.Image.FromStream(entity.Stream)
-#pragma warning restore CA1416
-            
+            image,
+            new ImageFileSettings(new Size(image.Width,image.Height))
         ).Wait();
 
-        _fileManager.CreateThumbnail(
+        _fileManager.UploadImage(
             thumbnailName,
-            
-#pragma warning disable CA1416
-            System.Drawing.Image.FromStream(entity.Stream), 
-#pragma warning restore CA1416
-            
-            new ThumbnailSettings()
+            thumbnail,
+            new ThumbnailFileSettings()
             ).Wait();
+        
 
         entity.Thumbnail = new Thumbnail()
         {
@@ -86,23 +87,22 @@ public class ImageEntityEventListener
         this._fileManager.DeleteFile(oldThumbnailName).Wait();
         
         string thumbnailName = FileManager.GetThumbnailName(imageBeforeModification.GetStoragePath());
+        
+        System.Drawing.Image image = System.Drawing.Image.FromStream(entity.Stream);
+        System.Drawing.Image thumbnail = System.Drawing.Image.FromStream(entity.Stream);
+        
         this._fileManager.UploadImage(
             entity.GetStoragePath(),
-            
-#pragma warning disable CA1416
-            System.Drawing.Image.FromStream(entity.Stream)
-#pragma warning restore CA1416
-            
+            image,
+            new ImageFileSettings(new Size(image.Width,image.Height))
         ).Wait();
-        this._fileManager.CreateThumbnail(
+        
+        this._fileManager.UploadImage(
             thumbnailName,
-            
-#pragma warning disable CA1416
-            System.Drawing.Image.FromStream(entity.Stream),
-#pragma warning restore CA1416
-            
-            new ThumbnailSettings()
+            thumbnail,
+            new ThumbnailFileSettings()
             ).Wait();
     }
+#pragma warning restore CA1416     
 
 }
