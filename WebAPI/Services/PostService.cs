@@ -101,11 +101,7 @@ public class PostService : IPostService
         criteria.AddCriteria(p => p.Guid == postRequest.PostGuid);
         criteria.AddCriteria(p => p.User == user);
 
-        var posts = _postRepository.GetByCriteriaQuery(criteria);
-        var post = posts.FirstOrDefault();
-        
-        if (post == null)
-            throw new PostNotFoundException();
+        Post post = await _postRepository.GetByCriteriaSingle(criteria) ?? throw new PostNotFoundException();;
 
         await _postRepository.Add(post);
     }
