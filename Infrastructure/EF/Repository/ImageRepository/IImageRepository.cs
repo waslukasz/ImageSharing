@@ -2,11 +2,7 @@
 
 namespace Infrastructure.EF.Repository.ImageRepository;
 
-public interface IImageRepository
+public interface IImageRepository : IRepositoryBase<Image>
 {
-    Task<Image?> GetImageByGuid(Guid id);
-
-    Task AddImage(Image image);
-
-    Task DeleteImage(Image image);
+    
 }

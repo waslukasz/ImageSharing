@@ -28,7 +28,7 @@ public class AlbumService :  IAlbumService
         
         PaginatorResult<Album> result = await _paginator
             .SetItemNumberPerPage(maxItems)
-            .Paginate(_albumRepository.GetAlbumsByCriteriaQuery(
+            .Paginate(_albumRepository.GetByCriteriaQuery(
                 specification
             ), page);
 
@@ -59,7 +59,7 @@ public class AlbumService :  IAlbumService
             specification.SetOrderByDescending(c => c.Title);
         }
         
-        IQueryable<Album> query = _albumRepository.GetAlbumsByCriteriaQuery(
+        IQueryable<Album> query = _albumRepository.GetByCriteriaQuery(
             specification
         );
 

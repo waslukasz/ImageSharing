@@ -1,4 +1,5 @@
-﻿using Application_Core.Exception;
+﻿using Application_Core.Common.Specification;
+using Application_Core.Exception;
 using Application_Core.Model;
 using AutoMapper;
 using Infrastructure.Dto;
@@ -28,7 +29,7 @@ namespace WebAPI.Services
 
         public async Task<Guid> AddComment(AddCommentRequest request, UserEntity user)
         {
-            Post? post = await _postRepository.GetByGuidAsync(request.PostId);
+            Post? post = await _postRepository.GetByGuid(request.PostId);
 
             if (post is null) throw new PostNotFoundException();
 
@@ -41,47 +42,49 @@ namespace WebAPI.Services
                 UserId= user.Id
             };
 
-            return await _commentRepository.AddCommentAsync(comment);
+            await _commentRepository.Add(comment);
+            return comment.Guid;
         }
 
         public async Task<List<CommentDto>> GetAll(Guid postGuId)
         {
-            Post post = await _postRepository.GetByGuidAsync(postGuId) ?? throw new PostNotFoundException();
-            
-            List<Comment> comments = await _commentRepository.GetAllCommentsAsync(post.Id);
+            Post post = await _postRepository.GetByGuid(postGuId) ?? throw new PostNotFoundException();
+
+            BaseSpecification<Comment> specification = new BaseSpecification<Comment>();
+
+            specification.AddCriteria(c => c.PostId == post.Id);
+            specification
+                .AddInclude(c => c.Post)
+                .AddInclude(c => c.User);
+
+            List<Comment> comments = (await _commentRepository.GetByCriteria(specification)).ToList();
             List<CommentDto> result = _mapper.Map<List<Comment>, List<CommentDto>>(comments);
             return result;
         }
 
         public async Task<CommentDto> FindByGuId(Guid commentGuId)
         {
-            Comment comment = await _commentRepository.GetCommentByGuIdAsync(commentGuId);
-            if(comment is null) throw new CommentNotFoundException();
-
+            Comment comment = await _commentRepository.GetCommentByGuIdAsync(commentGuId) ?? throw new CommentNotFoundException();
             CommentDto commentDto = _mapper.Map<CommentDto>(comment);
-
-
-            return await Task.FromResult(commentDto);
+            
+            return commentDto;
         }
 
         public async Task<CommentDto> Edit(EditCommentRequest request)
         {
-            Comment comment = await _commentRepository.GetCommentByGuIdAsync(request.CommentGuId);
-
-            if(comment is null) throw new CommentNotFoundException();
+            Comment comment = await _commentRepository.GetCommentByGuIdAsync(request.CommentGuId) ?? throw new CommentNotFoundException();
             comment.Text = request.Text;
             await _commentRepository.EditCommentAsync(comment);
 
             CommentDto commentDto = _mapper.Map<CommentDto>(comment);
 
-            return await Task.FromResult(commentDto);
+            return commentDto;
         }
 
-        public async Task Delete(Guid CommentGuid)
+        public async Task Delete(Guid commentGuid)
         {
-            Comment comment = await _commentRepository.GetCommentByGuIdAsync(CommentGuid);
-            if(comment is null ) throw new CommentNotFoundException();
-            await _commentRepository.DeleteAsync(comment);
+            Comment comment = await _commentRepository.GetCommentByGuIdAsync(commentGuid) ?? throw new CommentNotFoundException();
+            await _commentRepository.Remove(comment);
         }
     }
 }

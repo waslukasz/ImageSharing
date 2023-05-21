@@ -35,7 +35,7 @@ public class ImageService : IImageService
 
     public async Task<Image> GetImageWithStream(Guid id)
     {
-        Image image = await _imageRepository.GetImageByGuid(id) ?? throw new ImageNotFoundException();
+        Image image = await _imageRepository.GetByGuid(id) ?? throw new ImageNotFoundException();
         image.Stream = await _fileManager.GetFileStream(image.GetStoragePath());
 
         return image;
@@ -44,7 +44,7 @@ public class ImageService : IImageService
     
     public async Task<Image> GetImageThumbnailWithStream(Guid id)
     {
-        Image image = await _imageRepository.GetImageByGuid(id) ?? throw new ImageNotFoundException();
+        Image image = await _imageRepository.GetByGuid(id) ?? throw new ImageNotFoundException();
         image.Stream = await _fileManager.GetFileStream(FileManager.GetThumbnailName(image.GetStoragePath()));
 
         return image;

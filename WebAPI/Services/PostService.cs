@@ -59,7 +59,7 @@ public class PostService : IPostService
 
     public async Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page)
     {
-        UserEntity user = await _userRepository.GetUserByGuidAsync(id) ?? throw new UserNotFoundException();
+        UserEntity user = await _userRepository.GetByGuid(id) ?? throw new UserNotFoundException();
 
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
 
@@ -91,7 +91,7 @@ public class PostService : IPostService
         post.Image = image.ToImage(_nameAssigner);
         post.Image.User = user;
         
-        await _postRepository.CreateAsync(post);
+        await _postRepository.Add(post);
     }
 
     public async Task DeleteAsync(DeletePostRequest postRequest, UserEntity user)
@@ -101,12 +101,12 @@ public class PostService : IPostService
         criteria.AddCriteria(p => p.Guid == postRequest.PostGuid);
         criteria.AddCriteria(p => p.User == user);
 
-        var posts = await _postRepository.GetByCriteriaAsync(criteria);
+        var posts = _postRepository.GetByCriteriaQuery(criteria);
         var post = posts.FirstOrDefault();
         
         if (post == null)
             throw new PostNotFoundException();
 
-        await _postRepository.DeleteAsync(post);
+        await _postRepository.Add(post);
     }
 }

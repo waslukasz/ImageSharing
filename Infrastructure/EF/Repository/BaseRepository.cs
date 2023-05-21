@@ -8,39 +8,49 @@ namespace Infrastructure.EF.Repository;
 
 public abstract class BaseRepository<TEntity,TKey> : IRepositoryBase<TEntity> where TEntity: class, IUidIdentity<TKey> where TKey: IEquatable<TKey>
 {
-    private readonly ImageSharingDbContext _context;
+    protected readonly ImageSharingDbContext Context;
 
     protected BaseRepository(ImageSharingDbContext context)
     {
-        _context = context;
+        Context = context;
     }
     
-    public async Task<IEnumerable<TEntity>> GetByCriteria(ISpecification<TEntity> criteria)
+    public virtual async Task<IEnumerable<TEntity>> GetByCriteria(ISpecification<TEntity> criteria)
     {
         return await GetByCriteriaQuery(criteria).ToListAsync();
     }
     
-    public IQueryable<TEntity> GetByCriteriaQuery(ISpecification<TEntity> criteria)
+    public virtual IQueryable<TEntity> GetByCriteriaQuery(ISpecification<TEntity> criteria)
     {
         return SpecificationToQueryEvaluator<TEntity>.ApplySpecification(
-            _context.Set<TEntity>(),
+            Context.Set<TEntity>(),
             criteria
         );
     }
 
-    public async Task<TEntity?> GetByGuid(Guid id)
+    public virtual async Task<TEntity?> GetByCriteriaSingle(ISpecification<TEntity> criteria)
     {
-        return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Guid == id);
+        return await SpecificationToQueryEvaluator<TEntity>.ApplySpecification(
+            Context.Set<TEntity>(),
+            criteria
+        ).FirstOrDefaultAsync();
     }
 
-    public async Task Add(TEntity entity)
+    public virtual async Task<TEntity?> GetByGuid(Guid id)
     {
-        await _context.Set<TEntity>().AddAsync(entity);
+        return await Context.Set<TEntity>().FirstOrDefaultAsync(e => e.Guid == id);
     }
 
-    public async Task Remove(TEntity entity)
+    public virtual async Task Add(TEntity entity)
     {
-        await Task.FromResult(_context.Set<TEntity>().Remove(entity));
+        await Context.Set<TEntity>().AddAsync(entity);
+        await Context.SaveChangesAsync();
+    }
+
+    public virtual async Task Remove(TEntity entity)
+    {
+        await Task.FromResult(Context.Set<TEntity>().Remove(entity));
+        await Context.SaveChangesAsync();
     }
 
 }

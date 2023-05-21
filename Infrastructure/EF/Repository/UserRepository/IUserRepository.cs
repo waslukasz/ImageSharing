@@ -2,7 +2,7 @@
 
 namespace Infrastructure.EF.Repository.UserRepository;
 
-public interface IUserRepository
+public interface IUserRepository : IRepositoryBase<UserEntity>
 {
-    public Task<UserEntity?> GetUserByGuidAsync(Guid id);
+
 }

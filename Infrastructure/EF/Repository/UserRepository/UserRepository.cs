@@ -4,17 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.EF.Repository.UserRepository;
 
-public class UserRepository : IUserRepository
+public class UserRepository : BaseRepository<UserEntity,int>, IUserRepository 
 {
-    private readonly ImageSharingDbContext _context;
-
-    public UserRepository(ImageSharingDbContext context)
+    public UserRepository(ImageSharingDbContext context) : base(context)
     {
-        _context = context;
-    }
-
-    public async Task<UserEntity?> GetUserByGuidAsync(Guid id)
-    {
-        return await _context.Users.Where(u => u.Guid == id).FirstOrDefaultAsync();
+        
     }
 }
