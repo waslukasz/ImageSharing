@@ -1,8 +1,10 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using WebAPI.Request;
 using WebAPI.Services;
 using WebAPI.Services.Interfaces;
@@ -15,49 +17,53 @@ namespace WebAPI.Controllers
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly ICommentService _commentService;
-        
+
 
         public CommentController(UserManager<UserEntity> userManager, ICommentService commentService)
         {
             _userManager = userManager;
             _commentService = commentService;
         }
+
         [HttpPost("Add")]
+        [Authorize]
         public async Task<IActionResult> AddComment([FromBody] AddCommentRequest request)
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (user is null) return Unauthorized();
-
             Guid newCommentGuId = await _commentService.AddComment(request, user);
-            return Ok($"Comment GuId: {newCommentGuId}");
+            return Ok(new { CommentGuId = newCommentGuId, Text = request.Text });
 
         }
 
-        //TODO: admin i własciciel moze usuwac
         [HttpDelete("Delete/{CommentGuId}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment([FromRoute] Guid CommentGuId)
         {
-            await _commentService.Delete(CommentGuId);
+            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
+
+            await _commentService.Delete(CommentGuId, user);
             return NoContent();
         }
-        //TODO: własciciel moze edytowac 
 
         [HttpPatch("Edit")]
+        [Authorize]
         public async Task<IActionResult> EditComment([FromBody] EditCommentRequest request)
         {
-            CommentDto commentDto = await _commentService.Edit(request);
+            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
+
+            CommentDto commentDto = await _commentService.Edit(request, user);
             return Ok(commentDto);
         }
-  
-        //TODO: paginacja
-        [HttpGet("GetAll/{PostGuId}")]
-        public async Task<IActionResult> GetAllComments([FromRoute] Guid PostGuId)
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllComments([FromQuery] GetAllCommentsRequest request)
         {
-            return Ok(await _commentService.GetAll(PostGuId));
+            if (!ModelState.IsValid) return BadRequest();
+            return Ok(await _commentService.GetAll(request));
         }
 
-        [HttpGet("GetById/{CommentGuId}")]
+        [HttpGet("GetByGuId/{CommentGuId}")]
         public async Task<IActionResult> GetCommentById([FromRoute] Guid CommentGuId)
         {
             CommentDto comment = await _commentService.FindByGuId(CommentGuId);
