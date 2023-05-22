@@ -24,7 +24,7 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.Image, opt => opt.Ignore())
             .ForMember(x=>x.UserId,opt=>opt.Ignore())
             .ForMember(x=>x.StatusId,opt=>opt.MapFrom(src=>src.isHidden?2:1));
-        CreateMap<RegisterAccountRequest, UserEntity>()
+        CreateMap<CreateAccountRequest, UserEntity>()
             .ForMember(r => r.UserName, opt => opt.MapFrom(r => r.Username));
         CreateMap<AddReactionRequest, Reaction>()
             .ForMember(r=>r.PostId, e=>e.Ignore());

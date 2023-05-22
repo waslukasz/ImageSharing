@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:WebAPI.Controllers.AccountController.Get(System.String)">
+            <summary>
+            Gets account by username
+            </summary>
+            <remarks>This can only be done by logged in user.<br/>Required Admin rights to get other user account.</remarks>
+            <param name="username">Username associated with account</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AccountController.Create(WebAPI.Request.CreateAccountRequest)">
+            <summary>
+            Create account
+            </summary>
+            <param name="request">New account object</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AccountController.Update(WebAPI.Request.UpdateAccountRequest,System.String)">
+            <summary>
+            Update account
+            </summary>
+            <remarks>This can only be done by logged in user.<br/>Required Admin rights to update other user account.</remarks>
+            <param name="request">Updated account object</param>
+            <param name="username">Username associated with account</param>
+            <returns></returns>
+            <exception cref="T:Application_Core.Exception.BadRequestException"></exception>
+        </member>
+        <member name="M:WebAPI.Controllers.AccountController.Delete(System.String)">
+            <summary>
+            Delete account
+            </summary>
+            <remarks>This can only be done by logged in user.<br/>Required Admin rights to delete other user account.</remarks>
+            <param name="username"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthenticationController.Authenticate(WebAPI.Request.LoginUserRequest)">
+            <summary>
+            Get JWT Security token for account
+            </summary>
+            <param name="request">Account details</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
