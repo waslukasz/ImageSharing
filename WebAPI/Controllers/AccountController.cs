@@ -1,50 +1,65 @@
 using System.Net;
 using Application_Core.Exception;
+using Infrastructure.EF.Entity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
+using WebAPI.Response;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly UserManager<UserEntity> _userManager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, UserManager<UserEntity> userManager)
         {
             _accountService = accountService;
-        }
-        
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromForm] RegisterAccountRequest request)
-        {
-            return await _accountService.Register(request) ? NoContent() : BadRequest();
+            _userManager = userManager;
         }
 
-        [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete([FromForm] DeleteAccountRequest request)
+        [HttpPost("Get/{username}")]
+        public async Task<IActionResult> Get([FromRoute] string username)
         {
-            return await _accountService.Delete(request) ? NoContent() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            if (!await HasAccessAsync(username)) return Unauthorized();
+            return Ok(await _accountService.GetByNameAsync(username));
+        }
+
+        [HttpPost("Create")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Create([FromBody] RegisterAccountRequest request)
+        {
+            return await _accountService.CreateAsync(request) ? NoContent() : BadRequest();
         }
         
-        [HttpPatch("ChangeUsername")]
-        public async Task<IActionResult> ChangeUsername([FromForm] ChangeUsernameAccountRequest request)
+        [HttpPatch("Update/{username}")]
+        public async Task<IActionResult> Update([FromBody] UpdateAccountRequest request, [FromRoute] string username)
         {
-            return await _accountService.ChangeUsername(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            if (!await HasAccessAsync(username)) return Unauthorized();
+            return await _accountService.UpdateAsync(username, request) ? NoContent() : throw new BadRequestException("Something did not work.", HttpStatusCode.BadRequest);
         }
-        
-        [HttpPatch("ChangeEmail")]
-        public async Task<IActionResult> ChangeEmail([FromForm] ChangeEmailAccountRequest request)
+
+        [HttpDelete("Delete/{username}")]
+        public async Task<IActionResult> Delete([FromRoute] string username)
         {
-            return await _accountService.ChangeEmail(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            if (!await HasAccessAsync(username)) return Unauthorized();
+            var user = await _userManager.FindByNameAsync(username);
+            await _accountService.DeleteAsync(user);
+            return NoContent();
         }
-        
-        [HttpPatch("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordAccountRequest request)
+
+        private async Task<bool> HasAccessAsync(string username)
         {
-            return await _accountService.ChangePassword(request) ? Ok() : throw new BadRequestException("Invalid username or password.", HttpStatusCode.BadRequest);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            if (await _userManager.IsInRoleAsync(currentUser, "Admin")) return true;
+            var user = await _userManager.FindByNameAsync(username) ?? throw new UserNotFoundException();
+            return user == currentUser ? true : false;
         }
     }
 }

@@ -4,6 +4,7 @@ using AutoMapper;
 using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Identity;
 using WebAPI.Request;
+using WebAPI.Response;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services;
@@ -18,8 +19,15 @@ public class AccountService : IAccountService
         _mapper = mapper;
         _userManager = userManager;
     }
-    
-    public async Task<bool> Register(RegisterAccountRequest request)
+
+    public async Task<GetAccountResponse> GetByNameAsync(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username) ?? throw new UserNotFoundException();
+        var result = _mapper.Map<GetAccountResponse>(user);
+        return result;
+    }
+
+    public async Task<bool> CreateAsync(RegisterAccountRequest request)
     {
         var user = _mapper.Map<UserEntity>(request);
 
@@ -33,50 +41,19 @@ public class AccountService : IAccountService
         return result.Succeeded;
     }
 
-    public async Task<bool> Delete(DeleteAccountRequest request)
+    public async Task<bool> UpdateAsync(string username, UpdateAccountRequest request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
-        
-        if (!await _userManager.CheckPasswordAsync(user, request.Password))
-            return false;
-        
-        await _userManager.DeleteAsync(user);
-        return true;
+        var user = await _userManager.FindByNameAsync(username);
+
+        if (await _userManager.FindByNameAsync(username) is null)
+            throw new UserNotFoundException();
+
+        _mapper.Map(request, user);
+        return (await _userManager.UpdateAsync(user)).Succeeded;
     }
-    
-    public async Task<bool> ChangeUsername(ChangeUsernameAccountRequest request)
+
+    public async Task<bool> DeleteAsync(UserEntity user)
     {
-        var user = await _userManager.FindByNameAsync(request.Username);
-        
-        if (!await _userManager.CheckPasswordAsync(user, request.Password)) 
-            return false;
-        if (!(await _userManager.SetUserNameAsync(user, request.NewUsername)).Succeeded) 
-            throw new BadRequestException("Username already taken.", HttpStatusCode.BadRequest);
-        
-        return true;
-    }
-    
-    public async Task<bool> ChangeEmail(ChangeEmailAccountRequest request)
-    {
-        var user = await _userManager.FindByNameAsync(request.Username);
-        
-        if (!await _userManager.CheckPasswordAsync(user, request.Password)) 
-            return false;
-        if (await _userManager.FindByEmailAsync(request.NewEmail) is not null)
-             throw new BadRequestException("Email already taken.", HttpStatusCode.BadRequest);
-        
-        await _userManager.SetEmailAsync(user, request.NewEmail);
-        return true;
-    }
-    
-    public async Task<bool> ChangePassword(ChangePasswordAccountRequest request)
-    {
-        var user = await _userManager.FindByNameAsync(request.Username);
-        
-        if (!await _userManager.CheckPasswordAsync(user, request.Password))
-            return false;
-        
-        await _userManager.ChangePasswordAsync(user, request.Password, request.NewPassword);
-        return true;
+        return (await _userManager.DeleteAsync(user)).Succeeded;
     }
 }

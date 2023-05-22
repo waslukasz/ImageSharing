@@ -1,12 +1,13 @@
-﻿using WebAPI.Request;
+﻿using Infrastructure.EF.Entity;
+using WebAPI.Request;
+using WebAPI.Response;
 
 namespace WebAPI.Services.Interfaces;
 
 public interface IAccountService
 {
-    Task<bool> Register(RegisterAccountRequest request);
-    Task<bool> Delete(DeleteAccountRequest request);
-    Task<bool> ChangeUsername(ChangeUsernameAccountRequest request);
-    Task<bool> ChangeEmail(ChangeEmailAccountRequest request);
-    Task<bool> ChangePassword(ChangePasswordAccountRequest request);
+    Task<GetAccountResponse> GetByNameAsync(string username);
+    Task<bool> CreateAsync(RegisterAccountRequest request);
+    Task<bool> DeleteAsync(UserEntity request);
+    Task<bool> UpdateAsync(string username, UpdateAccountRequest request);
 }
