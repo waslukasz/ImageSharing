@@ -23,6 +23,19 @@ namespace WebAPI.Controllers
             _accountService = accountService;
             _userManager = userManager;
         }
+
+        /// <summary>
+        /// Gets current account
+        /// </summary>
+        /// <remarks>This can only be done by logged in user.</remarks>
+        /// <returns></returns>
+        [HttpGet("Get")]
+        public async Task<IActionResult> GetCurrentAccount()
+        {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User) ?? throw new UserNotFoundException();
+            var result = await _accountService.GetByNameAsync(currentUser.UserName);
+            return Ok(result);
+        }
         
         /// <summary>
         /// Gets account by username
@@ -70,6 +83,7 @@ namespace WebAPI.Controllers
         /// <remarks>This can only be done by logged in user.<br/>Required Admin rights to delete other user account.</remarks>
         /// <param name="username"></param>
         /// <returns></returns>
+        // TODO: Nie można usunąć użytkownika, gdy ma dodane zdjęcie. Problem z bazą danych.
         [HttpDelete("Delete/{username}")]
         public async Task<IActionResult> Delete([FromRoute] string username)
         {
@@ -81,7 +95,7 @@ namespace WebAPI.Controllers
 
         private async Task<bool> HasAccessAsync(string username)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User) ?? throw new UserNotFoundException();
             if (await _userManager.IsInRoleAsync(currentUser, "Admin")) return true;
             var user = await _userManager.FindByNameAsync(username) ?? throw new UserNotFoundException();
             return user == currentUser ? true : false;
