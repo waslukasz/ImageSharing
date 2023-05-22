@@ -23,7 +23,13 @@ namespace WebAPI.Controllers
             _accountService = accountService;
             _userManager = userManager;
         }
-
+        
+        /// <summary>
+        /// Gets account by username
+        /// </summary>
+        /// <remarks>This can only be done by logged in user.<br/>Required Admin rights to get other user account.</remarks>
+        /// <param name="username">Username associated with account</param>
+        /// <returns></returns>
         [HttpPost("Get/{username}")]
         public async Task<IActionResult> Get([FromRoute] string username)
         {
@@ -31,13 +37,26 @@ namespace WebAPI.Controllers
             return Ok(await _accountService.GetByNameAsync(username));
         }
 
+        /// <summary>
+        /// Create account
+        /// </summary>
+        /// <param name="request">New account object</param>
+        /// <returns></returns>
         [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] RegisterAccountRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateAccountRequest request)
         {
             return await _accountService.CreateAsync(request) ? NoContent() : BadRequest();
         }
         
+        /// <summary>
+        /// Update account
+        /// </summary>
+        /// <remarks>This can only be done by logged in user.<br/>Required Admin rights to update other user account.</remarks>
+        /// <param name="request">Updated account object</param>
+        /// <param name="username">Username associated with account</param>
+        /// <returns></returns>
+        /// <exception cref="BadRequestException"></exception>
         [HttpPatch("Update/{username}")]
         public async Task<IActionResult> Update([FromBody] UpdateAccountRequest request, [FromRoute] string username)
         {
@@ -45,6 +64,12 @@ namespace WebAPI.Controllers
             return await _accountService.UpdateAsync(username, request) ? NoContent() : throw new BadRequestException("Something did not work.", HttpStatusCode.BadRequest);
         }
 
+        /// <summary>
+        /// Delete account
+        /// </summary>
+        /// <remarks>This can only be done by logged in user.<br/>Required Admin rights to delete other user account.</remarks>
+        /// <param name="username"></param>
+        /// <returns></returns>
         [HttpDelete("Delete/{username}")]
         public async Task<IActionResult> Delete([FromRoute] string username)
         {

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebAPI.Request;
 
-public class RegisterAccountRequest
+public class CreateAccountRequest
 {
     [EmailAddress]
     [Required]
@@ -14,6 +15,7 @@ public class RegisterAccountRequest
     [Required]
     [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Password has to meet specified criteria: min. 8 characters, 1 lower case, 1 uppercase, 1 number, 1 special character.")]
     [DataType(DataType.Password)]
+    [DefaultValue("string")]
     public string Password { get; set; }
     [Required]
     [Compare("Password", ErrorMessage = "Password and Confirm password did not match.")]

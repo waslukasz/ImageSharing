@@ -27,7 +27,7 @@ public class AccountService : IAccountService
         return result;
     }
 
-    public async Task<bool> CreateAsync(RegisterAccountRequest request)
+    public async Task<bool> CreateAsync(CreateAccountRequest request)
     {
         var user = _mapper.Map<UserEntity>(request);
 

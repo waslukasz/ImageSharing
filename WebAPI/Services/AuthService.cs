@@ -47,5 +47,4 @@ public class AuthService : IAuthService
             .Issuer(_jwtSettings.Issuer)
             .Encode();
     }
-    
 }

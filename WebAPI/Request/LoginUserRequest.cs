@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Request;
+﻿using System.ComponentModel;
+
+namespace WebAPI.Request;
 
 public class LoginUserRequest
 {

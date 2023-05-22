@@ -14,12 +14,17 @@ namespace WebAPI.Controllers
         {
             _authService = authService;
         }
-
+        
+        /// <summary>
+        /// Get JWT Security token for account
+        /// </summary>
+        /// <param name="request">Account details</param>
+        /// <returns></returns>
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] LoginUserRequest request)
         {
-            return Ok(await _authService.Login(request));
+            return Ok(new { token = await _authService.Login(request) });
         }
     }
 }
