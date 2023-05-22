@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.EF.Repository.CommentRepository
 {
-    public class CommentRepository : BaseRepository<Comment,int>, ICommentRepository
+    public class CommentRepository : BaseRepository<Comment, int>, ICommentRepository
     {
         public CommentRepository(ImageSharingDbContext context) : base(context)
         {
-            
+
         }
 
         public async Task EditCommentAsync(Comment comment)
@@ -25,18 +25,26 @@ namespace Infrastructure.EF.Repository.CommentRepository
         public async Task<List<Comment>> GetAllCommentsAsync(int postId)
         {
             return await Context.Comments
-                .Where(i=>i.PostId==postId)
-                .Include(p=>p.Post)
-                .Include(u=>u.User)
+                .Where(i => i.PostId == postId)
+                .Include(p => p.Post)
+                .Include(u => u.User)
                 .ToListAsync();
+        }
+
+        public async Task<IQueryable<Comment>> GetAllCommentsQueryAsync(int postId)
+        {
+            return Context.Comments
+                .Where(i => i.PostId == postId)
+                .Include(p => p.Post)
+                .Include(u => u.User);
         }
 
         public async Task<Comment?> GetCommentByGuIdAsync(Guid guId)
         {
             return await Context.Comments
-                .Where(i=>i.Guid==guId)
-                .Include(p=>p.Post)
-                .Include(u=>u.User)
+                .Where(i => i.Guid == guId)
+                .Include(p => p.Post)
+                .Include(u => u.User)
                 .FirstOrDefaultAsync();
         }
     }
