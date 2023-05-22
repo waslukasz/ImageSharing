@@ -4,6 +4,13 @@
         <name>WebAPI</name>
     </assembly>
     <members>
+        <member name="M:WebAPI.Controllers.AccountController.GetCurrentAccount">
+            <summary>
+            Gets current account
+            </summary>
+            <remarks>This can only be done by logged in user.</remarks>
+            <returns></returns>
+        </member>
         <member name="M:WebAPI.Controllers.AccountController.Get(System.String)">
             <summary>
             Gets account by username
@@ -37,12 +44,42 @@
             <param name="username"></param>
             <returns></returns>
         </member>
-        <member name="M:WebAPI.Controllers.AuthenticationController.Authenticate(WebAPI.Request.LoginUserRequest)">
+        <member name="M:WebAPI.Controllers.AuthenticationController.Login(WebAPI.Request.LoginUserRequest)">
             <summary>
             Get JWT Security token for account
             </summary>
             <param name="request">Account details</param>
             <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthenticationController.GetRoles">
+            <summary>
+            Get current account roles
+            </summary>
+            <remarks>This can only be done by logged in user.</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthenticationController.GetRolesByUser(System.String)">
+            <summary>
+            Get account roles by username
+            </summary>
+            <remarks>Required Admin rights to get other account roles.</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthenticationController.AssignRole(WebAPI.Request.AssignRoleAuthRequest)">
+            <summary>
+            Assign role to account
+            </summary>
+            <remarks>Required Admin rights to assign role.</remarks>
+            <returns></returns>
+            <exception cref="T:Application_Core.Exception.BadRequestException">Account already has role.</exception>
+        </member>
+        <member name="M:WebAPI.Controllers.AuthenticationController.RemoveRole(WebAPI.Request.RemoveRoleAuthRequest)">
+            <summary>
+            Remove role from account
+            </summary>
+            <remarks>Required Admin rights to remove role.</remarks>
+            <returns></returns>
+            <exception cref="T:Application_Core.Exception.BadRequestException">Account did not had this role.</exception>
         </member>
     </members>
 </doc>
