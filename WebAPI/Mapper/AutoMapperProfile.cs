@@ -3,6 +3,7 @@ using AutoMapper;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using WebAPI.Request;
+using WebAPI.Response;
 
 namespace WebAPI.Mapper;
 
@@ -24,11 +25,15 @@ public class AutoMapperProfile : Profile
             .ForMember(x=>x.UserId,opt=>opt.Ignore())
             .ForMember(x=>x.StatusId,opt=>opt.MapFrom(src=>src.isHidden?2:1));
         CreateMap<RegisterAccountRequest, UserEntity>()
-            .ForMember(r => r.UserName, e => e.MapFrom(r => r.Username));
+            .ForMember(r => r.UserName, opt => opt.MapFrom(r => r.Username));
         CreateMap<AddReactionRequest, Reaction>()
             .ForMember(r=>r.PostId, e=>e.Ignore());
         CreateMap<Comment, CommentDto>()
             .ForMember(x => x.PostGuId, opt => opt.MapFrom(src => src.Post.Guid))
             .ForMember(x => x.UserGuId, opt => opt.MapFrom(src => src.User.Guid));
+        CreateMap<UpdateAccountRequest, UserEntity>()
+            .ForMember(u => u.UserName, opt => opt.MapFrom(src => src.Username));
+        CreateMap<UserEntity, GetAccountResponse>()
+            .ForMember(d => d.Username, opt => opt.MapFrom(s => s.UserName));
     }
 }
