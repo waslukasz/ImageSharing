@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
-using WebAPI.Response;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
@@ -98,7 +97,7 @@ namespace WebAPI.Controllers
             var currentUser = await _userManager.GetUserAsync(HttpContext.User) ?? throw new UserNotFoundException();
             if (await _userManager.IsInRoleAsync(currentUser, "Admin")) return true;
             var user = await _userManager.FindByNameAsync(username) ?? throw new UserNotFoundException();
-            return user == currentUser ? true : false;
+            return user == currentUser;
         }
     }
 }
