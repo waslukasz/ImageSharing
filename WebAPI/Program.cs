@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Authentication and authorization
 builder.Services.AddSingleton<JwtSettings>();
 builder.Services.ConfigureIdentity();
-builder.Services.ConfigureJWT(new JwtSettings(builder.Configuration));
+builder.Services.ConfigureJwt(new JwtSettings(builder.Configuration));
 builder.Services.ConfigureCors();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -120,6 +120,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.AddUsers();
 app.AddRoles();
+app.AddUsers();
 app.Run();

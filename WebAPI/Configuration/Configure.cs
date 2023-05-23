@@ -11,21 +11,20 @@ namespace WebAPI.Configuration;
 
 public static class Configure
 {
-
     public static void ConfigureCors(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
             options.AddPolicy(
-                "CorsPolicy", 
-                builder => 
+                "CorsPolicy",
+                builder =>
                     builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
         });
     }
-    
+
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services
@@ -41,7 +40,7 @@ public static class Configure
             .AddDefaultTokenProviders();
     }
 
-    public static void ConfigureJWT(this IServiceCollection services, JwtSettings jwtSettings)
+    public static void ConfigureJwt(this IServiceCollection services, JwtSettings jwtSettings)
     {
         services.AddAuthorization(opt =>
         {
@@ -49,10 +48,7 @@ public static class Configure
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build());
-            opt.AddPolicy("Email", policy =>
-            {
-                policy.RequireClaim("email");
-            });
+            opt.AddPolicy("Email", policy => { policy.RequireClaim("email"); });
         });
         services
             .AddAuthentication(opt =>
@@ -87,6 +83,7 @@ public static class Configure
                         {
                             context.Response.Headers.Add("Token-expired", "true");
                         }
+
                         return Task.CompletedTask;
                     },
                     OnChallenge = context =>
@@ -107,18 +104,33 @@ public static class Configure
                 };
             });
     }
-    
-    public static async void AddUsers(this WebApplication app){
+
+    public static async void AddUsers(this WebApplication app)
+    {
         using (var scope = app.Services.CreateScope())
         {
             var userManager = scope.ServiceProvider.GetService<UserManager<UserEntity>>();
-            var find = await userManager.FindByEmailAsync("admin@wsei.edu.pl");
-            if (find == null)
-            {
-                UserEntity user = new UserEntity() {Email = "admin@wsei.edu.pl", UserName = "admin"};
 
-                var saved = await userManager?.CreateAsync(user, "Administrator1!");
-                userManager.AddToRoleAsync(user, "USER");
+            if (await userManager.FindByNameAsync("admin") is null)
+            {
+                var adminAccount = new UserEntity()
+                {
+                    UserName = "admin",
+                    Email = "admin@example.com",
+                };
+                await userManager.CreateAsync(adminAccount, "Test123#");
+                await userManager.AddToRolesAsync(adminAccount, new[] { "Admin", "User" });
+            }
+
+            if (await userManager.FindByNameAsync("user") is null)
+            {
+                var userAccount = new UserEntity()
+                {
+                    UserName = "user",
+                    Email = "user@example.com"
+                };
+                await userManager.CreateAsync(userAccount, "Test123#");
+                await userManager.AddToRoleAsync(userAccount, "User");
             }
         }
     }
@@ -128,14 +140,14 @@ public static class Configure
         using (var scope = app.Services.CreateScope())
         {
             var roleManager = scope.ServiceProvider.GetService<RoleManager<RoleEntity>>();
-            if (roleManager.FindByNameAsync("admin").Result is null)
+            if (await roleManager.FindByNameAsync("admin") is null)
             {
                 var role = new RoleEntity();
                 role.Name = "Admin";
                 await roleManager.CreateAsync(role);
             }
 
-            if (roleManager.FindByNameAsync("user").Result is null)
+            if (await roleManager.FindByNameAsync("user") is null)
             {
                 var role = new RoleEntity();
                 role.Name = "User";
