@@ -9,7 +9,7 @@ namespace WebAPI.Services.Interfaces;
 public interface IPostService
 {
     Task CreateAsync(CreatePostRequest postRequest,UserEntity user);
-    Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page);
+    Task<PaginatorResult<Post>> GetAll(int maxItems, int page);
     Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page);
     Task DeleteAsync(DeletePostRequest postRequest,UserEntity user);
 }

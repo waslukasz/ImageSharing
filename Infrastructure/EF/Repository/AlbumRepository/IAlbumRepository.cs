@@ -8,5 +8,5 @@ public interface IAlbumRepository : IRepositoryBase<Album>
 {
     public IQueryable<Album> GetAllQuery();
 
-    public Task UpdateAlbum(Album album, string title, string description);
+    public Task UpdateAlbum(Album album);
 }

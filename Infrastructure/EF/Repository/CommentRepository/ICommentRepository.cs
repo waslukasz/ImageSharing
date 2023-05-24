@@ -12,7 +12,6 @@ namespace Infrastructure.EF.Repository.CommentRepository
     {
         Task EditCommentAsync(Comment comment);
         Task<List<Comment>> GetAllCommentsAsync(int postId);
-        Task<Comment?> GetCommentByGuIdAsync(Guid guId);
-        Task<IQueryable<Comment>> GetAllCommentsQueryAsync(int postId);
+        IQueryable<Comment> GetAllCommentsQueryAsync(int postId);
     }
 }

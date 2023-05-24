@@ -1,5 +1,7 @@
-﻿using Infrastructure.Dto;
+﻿using Application_Core.Model;
+using Infrastructure.Dto;
 using WebAPI.Request;
+using WebAPI.Response;
 
 namespace WebAPI.Mapper;
 
@@ -25,6 +27,16 @@ public class ImageMapper
             Name = request.File.FileName,
             Stream = request.File.OpenReadStream(),
             Length = request.File.Length
+        };
+    }
+
+    public static ImageResponse FromImageToImageResponse(Image image)
+    {
+        return new ImageResponse()
+        {
+            Id = image.Guid,
+            Name = image.Slug,
+            Extension = image.Extension,
         };
     }
 }

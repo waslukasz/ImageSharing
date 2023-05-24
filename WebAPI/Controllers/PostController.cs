@@ -8,6 +8,8 @@ using WebAPI.Request;
 using WebAPI.Services;
 using WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using WebAPI.Mapper;
+using WebAPI.Response;
 
 namespace WebAPI.Controllers
 {
@@ -31,9 +33,18 @@ namespace WebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            PaginatorResult<Post> data = await _postManager.GetAll(request.ItemNumber, request.Page);
+            PaginatorResult<PostResponse> response = data.MapToOtherType(PostMapper.FromPostToPostResponse);
             
-            PaginatorResult<PostDto> data = await _postManager.GetAll(request.ItemNumber, request.Page);
-            return Ok(data);
+            response.Items = response.Items.Select(c =>
+            {
+                c.Thumbnail.DownloadUrl = this.Url.Action("DownloadThumbnail", "Image", new { Id = c.Id });
+                c.Image.DownloadUrl = this.Url.Action("DownloadImage", "Image", new { Id = c.Id });
+                return c;
+            }).ToList();
+            
+            return Ok(response);
         }
         
         [HttpGet("getByUser")]

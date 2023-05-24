@@ -6,6 +6,7 @@ using Infrastructure.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Image = Application_Core.Model.Image;
+using SystemImage = System.Drawing.Image;
 
 namespace Infrastructure.EventListener;
 
@@ -46,8 +47,8 @@ public class ImageEntityEventListener
 
         string thumbnailName = FileManager.GetThumbnailName(entity.GetStoragePath());
 
-        System.Drawing.Image image = System.Drawing.Image.FromStream(entity.Stream);
-        System.Drawing.Image thumbnail = System.Drawing.Image.FromStream(entity.Stream);
+        SystemImage image = SystemImage.FromStream(entity.Stream);
+        SystemImage thumbnail = SystemImage.FromStream(entity.Stream);
   
         _fileManager.UploadImage(
             entity.GetStoragePath(),
@@ -88,8 +89,8 @@ public class ImageEntityEventListener
         
         string thumbnailName = FileManager.GetThumbnailName(imageBeforeModification.GetStoragePath());
         
-        System.Drawing.Image image = System.Drawing.Image.FromStream(entity.Stream);
-        System.Drawing.Image thumbnail = System.Drawing.Image.FromStream(entity.Stream);
+        SystemImage image = SystemImage.FromStream(entity.Stream);
+        SystemImage thumbnail = SystemImage.FromStream(entity.Stream);
         
         this._fileManager.UploadImage(
             entity.GetStoragePath(),

@@ -35,7 +35,7 @@ public class PostService : IPostService
         _nameAssigner = nameAssigner;
     }
 
-    public async Task<PaginatorResult<PostDto>> GetAll(int maxItems, int page)
+    public async Task<PaginatorResult<Post>> GetAll(int maxItems, int page)
     {
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
 
@@ -51,10 +51,7 @@ public class PostService : IPostService
         if (result.Items.Count() == 0)
             throw new PostNotFoundException();
 
-        PaginatorResult<PostDto> resultDto = new(result.TotalItems, result.ItemsOnPage
-            , _mapper.Map<List<PostDto>>(result.Items), result.CurrentPage, result.TotalPages);
-
-        return resultDto;
+        return result;
     }
 
     public async Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page)

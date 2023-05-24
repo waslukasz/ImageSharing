@@ -4,7 +4,7 @@ public record PaginatorResult<T> where T: class
 {
     public int TotalItems { get; }
     public int ItemsOnPage { get; }
-    public List<T> Items { get; }
+    public List<T> Items { get; set; }
     public int CurrentPage { get; }
     public int TotalPages { get; }
 

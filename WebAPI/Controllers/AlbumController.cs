@@ -1,11 +1,12 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Dto;
+using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Mapper;
 using WebAPI.Request;
 using WebAPI.Response;
-using WebAPI.Services;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers;
@@ -15,10 +16,12 @@ namespace WebAPI.Controllers;
 public class AlbumController : ControllerBase
 {
     private readonly IAlbumService _albumSerivce;
+    private readonly UserManager<UserEntity> _userManager;
 
-    public AlbumController(IAlbumService albumSerivce)
+    public AlbumController(IAlbumService albumSerivce, UserManager<UserEntity> userManager)
     {
         _albumSerivce = albumSerivce;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -47,5 +50,82 @@ public class AlbumController : ControllerBase
         PaginatorResult<AlbumResponse> response = paginator.MapToOtherType(AlbumMapper.FromAlbumToAlbumResponse);
 
         return Ok(response);
+    }
+
+    [HttpGet]
+    [Route("get")]
+    public async Task<IActionResult> GetAlbum([FromQuery] UidRequest request)
+    {
+        Album album = await _albumSerivce.GetAlbum(request);
+        AlbumWithImagesResponse response = AlbumMapper.FromAlbumToAlbumWithImagesResponse(album);
+        
+        response.Images = response.Images.Select(i =>
+        {
+            i.DownloadUrl = this.Url.Action("DownloadImage", "Image", new { Id = i.Id });
+            return i;
+        }).ToList();
+        
+        return Ok(response);
+    }
+
+    [HttpPost]
+    [Route("create")]
+    public async Task<IActionResult> CreateAlbum([FromBody] CreateAlbumRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+
+        UserEntity? userEntity = await _userManager.GetUserAsync(HttpContext.User);
+        if (userEntity is null)
+            return Unauthorized();
+
+        Album album = await _albumSerivce.CreateAlbum(request,userEntity);
+        AlbumWithImagesResponse response = AlbumMapper.FromAlbumToAlbumWithImagesResponse(album);
+        response.Images = response.Images.Select(i =>
+        {
+            i.DownloadUrl = this.Url.Action("DownloadImage", "Image", new { Id = i.Id });
+            return i;
+        }).ToList();
+        return Created(this.Url.Action("GetAlbum", new { Id = album.Guid }), response);
+    }
+
+    [HttpDelete]
+    [Route("delete")]
+    public async Task<IActionResult> DeleteAlbum([FromBody] UidRequest request)
+    {
+        Album album = await _albumSerivce.GetAlbum(request);
+        UserEntity? currentUser = await _userManager.GetUserAsync(HttpContext.User);
+        
+        if (album.User != currentUser)
+            return BadRequest();
+
+        await _albumSerivce.DeleteAlbum(album);
+
+        return NoContent();
+
+    }
+    
+    [HttpPatch]
+    [Route("update")]
+    public async Task<IActionResult> EditAlbum([FromBody] UpdateAlbumRequest request, [FromQuery] Guid id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+        
+        UserEntity? currentUser = await _userManager.GetUserAsync(HttpContext.User);
+        if (currentUser is null)
+            return Unauthorized();
+        
+        Album updatedAlbum = await _albumSerivce.UpdateAlbum(request, currentUser, id);
+        AlbumWithImagesResponse response = AlbumMapper.FromAlbumToAlbumWithImagesResponse(updatedAlbum);
+        
+        response.Images = response.Images.Select(i =>
+        {
+            i.DownloadUrl = this.Url.Action("DownloadImage", "Image", new { Id = i.Id });
+            return i;
+        }).ToList();
+        
+        return Ok(response);
+
     }
 }

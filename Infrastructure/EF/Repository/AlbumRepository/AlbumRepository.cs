@@ -18,10 +18,9 @@ public class AlbumRepository : BaseRepository<Album,int>, IAlbumRepository
         return Context.Albums;
     }
 
-    public async Task UpdateAlbum(Album album, string title, string description)
-    { 
-        album.Title = title;
-        album.Description = description;
+    public async Task UpdateAlbum(Album album)
+    {
+        Context.Albums.Update(album);
         await Context.SaveChangesAsync();
     }
 }

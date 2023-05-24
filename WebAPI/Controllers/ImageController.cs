@@ -28,7 +28,7 @@ public class ImageController : ControllerBase
         Image image = await _imageService.GetImageWithStream(id);
         if (new FileExtensionContentTypeProvider().TryGetContentType(image.GetStoragePath(), out contentType))
         {
-            return new FileStreamResult(image.Stream, contentType);
+            return new FileStreamResult(image.Stream!, contentType);
         }
         return BadRequest();
     }
@@ -41,7 +41,7 @@ public class ImageController : ControllerBase
         Image image = await _imageService.GetImageThumbnailWithStream(id);
         if (new FileExtensionContentTypeProvider().TryGetContentType(image.GetStoragePath(), out contentType))
         {
-            return new FileStreamResult(image.Stream, contentType);
+            return new FileStreamResult(image.Stream!, contentType);
         }
         return BadRequest();
     }
