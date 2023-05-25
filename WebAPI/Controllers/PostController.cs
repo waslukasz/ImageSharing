@@ -3,6 +3,7 @@ using Application_Core.Model;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Request;
 using WebAPI.Services;
@@ -67,6 +68,7 @@ namespace WebAPI.Controllers
         
         [HttpPost]
         [Route("Create")]
+        [Authorize]
         public async Task<IActionResult> Create([FromForm] CreatePostRequest postDto)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -76,8 +78,21 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [HttpPatch]
+        [Route("Edit")]
+        
+        public async Task<IActionResult> Edit([FromForm] UpdatePostRequest postRequest)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user ==null)
+                throw new UserNotFoundException();
+            await _postManager.EditAsync(postRequest, user);
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("Delete")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromQuery] DeletePostRequest postRequest)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

@@ -17,10 +17,10 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.ImageId, opt => opt.MapFrom(src => src.Image.Guid))
             .ForMember(x=>x.Reactions,opt=>opt.MapFrom(src=>src.Reactions.Count()))
             .ForMember(x=>x.StatusName,opt=>opt.MapFrom(src=>src.Status.Name));
-        CreateMap<CreatePostRequest, FileDto>()
-            .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Image.FileName))
-            .ForMember(x => x.Length, opt => opt.MapFrom(src => src.Image.Length))
-            .ForMember(x => x.Stream, opt => opt.MapFrom(src => src.Image.OpenReadStream()));
+        CreateMap<IFormFile, FileDto>()
+            .ForMember(x => x.Name, opt => opt.MapFrom(src => src.FileName))
+            .ForMember(x => x.Length, opt => opt.MapFrom(src => src.Length))
+            .ForMember(x => x.Stream, opt => opt.MapFrom(src => src.OpenReadStream()));
         CreateMap<CreatePostRequest, Post>()
             .ForMember(x => x.Image, opt => opt.Ignore())
             .ForMember(x=>x.UserId,opt=>opt.Ignore())

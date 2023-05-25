@@ -42,9 +42,8 @@ public class DbTestController : ControllerBase
     [HttpPost("images/update")]
     public async Task<IActionResult> UpdateImage([FromForm] UpdateImageRequest request)
     {
-        UserEntity user = await GetFirstUser();
 
-        await _imageService.UpdateImage(ImageMapper.FromRequestToImageDto(request), user);
+        await _imageService.UpdateImage(ImageMapper.FromRequestToImageDto(request));
         
         return Ok();
     }

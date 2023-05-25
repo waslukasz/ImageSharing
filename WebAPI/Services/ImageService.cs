@@ -61,21 +61,19 @@ public class ImageService : IImageService
         return result.Entity;
     }
 
-    public async Task UpdateImage(ImageDto imageDto, UserEntity user)
+    public async Task UpdateImage(ImageDto imageDto)
     {
-        Image? entity = await _context.Images.FindAsync(imageDto.Guid,user);
+        Image? entity = await _imageRepository.GetByGuid(imageDto.Guid);
         if (entity is null)
             throw new ImageNotFoundException();
-
+        
         Image updatedImage = imageDto.ToImage(_nameAssigner);
         
         entity.Stream = updatedImage.Stream;
-        entity.Guid = Guid.NewGuid();
+        entity.Guid = updatedImage.Guid;
         entity.Title = updatedImage.Title;
         entity.Slug = updatedImage.Slug;
-
         await _context.SaveChangesAsync();
-
     }
 
     public async Task DeleteImage(Guid id, UserEntity user)
