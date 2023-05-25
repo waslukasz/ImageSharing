@@ -70,7 +70,7 @@ public class ImageService : IImageService
         Image updatedImage = imageDto.ToImage(_nameAssigner);
         
         entity.Stream = updatedImage.Stream;
-        entity.Guid = updatedImage.Guid;
+        entity.Guid = imageDto.Guid;
         entity.Title = updatedImage.Title;
         entity.Slug = updatedImage.Slug;
         await _context.SaveChangesAsync();
