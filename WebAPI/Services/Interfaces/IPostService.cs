@@ -13,4 +13,5 @@ public interface IPostService
     Task<PaginatorResult<PostDto>> GetUserPosts(Guid id, int maxItems, int page);
     Task DeleteAsync(DeletePostRequest postRequest,UserEntity user);
     Task<PaginatorResult<PostDto>> GetPostByTags(SearchPostRequest request, PaginationRequest paginationRequest);
+    Task EditAsync(UpdatePostRequest postRequest, UserEntity user);
 }
