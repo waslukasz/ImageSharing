@@ -56,6 +56,14 @@ namespace WebAPI.Controllers
             PaginatorResult<PostDto> data = await _postManager.GetUserPosts(request.Id,request.ItemNumber,request.Page);
             return Ok(data);
         }
+
+        [HttpGet]
+        [Route("Search")]
+        public async Task<IActionResult> GetByTags([FromQuery] SearchPostRequest request,[FromQuery] PaginationRequest paginationRequest)
+        {
+           var data=await _postManager.GetPostByTags(request,paginationRequest);
+            return Ok(data);
+        }
         
         [HttpPost]
         [Route("Create")]

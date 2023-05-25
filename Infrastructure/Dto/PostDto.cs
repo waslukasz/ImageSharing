@@ -14,8 +14,6 @@ namespace Infrastructure.Dto
         public Guid UserId { get; set; }
         public List<string> Tags { get; set; } = new();
         public string Title { get; set; }=default!;
-        //public Guid UserGuid { get; set; }
-        //ToDo Coment and Reactinns 
-        
+        public int Reactions { get; set;}        
     }
 }

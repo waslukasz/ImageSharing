@@ -42,4 +42,21 @@ public class Paginator<TEntity> : IPaginator<TEntity> where TEntity: class
             totalPages
             );
     }
+    public   PaginatorResult<TEntity> PaginateEnumerable(IEnumerable<TEntity> query, int pageNumber)
+    {
+        int totalItemsCount = query.Count();
+        int totalPages = (int) Math.Ceiling((double) totalItemsCount / _itemNumberPerPage);
+
+        List<TEntity> items = query
+            .Skip((pageNumber - 1) * _itemNumberPerPage)
+            .Take(_itemNumberPerPage).ToList();
+
+        return new PaginatorResult<TEntity>(
+            totalItemsCount, 
+            items.Count(), 
+            items,
+            pageNumber,
+            totalPages
+            );
+    }
 }

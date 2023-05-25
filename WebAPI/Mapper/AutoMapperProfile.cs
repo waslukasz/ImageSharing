@@ -15,6 +15,7 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Guid))
             .ForMember(x => x.UserId, opt => opt.MapFrom(src => src.User.Guid))
             .ForMember(x => x.ImageId, opt => opt.MapFrom(src => src.Image.Guid))
+            .ForMember(x=>x.Reactions,opt=>opt.MapFrom(src=>src.Reactions.Count()))
             .ForMember(x=>x.StatusName,opt=>opt.MapFrom(src=>src.Status.Name));
         CreateMap<CreatePostRequest, FileDto>()
             .ForMember(x => x.Name, opt => opt.MapFrom(src => src.Image.FileName))
@@ -23,7 +24,7 @@ public class AutoMapperProfile : Profile
         CreateMap<CreatePostRequest, Post>()
             .ForMember(x => x.Image, opt => opt.Ignore())
             .ForMember(x=>x.UserId,opt=>opt.Ignore())
-            .ForMember(x=>x.StatusId,opt=>opt.MapFrom(src=>src.isHidden?2:1));
+            .ForMember(x=>x.StatusId,opt=>opt.MapFrom(src=>src.IsHidden?2:1));
         CreateMap<CreateAccountRequest, UserEntity>()
             .ForMember(r => r.UserName, opt => opt.MapFrom(r => r.Username));
         CreateMap<AddReactionRequest, Reaction>()

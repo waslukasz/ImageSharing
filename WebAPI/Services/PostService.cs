@@ -9,6 +9,7 @@ using Infrastructure.EF.Repository.ImageRepository;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.Utility;
+using Microsoft.Identity.Json.Utilities;
 using WebAPI.Request;
 using WebAPI.Services.Interfaces;
 
@@ -42,8 +43,9 @@ public class PostService : IPostService
         criteria
             .AddInclude(p => p.Status)
             .AddInclude(p => p.Image)
+            .AddInclude(p=>p.Reactions)
             .AddInclude(p => p.User);
-
+            
         PaginatorResult<Post> result = await _paginator
             .SetItemNumberPerPage(maxItems)
             .Paginate(_postRepository.GetByCriteriaQuery(criteria), page);
@@ -64,6 +66,7 @@ public class PostService : IPostService
         criteria
             .AddInclude(p => p.Status)
             .AddInclude(p => p.Image)
+            .AddInclude(p=>p.Reactions)
             .AddInclude(p => p.User);
 
         PaginatorResult<Post> result = await _paginator
@@ -79,15 +82,58 @@ public class PostService : IPostService
         return resultDto;
     }
 
+    public async Task<PaginatorResult<PostDto>> GetPostByTags(SearchPostRequest request, PaginationRequest paginationRequest)
+    {
+        BaseSpecification<Post> criteria = new BaseSpecification<Post>();
+        if (request.ImageId!=Guid.Empty)
+        {
+            criteria.AddCriteria(c => c.Image.Guid == request.ImageId);
+        }
+        if (request.Title != null)
+            criteria.AddCriteria(c => c.Title.Contains(request.Title));
+        if (request.OrderBy==OrderBy.Asc)
+        {
+            criteria.SetOrderBy(x=>x.Title);
+        }
+        else
+        {
+                criteria.SetOrderByDescending(x=>x.Title);
+        }
+        criteria
+            .AddInclude(p => p.Status)
+            .AddInclude(p => p.Image)
+            .AddInclude(p=>p.Reactions)
+            .AddInclude(p => p.User);
+        var data =await _postRepository.GetByCriteria(criteria);
+        var results = data;
+        if (request.Tags != null)
+        {
+            results = results.ToList().Where(c=>request.Tags.Any(c.Tags.Contains));
+        }
+       
+        PaginatorResult<Post> result = _paginator
+            .SetItemNumberPerPage(paginationRequest.ItemNumber)
+            .PaginateEnumerable(results, paginationRequest.Page);
+        
+        if (result.Items.Count() == 0)
+            throw new PostNotFoundException();
+
+        PaginatorResult<PostDto> resultDto = new(result.TotalItems, result.ItemsOnPage
+            , _mapper.Map<List<PostDto>>(result.Items), result.CurrentPage, result.TotalPages);
+
+        return resultDto;
+    }
+
+
     public async Task CreateAsync(CreatePostRequest postRequest, UserEntity user)
     {
         FileDto image = _mapper.Map<FileDto>(postRequest);
         Post post = _mapper.Map<Post>(postRequest);
-        
+
         post.User = user;
         post.Image = image.ToImage(_nameAssigner);
         post.Image.User = user;
-        
+
         await _postRepository.Add(post);
     }
 
@@ -100,6 +146,6 @@ public class PostService : IPostService
 
         Post post = await _postRepository.GetByCriteriaSingle(criteria) ?? throw new PostNotFoundException();
 
-        await _postRepository.Add(post);
+        await _postRepository.Remove(post);
     }
 }
