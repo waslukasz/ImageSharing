@@ -8,6 +8,7 @@ namespace Infrastructure.Database.Configuration;
 
 public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 {
+    public static string TableName = "Posts";
     public void Configure(EntityTypeBuilder<Post> builder)
     {
         builder.HasKey(p => p.Id);
@@ -32,6 +33,6 @@ public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
             .WithMany(u => u.Posts)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder.Property(c => c.Tags).HasConversion<TagConverter>();
-        builder.ToTable("Posts");
+        builder.ToTable(TableName);
     }
 }

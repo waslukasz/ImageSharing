@@ -7,5 +7,6 @@ namespace Infrastructure.EF.Repository.PostRepository
     {
         Task UpdateAsync(Post post);
         IQueryable<Post> GetAllQuery();
+        IQueryable<Post> GetByTagsQuery(List<string> tags, ISpecification<Post> specification);
     }
 }

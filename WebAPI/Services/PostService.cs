@@ -2,6 +2,7 @@
 using Application_Core.Exception;
 using Application_Core.Model;
 using AutoMapper;
+using Infrastructure.Database;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
@@ -9,7 +10,6 @@ using Infrastructure.EF.Repository.ImageRepository;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.Utility;
-using Microsoft.Identity.Json.Utilities;
 using WebAPI.Request;
 using WebAPI.Services.Interfaces;
 
@@ -27,7 +27,7 @@ public class PostService : IPostService
     public PostService(IPostRepository postRepository
         , IMapper mapper
         , IUserRepository userRepository
-        , IImageRepository imageRepository, UniqueFileNameAssigner nameAssigner)
+        , IImageRepository imageRepository, UniqueFileNameAssigner nameAssigner, ImageSharingDbContext dbContext)
     {
         _postRepository = postRepository;
         _paginator = new();
@@ -85,35 +85,39 @@ public class PostService : IPostService
     public async Task<PaginatorResult<PostDto>> GetPostByTags(SearchPostRequest request, PaginationRequest paginationRequest)
     {
         BaseSpecification<Post> criteria = new BaseSpecification<Post>();
+        
+        criteria
+            .AddInclude(p => p.Status)
+            .AddInclude(p => p.Image)
+            .AddInclude(p=>p.Reactions)
+            .AddInclude(p => p.User);
+        
         if (request.ImageId!=Guid.Empty)
         {
             criteria.AddCriteria(c => c.Image.Guid == request.ImageId);
         }
         if (request.Title != null)
+        {
             criteria.AddCriteria(c => c.Title.Contains(request.Title));
+        }
         if (request.OrderBy==OrderBy.Asc)
         {
             criteria.SetOrderBy(x=>x.Title);
         }
         else
         {
-                criteria.SetOrderByDescending(x=>x.Title);
+            criteria.SetOrderByDescending(x=>x.Title);
         }
-        criteria
-            .AddInclude(p => p.Status)
-            .AddInclude(p => p.Image)
-            .AddInclude(p=>p.Reactions)
-            .AddInclude(p => p.User);
-        var data =await _postRepository.GetByCriteria(criteria);
-        var results = data;
-        if (request.Tags != null)
+        if (request.Tags == null)
         {
-            results = results.ToList().Where(c=>request.Tags.Any(c.Tags.Contains));
+            request.Tags = new List<string>();
         }
-       
-        PaginatorResult<Post> result = _paginator
+
+        IQueryable<Post> data = _postRepository.GetByTagsQuery(request.Tags,criteria);
+
+        PaginatorResult<Post> result = await _paginator
             .SetItemNumberPerPage(paginationRequest.ItemNumber)
-            .PaginateEnumerable(results, paginationRequest.Page);
+            .Paginate(data, paginationRequest.Page);
         
         if (result.Items.Count() == 0)
             throw new PostNotFoundException();
