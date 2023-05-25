@@ -17,6 +17,7 @@ namespace WebAPI.Services;
 
 public class PostService : IPostService
 {
+    private readonly IImageService _imageService;
     private readonly IPostRepository _postRepository;
     private readonly Paginator<Post> _paginator;
     private readonly IMapper _mapper;
@@ -27,13 +28,14 @@ public class PostService : IPostService
     public PostService(IPostRepository postRepository
         , IMapper mapper
         , IUserRepository userRepository
-        , IImageRepository imageRepository, UniqueFileNameAssigner nameAssigner, ImageSharingDbContext dbContext)
+        , IImageRepository imageRepository, UniqueFileNameAssigner nameAssigner, ImageSharingDbContext dbContext, IImageService imageService)
     {
         _postRepository = postRepository;
         _paginator = new();
         _mapper = mapper;
         _userRepository = userRepository;
         _nameAssigner = nameAssigner;
+        _imageService = imageService;
     }
 
     public async Task<PaginatorResult<Post>> GetAll(int maxItems, int page)
@@ -127,7 +129,38 @@ public class PostService : IPostService
 
         return resultDto;
     }
+    
+    public async Task EditAsync(UpdatePostRequest postRequest, UserEntity user)
+    {
+        BaseSpecification<Post> criteria = new BaseSpecification<Post>();
+        criteria.AddCriteria(p => p.User == user);
+        criteria.AddCriteria(p => p.Guid == postRequest.PostGuid);
+        criteria.AddInclude(x => x.Image);
+        Post post = await _postRepository.GetByCriteriaSingle(criteria) ?? throw new AlbumNotFoundException();
 
+        if (postRequest.Title != null)
+            post.Title = postRequest.Title;
+
+        if (postRequest.Tags != null)
+            post.Tags = postRequest.Tags;
+
+        post.StatusId = postRequest.IsHidden ? 2 : 1;
+        if (postRequest.Image != null)
+        {
+            FileDto image = _mapper.Map<FileDto>(postRequest.Image);
+            ImageDto imageDto = new()
+            {
+                Stream = image.Stream,
+                Guid = post.Image.Guid,
+                Name = image.Name,
+                Title = post.Title,
+                Length = image.Length
+            };
+            await _imageService.UpdateImage(imageDto);
+        }
+
+        await _postRepository.UpdateAsync(post);
+    }
 
     public async Task CreateAsync(CreatePostRequest postRequest, UserEntity user)
     {
