@@ -5,7 +5,7 @@ namespace Infrastructure.EF.Repository.PostRepository
 {
     public interface IPostRepository : IRepositoryBase<Post>
     {
-        public Task UpdateAsync(Post post);
-        public IQueryable<Post> GetAllQuery();
+        Task UpdateAsync(Post post);
+        IQueryable<Post> GetAllQuery();
     }
 }

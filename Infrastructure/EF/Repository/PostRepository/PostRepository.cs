@@ -29,5 +29,7 @@ namespace Infrastructure.EF.Repository.PostRepository
             Context.Posts.Update(post);
             await Context.SaveChangesAsync();
         }
+
+       
     }
 }
