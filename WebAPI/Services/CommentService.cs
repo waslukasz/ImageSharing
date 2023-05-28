@@ -39,7 +39,8 @@ namespace WebAPI.Services
         {
             Post? post = await _postRepository.GetByGuid(request.PostId);
 
-            if (post is null) throw new PostNotFoundException();
+            if (post is null) 
+                throw new PostNotFoundException();
 
             Comment comment = new Comment()
             {
@@ -80,9 +81,9 @@ namespace WebAPI.Services
             return commentDto;
         }
 
-        public async Task<CommentDto> Edit(EditCommentRequest request, UserEntity user)
+        public async Task<CommentDto> Edit(EditCommentRequest request, UserEntity user, Guid id)
         {
-            BaseSpecification<Comment> specification = new GetCommentByGuidSpecification(request.CommentGuId);
+            BaseSpecification<Comment> specification = new GetCommentByGuidSpecification(id);
 
             Comment comment = await _commentRepository.GetByCriteriaSingle(specification) 
                               ?? throw new CommentNotFoundException();

@@ -1,12 +1,11 @@
-﻿using Application_Core.Model;
-using Infrastructure.Dto;
+﻿using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using Application_Core.Exception;
+using Infrastructure.EF.Pagination;
 using WebAPI.Request;
-using WebAPI.Services;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Controllers
@@ -35,37 +34,41 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpDelete("Delete/{CommentGuId}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteComment([FromRoute] Guid CommentGuId)
+        public async Task<IActionResult> DeleteComment(Guid id)
         {
             UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
-
-            await _commentService.Delete(CommentGuId, user);
+            await _commentService.Delete(id, user);
+            
             return NoContent();
         }
 
-        [HttpPatch("Edit")]
+        [HttpPatch("Edit/{id}")]
         [Authorize]
-        public async Task<IActionResult> EditComment([FromBody] EditCommentRequest request)
+        public async Task<IActionResult> EditComment([FromBody] EditCommentRequest request, Guid id)
         {
-            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
-
-            CommentDto commentDto = await _commentService.Edit(request, user);
+            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User) ?? throw new UserNotFoundException();
+            CommentDto commentDto = await _commentService.Edit(request, user, id);
+            
             return Ok(commentDto);
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllComments([FromQuery] GetAllCommentsRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest();
-            return Ok(await _commentService.GetAll(request));
+            if (!ModelState.IsValid) 
+                return BadRequest();
+
+            PaginatorResult<CommentDto> response = await _commentService.GetAll(request);
+
+            return Ok(response);
         }
 
-        [HttpGet("GetByGuId/{CommentGuId}")]
-        public async Task<IActionResult> GetCommentById([FromRoute] Guid CommentGuId)
+        [HttpGet("Get/{id}")]
+        public async Task<IActionResult> GetCommentById(Guid id)
         {
-            CommentDto comment = await _commentService.FindByGuId(CommentGuId);
+            CommentDto comment = await _commentService.FindByGuId(id);
             return Ok(comment);
         }
     }

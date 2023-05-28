@@ -2,6 +2,7 @@
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Pagination;
+using Infrastructure.Enum;
 using WebAPI.Request;
 
 namespace WebAPI.Services.Interfaces;
@@ -14,4 +15,6 @@ public interface IPostService
     Task DeleteAsync(DeletePostRequest postRequest,UserEntity user);
     Task<PaginatorResult<PostDto>> GetPostByTags(SearchPostRequest request, PaginationRequest paginationRequest);
     Task EditAsync(UpdatePostRequest postRequest, UserEntity user);
+    Task<Post> GetPost(Guid id);
+    PostService SetUser(UserEntity userEntity, RoleEnum roleEnum = RoleEnum.User);
 }

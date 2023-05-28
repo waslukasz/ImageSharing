@@ -1,15 +1,7 @@
 ﻿using Application_Core.Model;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Application_Core.Common.Specification;
-using Dapper;
 using Infrastructure.Database.Configuration;
 using Infrastructure.EF.Evaluator;
 using Microsoft.Data.SqlClient;
@@ -41,7 +33,7 @@ namespace Infrastructure.EF.Repository.PostRepository
             
             List<SqlParameter> sqlParameters = new List<SqlParameter>();
             string query = @$"SELECT * FROM [{PostEntityConfiguration.TableName}]";
-            
+
             for (int i = 0; i < tags.Count; i++) {
                 
                 if (i == 0) {

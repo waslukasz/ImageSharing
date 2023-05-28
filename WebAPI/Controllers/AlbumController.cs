@@ -23,9 +23,14 @@ public class AlbumController : ControllerBase
         _albumSerivce = albumSerivce;
         _userManager = userManager;
     }
-
+    
+    /// <summary>
+    /// Returns all Albums
+    /// </summary>
+    /// <param name="paginationRequest">Pagination object describing current page and max item per page</param>
+    /// <returns>PaginatorResult</returns>
     [HttpGet]
-    [Route("all")]
+    [Route("All")]
     public async Task<IActionResult> GetAll([FromQuery] PaginationRequest paginationRequest)
     {
         if (!ModelState.IsValid)
@@ -37,8 +42,13 @@ public class AlbumController : ControllerBase
         return Ok(response);
     }
     
+    /// <summary>
+    /// Returns list of Albums matching given criteria
+    /// </summary>
+    /// <param name="request">Request containing criteria and pagination fields</param>
+    /// <returns>PaginatorResult</returns>
     [HttpGet]
-    [Route("search")]
+    [Route("Search")]
     public async Task<IActionResult> Search([FromQuery] SearchAlbumRequest request)
     {
         if (!ModelState.IsValid)
@@ -52,11 +62,16 @@ public class AlbumController : ControllerBase
         return Ok(response);
     }
 
+    /// <summary>
+    /// Returns album matching given Guid
+    /// </summary>
+    /// <param name="id">Album Guid</param>
+    /// <returns>AlbumWithImageResponse</returns>
     [HttpGet]
-    [Route("get")]
-    public async Task<IActionResult> GetAlbum([FromQuery] UidRequest request)
+    [Route("Get/{id}")]
+    public async Task<IActionResult> GetAlbum(Guid id)
     {
-        Album album = await _albumSerivce.GetAlbum(request);
+        Album album = await _albumSerivce.GetAlbum(id);
         AlbumWithImagesResponse response = AlbumMapper.FromAlbumToAlbumWithImagesResponse(album);
         
         response.Images = response.Images.Select(i =>
@@ -68,8 +83,13 @@ public class AlbumController : ControllerBase
         return Ok(response);
     }
 
+    /// <summary>
+    /// Creates Album by requested data
+    /// </summary>
+    /// <param name="request">Object containing required fields to create Album</param>
+    /// <returns>Created Album</returns>
     [HttpPost]
-    [Route("create")]
+    [Route("Create")]
     public async Task<IActionResult> CreateAlbum([FromBody] CreateAlbumRequest request)
     {
         if (!ModelState.IsValid)
@@ -89,11 +109,16 @@ public class AlbumController : ControllerBase
         return Created(this.Url.Action("GetAlbum", new { Id = album.Guid }), response);
     }
 
+    /// <summary>
+    /// Deletes Album 
+    /// </summary>
+    /// <param name="id">Album Guid</param>
+    /// <returns>Bad request when specified album is not a currents user album, otherwise NoContent</returns>
     [HttpDelete]
-    [Route("delete")]
-    public async Task<IActionResult> DeleteAlbum([FromBody] UidRequest request)
+    [Route("Delete/{id}")]
+    public async Task<IActionResult> DeleteAlbum(Guid id)
     {
-        Album album = await _albumSerivce.GetAlbum(request);
+        Album album = await _albumSerivce.GetAlbum(id);
         UserEntity? currentUser = await _userManager.GetUserAsync(HttpContext.User);
         
         if (album.User != currentUser)
@@ -105,9 +130,15 @@ public class AlbumController : ControllerBase
 
     }
     
+    /// <summary>
+    /// Updates Album by fields specified in request body
+    /// </summary>
+    /// <param name="request">Object containing fields to update</param>
+    /// <param name="id">Album Guid</param>
+    /// <returns>Bad request when requested params fail validation, otherwise updated Album</returns>
     [HttpPatch]
-    [Route("update")]
-    public async Task<IActionResult> EditAlbum([FromBody] UpdateAlbumRequest request, [FromQuery] Guid id)
+    [Route("update/{id}")]
+    public async Task<IActionResult> EditAlbum([FromBody] UpdateAlbumRequest request, Guid id)
     {
         if (!ModelState.IsValid)
             return BadRequest();

@@ -45,12 +45,12 @@ public class AlbumService : IAlbumService
         return result;
     }
 
-    public async Task<Album> GetAlbum(UidRequest request)
+    public async Task<Album> GetAlbum(Guid id)
     {
         BaseSpecification<Album> specification = new BaseSpecification<Album>();
 
         specification
-            .AddCriteria(a => a.Guid == request.Id)
+            .AddCriteria(a => a.Guid == id)
             .AddInclude(a => a.Images)
             .AddInclude(a => a.User);
 

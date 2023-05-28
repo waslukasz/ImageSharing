@@ -19,4 +19,20 @@ public static class PostMapper
             Status = post.Status.Name
         };
     }
+
+    public static PostResponseWithDetails FromPostToPostResponseWithDetails(Post post)
+    {
+        return new PostResponseWithDetails()
+        {
+            Id = post.Guid,
+            Title = post.Title,
+            Image = ImageMapper.FromImageToImageResponse(post.Image),
+            Thumbnail = new ThumbnailResponse(),
+            User = UserMapper.FromUserToUserResponse((UserEntity)post.User),
+            Tags = post.Tags.ToList(),
+            Status = post.Status.Name,
+            CommentCount = post.Comments.Count(),
+            ReactionCount = post.Reactions.Count()
+        };
+    }
 }

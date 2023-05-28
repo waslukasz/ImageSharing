@@ -8,7 +8,7 @@ namespace Infrastructure.Database.Configuration;
 
 public class PostEntityConfiguration : IEntityTypeConfiguration<Post>
 {
-    public static string TableName = "Posts";
+    public const string TableName = "Posts";
     public void Configure(EntityTypeBuilder<Post> builder)
     {
         builder.HasKey(p => p.Id);

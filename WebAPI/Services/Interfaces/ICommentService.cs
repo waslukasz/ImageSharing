@@ -11,6 +11,6 @@ public interface ICommentService
     Task<Guid> AddComment(AddCommentRequest request, UserEntity user);
     Task<PaginatorResult<CommentDto>> GetAll(GetAllCommentsRequest request);
     Task<CommentDto> FindByGuId(Guid commentGuId);
-    Task<CommentDto> Edit(EditCommentRequest request, UserEntity user);
-    Task Delete(Guid CommentGuid, UserEntity user);
+    Task<CommentDto> Edit(EditCommentRequest request, UserEntity user, Guid id);
+    Task Delete(Guid commentGuid, UserEntity user);
 }

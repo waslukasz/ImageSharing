@@ -1,6 +1,8 @@
-﻿using Application_Core.Exception;
+﻿using Application_Core.Common.Specification;
+using Application_Core.Exception;
 using Application_Core.Model;
 using Infrastructure.Database;
+using Infrastructure.Database.Seed.Generator;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.ImageRepository;
@@ -14,8 +16,6 @@ namespace WebAPI.Services;
 
 public class ImageService : IImageService
 {
-    private readonly ILiteXBlobService _blobService;
-
     private readonly ImageSharingDbContext _context;
 
     private readonly UniqueFileNameAssigner _nameAssigner;
@@ -24,27 +24,26 @@ public class ImageService : IImageService
 
     private readonly FileManager _fileManager;
 
-    public ImageService(ILiteXBlobService blobService, ImageSharingDbContext context, UniqueFileNameAssigner nameAssigner, IImageRepository imageRepository, FileManager fileManager)
+    public ImageService(ImageSharingDbContext context, UniqueFileNameAssigner nameAssigner, IImageRepository imageRepository, FileManager fileManager)
     {
-        _blobService = blobService;
         _context = context;
         _nameAssigner = nameAssigner;
         _imageRepository = imageRepository;
         _fileManager = fileManager;
     }
 
-    public async Task<Image> GetImageWithStream(Guid id)
+    public async Task<Image> GetImageWithStream(Guid id, UserEntity? user)
     {
-        Image image = await _imageRepository.GetByGuid(id) ?? throw new ImageNotFoundException();
+        Image image = await GetImageOrThrowWhenHidden(id, user);
         image.Stream = await _fileManager.GetFileStream(image.GetStoragePath());
 
         return image;
 
     }
     
-    public async Task<Image> GetImageThumbnailWithStream(Guid id)
+    public async Task<Image> GetImageThumbnailWithStream(Guid id, UserEntity? user)
     {
-        Image image = await _imageRepository.GetByGuid(id) ?? throw new ImageNotFoundException();
+        Image image = await GetImageOrThrowWhenHidden(id, user);
         image.Stream = await _fileManager.GetFileStream(FileManager.GetThumbnailName(image.GetStoragePath()));
 
         return image;
@@ -84,5 +83,24 @@ public class ImageService : IImageService
 
         _context.Images.Remove(entity);
         await _context.SaveChangesAsync();
+    }
+
+    private async Task<Image> GetImageOrThrowWhenHidden(Guid id, UserEntity? user)
+    {
+        BaseSpecification<Image> criteria = new BaseSpecification<Image>();
+        criteria
+            .AddCriteria(i => i.Guid == id)
+            .AddInclude(i => i.Post)
+            .AddInclude(i => i.Post.Status)
+            .AddInclude(i => i.User);
+
+        Image? image = await _imageRepository.GetByCriteriaSingle(criteria) ?? throw new ImageNotFoundException();
+
+        if (image.Post.Status.Name == StatusEnum.Hidden.ToString() && image.Post.User != user)
+        {
+            throw new ImageNotFoundException("Content unavailable.");
+        }
+
+        return image;
     }
 }
