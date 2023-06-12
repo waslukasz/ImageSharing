@@ -44,6 +44,49 @@
             <param name="username"></param>
             <returns></returns>
         </member>
+        <member name="M:WebAPI.Controllers.AlbumController.GetAll(WebAPI.Request.PaginationRequest)">
+            <summary>
+            Returns all Albums
+            </summary>
+            <param name="paginationRequest">Pagination object describing current page and max item per page</param>
+            <returns>PaginatorResult</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AlbumController.Search(WebAPI.Request.SearchAlbumRequest)">
+            <summary>
+            Returns list of Albums matching given criteria
+            </summary>
+            <param name="request">Request containing criteria and pagination fields</param>
+            <returns>PaginatorResult</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AlbumController.GetAlbum(System.Guid)">
+            <summary>
+            Returns album matching given Guid
+            </summary>
+            <param name="id">Album Guid</param>
+            <returns>AlbumWithImageResponse</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AlbumController.CreateAlbum(WebAPI.Request.CreateAlbumRequest)">
+            <summary>
+            Creates Album by requested data
+            </summary>
+            <param name="request">Object containing required fields to create Album</param>
+            <returns>Created Album</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AlbumController.DeleteAlbum(System.Guid)">
+            <summary>
+            Deletes Album 
+            </summary>
+            <param name="id">Album Guid</param>
+            <returns>Bad request when specified album is not a currents user album, otherwise NoContent</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.AlbumController.EditAlbum(WebAPI.Request.UpdateAlbumRequest,System.Guid)">
+            <summary>
+            Updates Album by fields specified in request body
+            </summary>
+            <param name="request">Object containing fields to update</param>
+            <param name="id">Album Guid</param>
+            <returns>Bad request when requested params fail validation, otherwise updated Album</returns>
+        </member>
         <member name="M:WebAPI.Controllers.AuthenticationController.Login(WebAPI.Request.LoginUserRequest)">
             <summary>
             Get JWT Security token for account
@@ -80,6 +123,22 @@
             <remarks>Required Admin rights to remove role.</remarks>
             <returns></returns>
             <exception cref="T:Application_Core.Exception.BadRequestException">Account did not had this role.</exception>
+        </member>
+        <member name="M:WebAPI.Controllers.ImageController.DownloadImage(System.Guid)">
+            <summary>
+            Returns Image file
+            </summary>
+            <param name="id">Image Guid</param>
+            <returns>FileStreamResult</returns>
+            <exception cref="T:Application_Core.Exception.ImageNotFoundException">Throws only when image file specified in param as guid is not found on the server</exception>
+        </member>
+        <member name="M:WebAPI.Controllers.ImageController.DownloadThumbnail(System.Guid)">
+            <summary>
+            Returns Thumbnail file
+            </summary>
+            <param name="id">Image 'NOT THUMBNAIL' Guid</param>
+            <returns>FileStreamResult</returns>
+            <exception cref="T:Application_Core.Exception.ImageNotFoundException">Throws only when thumbnail file specified in param as image guid is not found on the server</exception>
         </member>
     </members>
 </doc>

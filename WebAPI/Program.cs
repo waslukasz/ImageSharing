@@ -123,3 +123,8 @@ app.MapControllers();
 app.AddRoles();
 app.AddUsers();
 app.Run();
+
+public partial class Program
+{
+    
+}

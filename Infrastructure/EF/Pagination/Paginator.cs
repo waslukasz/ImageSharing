@@ -29,6 +29,8 @@ public class Paginator<TEntity> : IPaginator<TEntity> where TEntity: class
         int totalItemsCount = query.Count();
         int totalPages = (int) Math.Ceiling((double) totalItemsCount / _itemNumberPerPage);
         
+        
+        
         List<TEntity> items = await query
             .Skip((pageNumber - 1) * _itemNumberPerPage)
             .Take(_itemNumberPerPage)
