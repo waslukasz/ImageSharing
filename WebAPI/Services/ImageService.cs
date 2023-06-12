@@ -6,7 +6,9 @@ using Infrastructure.Database.Seed.Generator;
 using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
 using Infrastructure.EF.Repository.ImageRepository;
+using Infrastructure.Enum;
 using Infrastructure.FileManagement;
+using Infrastructure.Struct;
 using Infrastructure.Utility;
 using LiteX.Storage.Core;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,7 @@ public class ImageService : IImageService
         _fileManager = fileManager;
     }
 
-    public async Task<Image> GetImageWithStream(Guid id, UserEntity? user)
+    public async Task<Image> GetImageWithStream(Guid id, CurrentUser user)
     {
         Image image = await GetImageOrThrowWhenHidden(id, user);
         image.Stream = await _fileManager.GetFileStream(image.GetStoragePath());
@@ -41,7 +43,7 @@ public class ImageService : IImageService
 
     }
     
-    public async Task<Image> GetImageThumbnailWithStream(Guid id, UserEntity? user)
+    public async Task<Image> GetImageThumbnailWithStream(Guid id, CurrentUser user)
     {
         Image image = await GetImageOrThrowWhenHidden(id, user);
         image.Stream = await _fileManager.GetFileStream(FileManager.GetThumbnailName(image.GetStoragePath()));
@@ -85,19 +87,24 @@ public class ImageService : IImageService
         await _context.SaveChangesAsync();
     }
 
-    private async Task<Image> GetImageOrThrowWhenHidden(Guid id, UserEntity? user)
+    private async Task<Image> GetImageOrThrowWhenHidden(Guid id, CurrentUser user)
     {
         BaseSpecification<Image> criteria = new BaseSpecification<Image>();
         criteria
             .AddCriteria(i => i.Guid == id)
             .AddInclude(i => i.Post)
+            .AddInclude(i => i.Post.User)
             .AddInclude(i => i.Post.Status)
             .AddInclude(i => i.User);
 
         Image? image = await _imageRepository.GetByCriteriaSingle(criteria) ?? throw new ImageNotFoundException();
 
-        if (image.Post.Status.Name == StatusEnum.Hidden.ToString() && image.Post.User != user)
+        if (image.Post.Status.Name == StatusEnum.Hidden.ToString())
         {
+            if (user.UserRole == RoleEnum.Admin || image.Post.User == user.User)
+            {
+                return image;
+            }
             throw new ImageNotFoundException("Content unavailable.");
         }
 

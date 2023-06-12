@@ -52,8 +52,8 @@ namespace WebAPI.Controllers
             
             response.Items = response.Items.Select(c =>
             {
-                c.Thumbnail.DownloadUrl = this.Url.Action(nameof(ImageController.DownloadThumbnail), "Image", new { Id = c.Id });
-                c.Image.DownloadUrl = this.Url.Action(nameof(ImageController.DownloadImage), "Image", new { Id = c.Id });
+                c.Thumbnail.DownloadUrl = this.Url.Action(nameof(ImageController.DownloadThumbnail), "Image", new { Id = c.Image.Id });
+                c.Image.DownloadUrl = this.Url.Action(nameof(ImageController.DownloadImage), "Image", new { Id = c.Image.Id });
                 return c;
             }).ToList();
             

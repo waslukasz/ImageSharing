@@ -1,5 +1,7 @@
 ﻿using Application_Core.Model;
+using Infrastructure.Dto;
 using Infrastructure.EF.Entity;
+using WebAPI.Request;
 using WebAPI.Response;
 
 namespace WebAPI.Mapper;
@@ -17,6 +19,17 @@ public static class PostMapper
             User = UserMapper.FromUserToUserResponse((UserEntity)post.User),
             Tags = post.Tags.ToList(),
             Status = post.Status.Name
+        };
+    }
+
+    public static FileDto FromCreatePostRequestToFileDto(CreatePostRequest request)
+    {
+        return new FileDto()
+        {
+            Length = request.Image.Length,
+            Name = request.Image.FileName,
+            Stream = request.Image.OpenReadStream(),
+            Title = request.Title
         };
     }
 

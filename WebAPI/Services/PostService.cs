@@ -10,17 +10,13 @@ using Infrastructure.EF.Pagination;
 using Infrastructure.EF.Repository.PostRepository;
 using Infrastructure.EF.Repository.UserRepository;
 using Infrastructure.Enum;
+using Infrastructure.Struct;
 using Infrastructure.Utility;
+using WebAPI.Mapper;
 using WebAPI.Request;
 using WebAPI.Services.Interfaces;
 
 namespace WebAPI.Services;
-
-public struct CurrentUser
-{ 
-    public UserEntity? User { get; set; }
-    public RoleEnum UserRole { get; set; }
-}
 
 public class PostService : IPostService
 {
@@ -35,12 +31,11 @@ public class PostService : IPostService
         User = null,
         UserRole = RoleEnum.User
     };
-
-
+    
     public PostService(IPostRepository postRepository
         , IMapper mapper
         , IUserRepository userRepository
-        , UniqueFileNameAssigner nameAssigner, ImageSharingDbContext dbContext, IImageService imageService)
+        , UniqueFileNameAssigner nameAssigner, IImageService imageService)
     {
         _postRepository = postRepository;
         _paginator = new();
@@ -160,7 +155,7 @@ public class PostService : IPostService
         criteria.AddCriteria(p => p.User == user);
         criteria.AddCriteria(p => p.Guid == postRequest.PostGuid);
         criteria.AddInclude(x => x.Image);
-        Post post = await _postRepository.GetByCriteriaSingle(criteria) ?? throw new AlbumNotFoundException();
+        Post post = await _postRepository.GetByCriteriaSingle(criteria) ?? throw new PostNotFoundException();
 
         if (postRequest.Title != null)
             post.Title = postRequest.Title;
@@ -188,7 +183,7 @@ public class PostService : IPostService
 
     public async Task CreateAsync(CreatePostRequest postRequest, UserEntity user)
     {
-        FileDto image = _mapper.Map<FileDto>(postRequest);
+        FileDto image = PostMapper.FromCreatePostRequestToFileDto(postRequest);
         Post post = _mapper.Map<Post>(postRequest);
 
         post.User = user;

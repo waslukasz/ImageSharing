@@ -1,6 +1,8 @@
 ﻿using Application_Core.Exception;
 using Application_Core.Model;
 using Infrastructure.EF.Entity;
+using Infrastructure.Enum;
+using Infrastructure.Struct;
 using LiteX.Storage.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +37,7 @@ public class ImageController : ControllerBase
         string contentType = "";
         try
         {
-            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
+            CurrentUser user = await GetCurrentUser();
             Image image = await _imageService.GetImageWithStream(id,user);
             if (new FileExtensionContentTypeProvider().TryGetContentType(image.GetStoragePath(), out contentType))
             {
@@ -63,7 +65,7 @@ public class ImageController : ControllerBase
         string contentType = "";
         try
         {
-            UserEntity? user = await _userManager.GetUserAsync(HttpContext.User);
+            CurrentUser user = await GetCurrentUser();
             Image image = await _imageService.GetImageThumbnailWithStream(id,user);
             if (new FileExtensionContentTypeProvider().TryGetContentType(image.GetStoragePath(), out contentType))
             {
@@ -75,5 +77,27 @@ public class ImageController : ControllerBase
         {
             throw new ImageNotFoundException();
         }
+    }
+
+    private async Task<CurrentUser> GetCurrentUser()
+    {
+        UserEntity? userEntity = await _userManager.GetUserAsync(HttpContext.User);
+
+        CurrentUser currentUser = new CurrentUser()
+        {
+            User = userEntity,
+            UserRole = RoleEnum.User
+        };
+
+        if (userEntity is not null)
+        {
+            if (await _userManager.IsInRoleAsync(userEntity, RoleEnum.Admin.ToString()))
+            {
+                currentUser.UserRole = RoleEnum.Admin;
+                return currentUser;
+            }
+        }
+
+        return currentUser;
     }
 }
