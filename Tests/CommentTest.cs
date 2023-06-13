@@ -20,17 +20,19 @@ namespace Tests
         }
 
         [Fact]
-        public async Task ShouldReturnNotFound()
+        public async Task ShouldReturnBadRequest()
         {
             var response = await _client.GetAsync("/api/Comment/Get/1");
-            Assert.NotEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
         public async Task ShouldReturnUnAuthorized()
         {
-            var response = await _client.GetAsync("/api/Comment/Add");
-            Assert.NotEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+            HttpContent content = JsonContent.Create(new { PostId = "1", Text = "Text" });
+
+            var response = await _client.PostAsync("/api/Comment/Add", content);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
 }

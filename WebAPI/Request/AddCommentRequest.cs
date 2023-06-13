@@ -8,6 +8,7 @@ namespace WebAPI.Request
         [Required]
         public Guid PostId { get; set; }
 
-        [Required] public string Text { get; set; }
+        [Required] 
+        public string Text { get; set; }
     }
 }
