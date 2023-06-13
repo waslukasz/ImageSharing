@@ -124,6 +124,42 @@
             <returns></returns>
             <exception cref="T:Application_Core.Exception.BadRequestException">Account did not had this role.</exception>
         </member>
+        <member name="M:WebAPI.Controllers.CommentController.AddComment(WebAPI.Request.AddCommentRequest)">
+            <summary>
+            Add a comment to a specific post
+            </summary>
+            <param name="request">Comment details</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.CommentController.DeleteComment(System.Guid)">
+            <summary>
+            Delete a specific comment
+            </summary>
+            <param name="id">Comment GuId</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.CommentController.EditComment(WebAPI.Request.EditCommentRequest,System.Guid)">
+            <summary>
+            Edit a specific comment
+            </summary>
+            <param name="id">Comment GuId</param>
+            <param name="request">Comment content</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.CommentController.GetAllComments(WebAPI.Request.GetAllCommentsRequest)">
+            <summary>
+            Get all comments for a given post
+            </summary>
+            <param name="request">Post GuId and response size</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.CommentController.GetCommentById(System.Guid)">
+            <summary>
+            Get comment by id
+            </summary>
+            <param name="id">Comment GuId</param>
+            <returns></returns>
+        </member>
         <member name="M:WebAPI.Controllers.ImageController.DownloadImage(System.Guid)">
             <summary>
             Returns Image file

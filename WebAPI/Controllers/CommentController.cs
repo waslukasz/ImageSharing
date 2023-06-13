@@ -23,6 +23,11 @@ namespace WebAPI.Controllers
             _commentService = commentService;
         }
 
+        /// <summary>
+        /// Add a comment to a specific post
+        /// </summary>
+        /// <param name="request">Comment details</param>
+        /// <returns></returns>
         [HttpPost("Add")]
         [Authorize]
         public async Task<IActionResult> AddComment([FromBody] AddCommentRequest request)
@@ -34,6 +39,12 @@ namespace WebAPI.Controllers
 
         }
 
+        /// <summary>
+        /// Delete a specific comment
+        /// </summary>
+        /// <param name="id">Comment GuId</param>
+        /// <returns></returns>
+
         [HttpDelete("Delete/{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteComment(Guid id)
@@ -44,6 +55,13 @@ namespace WebAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Edit a specific comment
+        /// </summary>
+        /// <param name="id">Comment GuId</param>
+        /// <param name="request">Comment content</param>
+        /// <returns></returns>
+
         [HttpPatch("Edit/{id}")]
         [Authorize]
         public async Task<IActionResult> EditComment([FromBody] EditCommentRequest request, Guid id)
@@ -53,6 +71,12 @@ namespace WebAPI.Controllers
             
             return Ok(commentDto);
         }
+
+        /// <summary>
+        /// Get all comments for a given post
+        /// </summary>
+        /// <param name="request">Post GuId and response size</param>
+        /// <returns></returns>
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAllComments([FromQuery] GetAllCommentsRequest request)
@@ -65,6 +89,11 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Get comment by id
+        /// </summary>
+        /// <param name="id">Comment GuId</param>
+        /// <returns></returns>
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> GetCommentById(Guid id)
         {
