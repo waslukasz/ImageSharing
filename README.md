@@ -11,6 +11,8 @@ Autoryzacja działa na zasadzie tokena Bearer.
 | admin                  | Test123#         | Admin             |
 | user                   | Test123#         | Użytkownik        |
 
+Aplikacja została stworzona w 4-osobowej grupie jako projekt na studia.
+
 ### English description
 API application created with .NET 7.
 Main functionality of application is creating posts with associated image, which you can view, comment, react and download image or thumbnail.
@@ -23,3 +25,5 @@ Authorization implemented by using Bearer Authentication (token).
 | :--------------------- | :--------------- | :---------------- |
 | admin                  | Test123#         | Admin             |
 | user                   | Test123#         | User              |
+
+The application was created in a 4-person group as a project for university.
